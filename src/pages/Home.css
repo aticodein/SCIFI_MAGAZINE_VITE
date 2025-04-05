@@ -1,0 +1,166 @@
+/* filepath: c:\Users\szalo\OneDrive\Desktop\sci_fi_magazine_vite\src\pages\Home.css */
+/* Header banner styles */
+.header-banner {
+  background-color: #111; /* Dark background for the banner */
+  color: #00ff00; /* Alien green text */
+  font-size: 24px; /* Larger font size */
+  font-family: 'Press Start 2P', cursive; /* Retro font */
+  padding: 10px 20px; /* Add vertical padding */
+  width: 100%; /* Full width of the screen */
+  display: flex; /* Use Flexbox for layout */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  gap: 10px; /* Add space between the text and the icon */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+}
+
+/* Sound toggle button styles */
+.sound-toggle {
+  background: none;
+  border: none;
+  color: #00ff00; /* Alien green text */
+  font-size: 24px; /* Icon size */
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.sound-toggle:hover {
+  transform: scale(1.2); /* Slightly enlarge on hover */
+}
+
+/* Styled slider styles */
+.styled-slider {
+  appearance: none;
+  width: 100%;
+  height: 10px;
+  background: #ddd;
+  border-radius: 5px;
+  outline: none;
+  transition: background 0.3s;
+}
+
+.styled-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  background: #13d613;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.styled-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1); /* Increase size by 10% */
+}
+
+.styled-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  background: #4caf50;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.styled-slider::-moz-range-thumb:hover {
+  transform: scale(1.1); /* Increase size by 10% */
+}
+
+/* Articles Section */
+.articles-section {
+  padding: 20px;
+  background-color: #222; /* Dark background for the articles section */
+  color: #fff; /* White text */
+  text-align: center;
+}
+
+.articles-title {
+  font-size: 24px;
+  font-family: 'Press Start 2P', cursive; /* Retro font */
+  font-weight: 100; /* Make the font thinner */
+  margin-bottom: 20px;
+}
+
+.articles-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.article-card {
+  background-color: #333; /* Slightly lighter background for cards */
+  padding: 15px;
+  border-radius: 10px;
+  width: 200px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition */
+}
+
+.article-card:hover {
+  transform: scale(1.03); /* Grow by 3% */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7); /* Add a deeper shadow on hover */
+}
+
+.article-card h3 {
+  font-size: 18px;
+  font-family: 'Press Start 2P', cursive; /* Retro font */
+  font-weight: 400; /* Make the font thinner */
+  margin-bottom: 10px;
+}
+
+.article-card p {
+  font-size: 11px;
+  font-family: 'Press Start 2P', cursive; /* Retro font */
+  font-weight: 00; /* Make the font thinner */
+  margin-bottom: 15px;
+}
+
+/* Shared Button Styles */
+.button {
+  background-color: #00ff00; /* Alien green */
+  color: #000;
+  border: 2px solid #00cc00; /* Light green border */
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', cursive; /* Retro font */
+  font-size: 14px; /* Consistent text size */
+  transition: background-color 0.3s, transform 0.2s ease-in-out, box-shadow 0.3s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+}
+
+.button:hover {
+  background-color: #00cc00; /* Darker green on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7); /* Add a deeper shadow on hover */
+}
+
+.button:active {
+  transform: scale(0.95); /* Slightly shrink on click */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Reduce shadow on click */
+}
+
+.read-more-button {
+  background-color: #00ff00; /* Alien green */
+  color: #000;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', cursive; /* Retro font */
+  font-weight: 100;
+  font-size: 14px;
+  transition: background-color 0.3s, transform 0.2s ease-in-out, box-shadow 0.3s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+}
+
+.read-more-button:hover {
+  background-color: #00cc00; /* Darker green on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7); /* Add a deeper shadow on hover */
+}
+
+.read-more-button:active {
+  transform: scale(0.95); /* Slightly shrink on click */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Reduce shadow on click */
+}
