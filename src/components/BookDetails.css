@@ -1,0 +1,46 @@
+.book-details {
+  position: fixed; /* Fixed to the viewport */
+  top: 15%;
+  left: 30%;
+  transform: translate(-50%, -50%); /* Center the component */
+  background-color: #222; /* Dark background */
+  color: #fff; /* White text */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  width: 90%; /* Adjust width */
+  max-width: 900px; /* Limit max width */
+  height: 38%;
+  text-align: center;
+  z-index: 10; /* Ensure it appears above other content */
+}
+
+.book-title {
+  font-size: 24px;
+  font-family: 'Press Start 2P', cursive;
+  margin-bottom: 15px;
+}
+
+.book-description {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.close-button {
+  background-color: #00ff00; /* Alien green */
+  color: #000;
+  border: 2px solid #00cc00;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 14px;
+  transition: background-color 0.3s, transform 0.2s ease-in-out, box-shadow 0.3s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.close-button:hover {
+  background-color: #00cc00;
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+}

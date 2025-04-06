@@ -317,12 +317,6 @@ body {
   margin-bottom: 10px;
 }
 
-.book-card p {
-  font-size: 11px;
-  font-family: 'Press Start 2P', cursive; /* Retro font */
-  font-weight: 400; /* Make the font thinner */
-  margin-bottom: 15px;
-}
 
 /* Console Panel */
 .console-panel {
