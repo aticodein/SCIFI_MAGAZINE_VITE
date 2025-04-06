@@ -1,4 +1,5 @@
 .buttons-box {
+  margin: 25px;
   display: flex;
   flex-direction: row;
   gap: 1px;

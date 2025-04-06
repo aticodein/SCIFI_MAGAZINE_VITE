@@ -1,4 +1,8 @@
 /* filepath: c:\Users\szalo\OneDrive\Desktop\sci_fi_magazine_vite\src\pages\Home.css */
+body {
+  overflow: hidden; /* Hides both horizontal and vertical scrollbars */
+}
+
 /* Header banner styles */
 .header-banner {
   background-color: #111; /* Dark background for the banner */
@@ -272,9 +276,9 @@
   color: #fff; /* White text */
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
-  min-height: 300px; /* Ensure enough height for content */
+  min-height: 350px; /* Ensure enough height for content */
   width: 100%; /* Full width */
-  max-width: 600px; /* Limit the width */
+  max-width: 100%; /* Limit the width */
   margin: 0 auto; /* Center the books section */
 }
 
@@ -330,9 +334,9 @@
   color: #fff; /* White text */
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
-  min-height: 300px; /* Ensure enough height for content */
+  min-height: 350px; /* Ensure enough height for content */
   width: 100%; /* Full width */
-  max-width: 800px; /* Limit the width */
+  
   margin: 0 auto; /* Center the console */
 }
 
@@ -350,7 +354,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  flex: 1; /* Take up equal space */
+  flex: 0.3; /* Take up equal space */
 }
 
 /* Buttons Box */
@@ -358,7 +362,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  flex: 1; /* Take up equal space */
+  flex: 0.2; /* Take up equal space */
 }
 
 /* Console Buttons */
