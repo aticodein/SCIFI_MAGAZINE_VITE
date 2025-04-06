@@ -1,0 +1,22 @@
+.console-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #222; /* Dark background for the console */
+  color: #fff; /* White text */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+  min-height: 300px; /* Ensure enough height for content */
+  width: 100%; /* Full width */
+  max-width: 1200px; /* Limit the width */
+  margin: 0 auto; /* Center the console */
+}
+
+.console-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  gap: 20px;
+}

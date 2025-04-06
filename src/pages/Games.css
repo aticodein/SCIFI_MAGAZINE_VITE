@@ -1,0 +1,75 @@
+/* Header Banner */
+.header-banner {
+  background-color: #111; /* Dark background for the banner */
+  color: #00ff00; /* Alien green text */
+  font-size: 24px; /* Larger font size */
+  font-family: 'Press Start 2P', cursive; /* Retro font */
+  padding: 10px 20px; /* Add vertical padding */
+  width: 100%; /* Full width of the screen */
+  display: flex; /* Use Flexbox for layout */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  gap: 10px; /* Add space between the text and the icon */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+}
+
+/* Sound Toggle Button */
+.sound-toggle {
+  background: none;
+  border: none;
+  color: #00ff00; /* Alien green text */
+  font-size: 24px; /* Icon size */
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.sound-toggle:hover {
+  transform: scale(1.2); /* Slightly enlarge on hover */
+}
+
+/* Navigation Section */
+.nav-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 0;
+  background-color: #111; /* Match header banner background */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+}
+
+/* Navigation Buttons */
+.nav-button {
+  background: linear-gradient(145deg, #00ff00, #008000); /* Alien green gradient */
+  color: #004d00; /* Very dark green text */
+  border: 3px solid #00ff00; /* Green border */
+  width: 140px; /* Fixed width */
+  height: 50px; /* Fixed height */
+  font-size: 12px; /* Adjusted font size */
+  text-transform: uppercase;
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 4px 4px 0 #008000; /* Retro shadow */
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-family: 'Press Start 2P', cursive; /* Retro font */
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-button:hover {
+  background: linear-gradient(145deg, #008000, #00ff00); /* Reverse gradient */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.nav-button:active {
+  transform: scale(0.95); /* Slightly shrink on click */
+  box-shadow: 2px 2px 0 #008000; /* Adjust shadow */
+}
+
+/* Main Content */
+.content {
+  padding: 20px;
+  text-align: center;
+}

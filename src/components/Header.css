@@ -1,0 +1,60 @@
+/* Header Banner */
+.header-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #111;
+  color: #fff;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 18px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.sound-toggle {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Navigation Section */
+.nav-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 0;
+  background-color: #111;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.nav-button {
+  background: linear-gradient(145deg, #00ff00, #008000);
+  color: #004d00;
+  border: 3px solid #00ff00;
+  width: 140px;
+  height: 50px;
+  font-size: 12px;
+  text-transform: uppercase;
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 #008000;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-family: 'Press Start 2P', cursive;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-button:hover {
+  background: linear-gradient(145deg, #008000, #00ff00);
+  transform: scale(1.05);
+}
+
+.nav-button:active {
+  transform: scale(0.95);
+  box-shadow: 2px 2px 0 #008000;
+}

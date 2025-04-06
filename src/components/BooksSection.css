@@ -1,0 +1,74 @@
+.books-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #222; /* Dark background for the books section */
+  color: #fff; /* White text */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+  min-height: 300px; /* Ensure enough height for content */
+  width: 100%; /* Full width */
+  max-width: 1200px; /* Limit the width */
+  margin: 0 auto; /* Center the books section */
+}
+
+.books-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+}
+
+.book-card {
+  background-color: #333; /* Slightly lighter background for cards */
+  padding: 15px;
+  border-radius: 10px;
+  width: 200px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth transition */
+}
+
+.book-card:hover {
+  transform: scale(1.03); /* Grow by 3% */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7); /* Add a deeper shadow on hover */
+}
+
+.book-card h3 {
+  font-size: 18px;
+  font-family: 'Press Start 2P', cursive; /* Retro font */
+  font-weight: 400; /* Make the font thinner */
+  margin-bottom: 10px;
+}
+
+.book-card p {
+  font-size: 11px;
+  font-family: 'Press Start 2P', cursive; /* Retro font */
+  font-weight: 400; /* Make the font thinner */
+  margin-bottom: 15px;
+}
+
+.back-button {
+  background-color: #00ff00; /* Alien green */
+  color: #000;
+  border: 2px solid #00cc00; /* Light green border */
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', cursive; /* Retro font */
+  font-size: 14px; /* Consistent text size */
+  transition: background-color 0.3s, transform 0.2s ease-in-out, box-shadow 0.3s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+  margin-top: 20px;
+}
+
+.back-button:hover {
+  background-color: #00cc00; /* Darker green on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7); /* Add a deeper shadow on hover */
+}
+
+.back-button:active {
+  transform: scale(0.95); /* Slightly shrink on click */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Reduce shadow on click */
+}
