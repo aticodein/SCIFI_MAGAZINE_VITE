@@ -80,12 +80,18 @@ export default function Home() {
     visible: {
       x: 0, // Center the section
       opacity: 1,
-      transition: { duration: 0.8 },
+      transition: {
+        duration: 0.7, // Shorten the duration for faster entry
+        ease: "easeInOut",
+      },
     },
     exit: (direction) => ({
       x: direction === "right" ? "-100%" : "100%", // Slide out to the left or right
       opacity: 0,
-      transition: { duration: 0.8 },
+      transition: {
+        duration: 0.5, // Slightly shorter duration for exit
+        ease: "easeInOut",
+      },
     }),
   };
 
@@ -118,24 +124,40 @@ export default function Home() {
 
       {/* RESERVED SPACE FOR ANIMATED SECTIONS */}
       <div className="animated-sections-container">
-        <AnimatePresence mode="wait" custom={showBooks ? "left" : "right"}>
+        <AnimatePresence mode="sync" custom={showBooks ? "left" : "right"}>
           {/* Console Section */}
           {started && !showBooks && (
-            <Console
-              playSliderSound={playSliderSound}
-              stopSliderSound={stopSliderSound}
-              playButtonSound={playButtonSound}
-              setShowBooks={setShowBooks}
-              sectionVariants={sectionVariants}
-            />
+            <motion.div
+              key="console"
+              className="console-panel"
+              variants={sectionVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              custom="right"
+            >
+              <Console
+                playSliderSound={playSliderSound}
+                stopSliderSound={stopSliderSound}
+                playButtonSound={playButtonSound}
+                setShowBooks={setShowBooks}
+              />
+            </motion.div>
           )}
 
           {/* Books Section */}
           {showBooks && (
-            <BooksSection
-              setShowBooks={setShowBooks}
-              sectionVariants={sectionVariants}
-            />
+            <motion.div
+              key="books"
+              className="books-section"
+              variants={sectionVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              custom="left"
+            >
+              <BooksSection setShowBooks={setShowBooks} />
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
