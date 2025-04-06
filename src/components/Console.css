@@ -5,12 +5,12 @@
   padding: 20px;
   background-color: #222; /* Dark background for the console */
   color: #fff; /* White text */
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
-  min-height: 300px; /* Ensure enough height for content */
+  border-radius: 10px 10px 0 0; /* Rounded corners at the top */
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+  height: 25%; /* 1/4 of the screen height */
   width: 100%; /* Full width */
-  max-width: 1200px; /* Limit the width */
-  margin: 0 auto; /* Center the console */
+  position: absolute; /* Position at the bottom */
+  bottom: 0; /* Align to the bottom of the screen */
 }
 
 .console-content {
