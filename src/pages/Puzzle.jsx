@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import movie1 from "../pages/assets/images/movie1.jpg";
-import movie2 from "../pages/assets/images/movie2.jpg";
-import movie3 from "../pages/assets/images/movie3.jpg";
-import movie4 from "../pages/assets/images/movie4.jpg";
+import movie1 from "../assets/images/movie1.jpg";
+import movie2 from "../assets/images/movie2.jpg";
+import movie3 from "../assets/images/movie3.jpg";
+import movie4 from "../assets/images/movie4.jpg";
 
 const initialPositions = {
   card1: { x: 0, y: 0 },

@@ -2,11 +2,10 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaVolumeUp, FaVolumeMute } from "react-icons/fa"; // Import speaker icons
-import sciFiPing from "../pages/assets/sounds/sci-fi-ping.mp3"; // Import the sci-fi ping sound
-import sonarSound from "../pages/assets/sounds/sci-fi-sonar.mp3"; // Import the sonar sound
-import sciFiSlider from "../pages/assets/sounds/sci-fi-slider.mp3"; // Import the slider soudn
-import sciFiReadMoreSound from "../pages/assets/sounds/sci-fi-read-more-sound.mp3";
-import readMoreSound from "../pages/assets/sounds/sci-fi-read-more-sound.mp3"; // Import the new sound
+import sciFiPing from "../assets/sounds/sci-fi-ping.mp3"; // Import the sci-fi ping sound
+import sonarSound from "../assets/sounds/sci-fi-sonar.mp3"; // Import the sonar sound
+import sciFiSlider from "../assets/sounds/sci-fi-slider.mp3"; // Import the slider sound
+import sciFiReadMoreSound from "../assets/sounds/sci-fi-read-more-sound.mp3";
 
 import "./Home.css";
 
@@ -14,22 +13,28 @@ export default function Home() {
   const navigate = useNavigate();
   const [started, setStarted] = useState(false); // State to track if START was clicked
   const [showArticles, setShowArticles] = useState(false); // State to control article visibility
+  const [selectedArticle, setSelectedArticle] = useState(null); // State to track the selected article
   const [isMuted, setIsMuted] = useState(false); // State to track sound on/off
   const sliderAudioRef = useRef(null); // Ref to manage slider audio
 
   const handleStart = () => {
     playButtonSound();
-    setStarted(true);
-
-    // Delay the appearance of the articles by 2 seconds
-    setTimeout(() => {
-      setShowArticles(true);
-    }, 1000);
+    setStarted(true); // Show the console section
   };
 
   const handleIgnition = () => {
     playButtonSound();
     console.log("Ignition button clicked!");
+  };
+
+  const handleArticlesClick = () => {
+    playButtonSound();
+    setShowArticles(true); // Show the articles section when "Articles" button is clicked
+  };
+
+  const handleReadMoreClick = (article) => {
+    playReadMoreSound();
+    setSelectedArticle(article); // Show the relevant article in the "Exclusive Content" section
   };
 
   const playButtonSound = () => {
@@ -94,24 +99,46 @@ export default function Home() {
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
           >
-            <h2 className="articles-title">Featured Articles</h2>
+            <h2 className="articles-title">Books</h2>
             <div className="articles-container">
-              {[1, 2, 3].map((article) => (
+              {[1, 2, 3, 4].map((article) => (
                 <article key={article} className="article-card">
-                  <h3>Article {article}</h3>
+                  <h3>Book {article}</h3>
                   <p>
-                    This is a short description of Article {article}. Click to
-                    read more.
+                    This is a short description of the Book {article}. Click to 
                   </p>
                   <motion.button
                     className="button read-more-button"
-                    onClick={playReadMoreSound} // Play the new sound on click
-                    whileTap={{ scale: 0.95 }} // Add a tap animation
+                    onClick={() => handleReadMoreClick(article)} // Show the relevant article
+                    whileTap={{ scale: 0.95 }}
                   >
                     Read More
                   </motion.button>
                 </article>
               ))}
+            </div>
+          </motion.section>
+        )}
+      </AnimatePresence>
+
+      {/* EXCLUSIVE CONTENT SECTION */}
+      <AnimatePresence>
+        {selectedArticle && (
+          <motion.section
+            className="exclusive-content-section"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+          >
+            <h2 className="exclusive-content-title">Book{selectedArticle}</h2>
+            <div className="exclusive-content-container">
+              <article className="exclusive-content-card">
+                <h3>Book {selectedArticle}</h3>
+                <p>
+                  This is the detailed content of the Book {selectedArticle}.
+                </p>
+              </article>
             </div>
           </motion.section>
         )}
@@ -168,7 +195,7 @@ export default function Home() {
             <div className="buttons-box">
               <motion.button
                 className="console-button"
-                onClick={handleIgnition}
+                onClick={handleIgnition} // Use the defined function
               >
                 IGNITION
               </motion.button>
@@ -185,9 +212,9 @@ export default function Home() {
                 <motion.button
                   key={n}
                   className="console-button"
-                  onClick={playButtonSound}
+                  onClick={n === 3 ? handleArticlesClick : playButtonSound} // Show articles on Button 3 click
                 >
-                  BUTTON {n}
+                  {n === 3 ? "Books" : `BUTTON ${n}`}
                 </motion.button>
               ))}
             </div>
