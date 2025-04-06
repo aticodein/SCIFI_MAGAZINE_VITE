@@ -317,21 +317,19 @@ body {
   margin-bottom: 10px;
 }
 
-
 /* Console Panel */
 .console-panel {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
-  background-color: #222; /* Dark background for the console */
-  color: #fff; /* White text */
+  background-color: #222;
+  color: #fff;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
-  min-height: 350px; /* Ensure enough height for content */
-  width: 100%; /* Full width */
-  
-  margin: 0 auto; /* Center the console */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  min-height: 350px;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 /* Console Content */
