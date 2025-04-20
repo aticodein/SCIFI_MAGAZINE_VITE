@@ -2,6 +2,22 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function BookModal({ book, onClose }) {
+  if (!book || !book.volumeInfo) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center px-4">
+        <div className="bg-white text-red-600 p-6 rounded-xl shadow-xl">
+          <p className="text-center">⚠️ Error: Book data not available.</p>
+          <button
+            onClick={onClose}
+            className="mt-4 bg-brand-yellow text-brand-dark px-4 py-2 rounded-full"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const info = book.volumeInfo;
   const snippet = info.description || "No detailed information available.";
 
@@ -62,21 +78,29 @@ export default function BookModal({ book, onClose }) {
           {info.authors?.join(", ") || "Unknown Author"}
         </p>
 
-        {/* Shortened Description */}
         <div className="text-sm text-gray-800 whitespace-pre-line leading-relaxed space-y-2 mb-4">
           {trimmedSnippet}
         </div>
 
-        {/* Optional extra metadata */}
         <div className="border-t pt-4 text-xs text-gray-600 space-y-1">
           {info.publisher && <p><strong>Publisher:</strong> {info.publisher}</p>}
           {info.publishedDate && <p><strong>Published:</strong> {info.publishedDate}</p>}
           {info.pageCount && <p><strong>Pages:</strong> {info.pageCount}</p>}
-          {info.categories && <p><strong>Category:</strong> {info.categories.join(', ')}</p>}
+          {info.categories && (
+            <p>
+              <strong>Category:</strong> {info.categories.map((cat, idx) => (
+                <span
+                  key={idx}
+                  className="inline-block bg-brand-yellow text-brand-dark text-xs font-medium mr-2 px-2.5 py-0.5 rounded"
+                >
+                  {cat}
+                </span>
+              ))}
+            </p>
+          )}
           {info.averageRating && <p><strong>Rating:</strong> {info.averageRating} / 5</p>}
         </div>
 
-        {/* Preview Status & Toggle */}
         <div className="mt-6 text-sm text-center">
           {info.previewLink ? (
             <>

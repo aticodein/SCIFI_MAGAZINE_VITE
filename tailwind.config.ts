@@ -18,7 +18,7 @@ const config: Config = {
           orange: "#FB8500",
         },
         earth: {
-          olive: "#606C38",
+          olive: "#606A38",
           forest: "#283618",
           cream: "#FEFCC8",
           sand: "#DDA15E",
