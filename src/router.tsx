@@ -8,6 +8,10 @@ import Retro from "./pages/Retro";
 import Pro from "./pages/Pro";
 import About from "./pages/About";
 import React from "react";
+import ReadBooks from "./pages/ReadBooks";
+import ReadNovels from "./pages/ReadNovels";
+import ReadComics from "./pages/ReadComics";
+
 
 
 const router = createBrowserRouter([
@@ -22,6 +26,18 @@ const router = createBrowserRouter([
       { path: "/retro", element: <Retro /> },
       { path: "/pro", element: <Pro /> },
       { path: "/about", element: <About /> },
+      {
+        path: "/read/books",
+        element: <ReadBooks />,
+      },
+      {
+        path: "/read/novels",
+        element: <ReadNovels />,
+      },
+      {
+        path: "/read/comics",
+        element: <ReadComics />,
+      }  
     ],
   },
 ]);
