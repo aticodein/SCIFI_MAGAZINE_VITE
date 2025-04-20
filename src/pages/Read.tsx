@@ -1,63 +1,73 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+// Import your background images
+import warImg from "../assets/images/war.png";
+import movie2Img from "../assets/images/movie2.jpg";
+import hero2Img from "../assets/images/hero2.png";
+
 const categories = [
   {
     title: "Books",
     description: "Reviews and features of classic and new sci-fi books across the galaxy.",
-    bg: "bg-earth-cream",
-    text: "text-earth-forest",
+    image: warImg,
+    bgTint: "bg-earth-cream bg-opacity-20",
+    text: "text-white",
+    path: "/read/books",
   },
   {
     title: "Novels",
     description: "In-depth stories that shaped the genre. Dune, Foundation, and beyond.",
-    bg: "bg-brand-light",
-    text: "text-brand-dark",
+    image: movie2Img,
+    bgTint: "bg-brand-light bg-opacity-20",
+    text: "text-white",
+    path: "/read/novels",
   },
   {
     title: "Comics",
     description: "Explore graphic novels, vintage panels, and the best illustrated sci-fi.",
-    bg: "bg-earth-sand",
-    text: "text-earth-forest",
+    image: hero2Img,
+    bgTint: "bg-earth-sand bg-opacity-20",
+    text: "text-white",
+    path: "/read/comics",
   },
 ];
 
 export default function Read() {
   return (
-    <div className="min-h-screen bg-earth-olive px-4 py-10 sm:py-12">
+    <div className="min-h-screen bg-earth-olive px-4 py-12">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-earth-cream mb-8 sm:mb-10 text-center">
-          Explore Sci-Fi Reads
-        </h1>
+        <h1 className="text-4xl font-bold text-earth-cream mb-10 text-center">Explore Sci-Fi Reads</h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10 px-2">
-          {categories.map((cat, i) => {
-            const link =
-              cat.title === "Books"
-                ? "/read/books"
-                : cat.title === "Novels"
-                ? "/read/novels"
-                : cat.title === "Comics"
-                ? "/read/comics"
-                : null;
-
-            const card = (
-              <div
-                className={`${cat.bg} ${cat.text} aspect-[4/3] min-h-[240px] rounded-2xl shadow-xl p-6 sm:p-8 transform hover:scale-[1.03] transition duration-300 flex flex-col justify-center items-center text-center`}
-              >
-                <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">{cat.title}</h2>
-                <p className="text-sm sm:text-base opacity-80 max-w-md">{cat.description}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {categories.map((cat, i) => (
+            <Link to={cat.path} key={i} className="block">
+            <div
+              className={`relative aspect-[4/3] rounded-2xl p-[3px] bg-earth-cream transform transition-transform duration-300 hover:scale-[1.06] overflow-hidden shadow-xl`}
+            >
+              <div className="relative w-full h-full rounded-[1rem] overflow-hidden">
+                {/* Background image */}
+                <img
+                  src={cat.image}
+                  alt={`${cat.title} image`}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+          
+                {/* Optional dark overlay for contrast */}
+                <div className="absolute inset-0 bg-black bg-opacity-30 z-0" />
+          
+                {/* Centered text */}
+                <div className="relative z-10 flex flex-col justify-center items-center h-full text-center px-6">
+                  <h2 className="text-3xl font-bold text-white drop-shadow-md mb-3">{cat.title}</h2>
+                  <p className="text-base text-white opacity-90 drop-shadow">{cat.description}</p>
+                </div>
               </div>
-            );
-
-            return link ? (
-              <Link to={link} key={i} className="block">
-                {card}
-              </Link>
-            ) : (
-              <div key={i}>{card}</div>
-            );
-          })}
+            </div>
+          </Link>
+          
+          
+          
+          ))}
         </div>
       </div>
     </div>

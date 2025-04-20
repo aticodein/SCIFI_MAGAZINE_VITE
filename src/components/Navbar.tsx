@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import React from "react";
-import logo from "../assets/scifim.png";
+import logo from "../assets/images/scifim.png";
 
 
 
@@ -25,7 +25,12 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 text-indigo-600">
-           <img src={logo} alt="Sci-Fi Logo" className="h-8 w-8 object-contain" />
+        <img
+  src={logo}
+  alt="Sci-Fi Logo"
+  className="h-12 w-10 object-contain transition-transform duration-300 ease-out hover:scale-[2.5] active:scale-[1.5] will-change-transform  translate-y-4"
+/>
+
            <span className="text-xl font-bold tracking-tight text-earth-clay">Sci-Fi Magazine</span>
         </Link>
 
