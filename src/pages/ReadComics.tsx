@@ -1,3 +1,4 @@
+// src/pages/ReadComics.tsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -21,29 +22,29 @@ export default function ReadComics() {
   const comics = generateComics(activeCategory);
 
   return (
-    <div className="min-h-screen bg-earth-olive text-earth-cream px-4 py-12">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-earth-olive text-earth-cream px-4 py-10 sm:py-12">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-10 gap-4">
-          <h1 className="text-3xl sm:text-4xl font-bold text-center sm:text-left">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 sm:mb-10 gap-4 px-2">
+          <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold text-center sm:text-left">
             Advised Comics by Sci-Fi Magazine
           </h1>
 
           <Link
             to="/read"
-            className="px-5 py-2 bg-earth-forest text-earth-cream rounded-md shadow hover:bg-earth-clay transition"
+            className="px-4 py-2 bg-earth-forest text-earth-cream rounded-md shadow hover:bg-earth-clay transition text-sm sm:text-base"
           >
             ← Back to Read
           </Link>
         </div>
 
         {/* Tabs */}
-        <div className="flex justify-center flex-wrap gap-4 mb-10">
+        <div className="flex justify-center flex-wrap gap-3 mb-8 sm:mb-10 px-2">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-5 py-2 rounded-full font-semibold shadow-md transition-all duration-200 hover:scale-105 ${
+              className={`px-4 py-2 rounded-full font-semibold shadow-md transition-all duration-200 text-sm sm:text-base hover:scale-105 ${
                 activeCategory === cat
                   ? "bg-white text-earth-forest border-2 border-earth-clay"
                   : "bg-earth-forest text-earth-cream"
@@ -55,16 +56,16 @@ export default function ReadComics() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
           {comics.map((comic) => (
             <div
               key={comic.id}
-              className={`rounded-xl shadow-lg p-6 hover:scale-[1.03] transition-transform duration-300 text-center ${
+              className={`rounded-2xl shadow-lg p-6 hover:scale-[1.03] transition-transform duration-300 text-center ${
                 categoryStyles[activeCategory] || "bg-white text-black"
               }`}
             >
-              <h2 className="text-2xl font-bold mb-2">{comic.title}</h2>
-              <p className="text-sm opacity-80">{comic.description}</p>
+              <h2 className="text-lg sm:text-xl font-bold mb-2">{comic.title}</h2>
+              <p className="text-sm sm:text-base opacity-80">{comic.description}</p>
             </div>
           ))}
         </div>
