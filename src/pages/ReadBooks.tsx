@@ -86,7 +86,7 @@ export default function ReadBooks() {
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-earth-cream">
-            Advised Books by Sci-Fi Magazine
+            Sci-Fi Magazine's Good Read Library
           </h1>
           <a
             href="/read"

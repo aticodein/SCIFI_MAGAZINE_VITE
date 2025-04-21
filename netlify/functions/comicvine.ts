@@ -1,9 +1,12 @@
+// netlify/functions/comicvine.ts
+
 import axios from "axios";
 
 export const handler = async (event: any) => {
   const category = event.queryStringParameters?.category?.toLowerCase() || "marvel";
-  const name = event.queryStringParameters?.name;
-  console.log("Incoming category:", category, "name:", name);
+  const name = event.queryStringParameters?.name || null;
+  console.log("Incoming category:", category);
+  console.log("Incoming name:", name);
 
   const publisherMap: Record<string, number> = {
     dc: 10,
@@ -19,24 +22,57 @@ export const handler = async (event: any) => {
     };
   }
 
-  // Static mock data for "Others"
   if (category === "others") {
-    const mock = Array.from({ length: 9 }, (_, i) => ({
-      id: `others-${i}`,
-      title: `Cyberpunk Hero ${i + 1}`,
-      description: `A cyber-enhanced vigilante from Neo-Tokyo. Volume ${i + 1}`,
-      image: "https://placehold.co/300x400?text=Cyberpunk",
-    }));
-    return {
-      statusCode: 200,
-      body: JSON.stringify(mock),
-    };
+    try {
+      const searchTerm = name || "Cowboy Bebop";
+
+      const response = await axios.get("https://api.jikan.moe/v4/anime", {
+        params: {
+          q: searchTerm,
+          limit: 25,
+        },
+      });
+
+      const items = response.data.data;
+      const results: any[] = [];
+      const usedTitles = new Set();
+
+      for (const item of items) {
+        const title = item.title || item.name || item.titles?.[0]?.title;
+        const image = item.images?.jpg?.image_url || item.image_url || item.images?.webp?.image_url;
+        const synopsis = item.synopsis || item.about || "No synopsis available.";
+
+        const titleKey = title?.toLowerCase();
+        if (!titleKey || usedTitles.has(titleKey)) continue;
+        usedTitles.add(titleKey);
+
+        results.push({
+          id: `anime-${item.mal_id}`,
+          title: title,
+          description: synopsis.slice(0, 200),
+          image: image || `https://placehold.co/300x400?text=${encodeURIComponent(title)}`,
+        });
+
+        if (results.length >= 9) break;
+      }
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify(results),
+      };
+    } catch (error) {
+      console.error("Error fetching from Jikan:", error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Failed to fetch from Jikan API" }),
+      };
+    }
   }
 
   try {
-    // Use ComicVine filtering by name or publisher
-    const filter = name ? `name:${name}` : `publisher:${publisherId}`;
-    console.log("ComicVine filter:", filter);
+    let filter = name ? `name:${name}` : `publisher:${publisherId}`;
+
+    console.log("Using filter:", filter);
 
     const response = await axios.get("https://comicvine.gamespot.com/api/volumes/", {
       params: {
@@ -63,7 +99,7 @@ export const handler = async (event: any) => {
       body: JSON.stringify(results),
     };
   } catch (error) {
-    console.error("ComicVine fetch error:", error);
+    console.error("Error fetching from ComicVine:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "Failed to fetch comics" }),

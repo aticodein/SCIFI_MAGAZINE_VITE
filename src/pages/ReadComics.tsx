@@ -13,25 +13,64 @@ const categoryStyles: Record<string, string> = {
 
 const heroOptions: Record<string, string[]> = {
   DC: ["Superman", "Batman", "Wonder Woman", "The Flash", "Green Lantern", "Aquaman", "Cyborg", "Nightwing", "Shazam"],
-  Marvel: ["Iron Man", "Spider-Man", "Wolverine", "Captain America", "Thor", "Hulk", "Black Widow", "Doctor Strange", "Black Panther"],
-  Others: ["Neo", "Motoko", "Tetsuo", "Kaneda", "Alita", "Spike", "Vash", "Major", "Batou"]
+  Marvel: [
+    "Iron Man",
+    "Spider-Man",
+    "Wolverine",
+    "Captain America",
+    "Thor",
+    "Hulk",
+    "Black Widow",
+    "Doctor Strange",
+    "Black Panther",
+  ],
+  Others: [
+    "Space",
+    "Bleach",
+    "Bebop",
+    "Star Wars",
+    "One Piece",
+    "Dragon Ball",
+    "Naruto"
+  ],
 };
 
 const BASE_URL = "/.netlify/functions/comicvine";
 
 const fetchComics = async (category: string, hero?: string) => {
   try {
-    if (category === "Others") {
-      return Array.from({ length: 9 }, (_, i) => ({
-        id: `others-${i}`,
-        title: `Cyberpunk Saga ${i + 1}`,
-        description: `An underground manga epic set in Neo-Tokyo. Volume ${i + 1}`,
-        image: `https://placehold.co/300x400?text=Cyberpunk+${i + 1}`,
-      }));
+    // For Marvel, load fallback heroes when no hero is selected
+    if (category === "Marvel" && !hero) {
+      const fallbackHeroes = ["Iron Man", "Spider-Man", "Thor"];
+      const promises = fallbackHeroes.map((h) =>
+        axios.get(`${BASE_URL}?category=${category.toLowerCase()}&name=${encodeURIComponent(h)}`)
+      );
+      const responses = await Promise.all(promises);
+      return responses.flatMap((res) => res.data.slice(0, 3)).slice(0, 9);
+    }
+
+    // For DC, load fallback heroes when no hero is selected
+    if (category === "DC" && !hero) {
+      const fallbackHeroes = ["Superman", "Batman", "The Flash"];
+      const promises = fallbackHeroes.map((h) =>
+        axios.get(`${BASE_URL}?category=${category.toLowerCase()}&name=${encodeURIComponent(h)}`)
+      );
+      const responses = await Promise.all(promises);
+      return responses.flatMap((res) => res.data.slice(0, 3)).slice(0, 9);
+    }
+
+    // For Others, load fallback characters when no hero is selected
+    if (category === "Others" && !hero) {
+      const fallbackHeroes = ["Bleach","Bebop","Star Wars"];
+      const promises = fallbackHeroes.map((h) =>
+        axios.get(`${BASE_URL}?category=${category.toLowerCase()}&name=${encodeURIComponent(h)}`)
+      );
+      const responses = await Promise.all(promises);
+      return responses.flatMap((res) => res.data.slice(0, 3)).slice(0, 9);
     }
 
     const response = await axios.get(
-      `/.netlify/functions/comicvine?category=${category.toLowerCase()}${hero ? `&name=${encodeURIComponent(hero)}` : ""}`
+      `${BASE_URL}?category=${category.toLowerCase()}${hero ? `&name=${encodeURIComponent(hero)}` : ""}`
     );
 
     const data = response.data;
@@ -65,7 +104,7 @@ export default function ReadComics() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8 sm:mb-10 gap-4 px-2">
           <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold text-center sm:text-left">
-            Advised Comics by Sci-Fi Magazine
+            Comics Worth a Look -Some Greats, Not All
           </h1>
           <Link
             to="/read"
@@ -76,8 +115,6 @@ export default function ReadComics() {
         </div>
 
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 px-2 relative z-10">
-
-
           <div className="flex flex-wrap gap-3">
             {categories.map((cat) => (
               <button
@@ -97,15 +134,17 @@ export default function ReadComics() {
             ))}
           </div>
 
-          {/* Hero Dropdown */}
           <select
             value={selectedHero}
             onChange={(e) => setSelectedHero(e.target.value)}
-            className="sm:ml-auto px-3 py-2 rounded-lg bg-earth-forest text-earth-cream shadow border border-earth-clay text-sm sm:text-base w-fit"
+            className="sm:ml-auto pl-3 pr-6 py-2 rounded-lg bg-earth-forest text-earth-cream shadow border border-earth-clay text-sm sm:text-base w-fit"
+
           >
-
-
-            <option value="">All {activeCategory} Heroes</option>
+            <option value="">{
+              activeCategory === "Others"
+                ? "Famous Titles"
+                : `${activeCategory} Heroes`
+            }</option>
             {heroOptions[activeCategory]?.map((hero) => (
               <option key={hero} value={hero}>{hero}</option>
             ))}
