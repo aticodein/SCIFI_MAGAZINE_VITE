@@ -83,7 +83,7 @@ export default function ReadBooks() {
     }
   };
 
-  const chunked = [];
+  const chunked: Array<Array<any>> = [];
   for (let i = 0; i < books.length; i += 9) {
     chunked.push(books.slice(i, i + 9));
   }

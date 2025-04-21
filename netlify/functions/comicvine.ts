@@ -5,9 +5,50 @@ import axios from "axios";
 export const handler = async (event: any) => {
   const category = event.queryStringParameters?.category?.toLowerCase() || "marvel";
   const name = event.queryStringParameters?.name || null;
+  const volumeId = event.queryStringParameters?.volumeId || null;
+
   console.log("Incoming category:", category);
   console.log("Incoming name:", name);
+  console.log("Incoming volumeId:", volumeId);
 
+  // 🎯 If volumeId is provided, fetch specific volume details
+  if (volumeId) {
+    try {
+      const response = await axios.get(`https://comicvine.gamespot.com/api/volume/4050-${volumeId}/`, {
+        params: {
+          api_key: "d98635bc1dfac02c9c9a147d36a3ebe5d8020db8",
+          format: "json",
+        },
+        headers: {
+          "Accept-Encoding": "identity",
+        },
+      });
+
+      const data = response.data.results;
+
+      const cleanData = {
+        name: data.name,
+        publisher: data.publisher,
+        start_year: data.start_year,
+        count_of_issues: data.count_of_issues,
+        image: data.image,
+        description: data.description || "No description available.",
+      };
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify(cleanData),
+      };
+    } catch (error) {
+      console.error("Error fetching volume details:", error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Failed to fetch volume details" }),
+      };
+    }
+  }
+
+  // Handle publisher-based or name-based comic search
   const publisherMap: Record<string, number> = {
     dc: 10,
     marvel: 31,
@@ -69,9 +110,9 @@ export const handler = async (event: any) => {
     }
   }
 
+  // Normal ComicVine volume list
   try {
     let filter = name ? `name:${name}` : `publisher:${publisherId}`;
-
     console.log("Using filter:", filter);
 
     const response = await axios.get("https://comicvine.gamespot.com/api/volumes/", {

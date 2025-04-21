@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import LoadingCard from "../components/LoadingCard";
-
+import ComicsModal from "../components/ComicsModal";
 
 const categories = ["DC", "Marvel", "Others"];
 
@@ -14,7 +14,17 @@ const categoryStyles: Record<string, string> = {
 };
 
 const heroOptions: Record<string, string[]> = {
-  DC: ["Superman", "Batman", "Wonder Woman", "The Flash", "Green Lantern", "Aquaman", "Cyborg", "Nightwing", "Shazam"],
+  DC: [
+    "Superman",
+    "Batman",
+    "Wonder Woman",
+    "The Flash",
+    "Green Lantern",
+    "Aquaman",
+    "Cyborg",
+    "Nightwing",
+    "Shazam",
+  ],
   Marvel: [
     "Iron Man",
     "Spider-Man",
@@ -33,7 +43,7 @@ const heroOptions: Record<string, string[]> = {
     "Star Wars",
     "One Piece",
     "Dragon Ball",
-    "Naruto"
+    "Naruto",
   ],
 };
 
@@ -41,7 +51,6 @@ const BASE_URL = "/.netlify/functions/comicvine";
 
 const fetchComics = async (category: string, hero?: string) => {
   try {
-    // For Marvel, load fallback heroes when no hero is selected
     if (category === "Marvel" && !hero) {
       const fallbackHeroes = ["Iron Man", "Spider-Man", "Thor"];
       const promises = fallbackHeroes.map((h) =>
@@ -51,7 +60,6 @@ const fetchComics = async (category: string, hero?: string) => {
       return responses.flatMap((res) => res.data.slice(0, 3)).slice(0, 9);
     }
 
-    // For DC, load fallback heroes when no hero is selected
     if (category === "DC" && !hero) {
       const fallbackHeroes = ["Superman", "Batman", "The Flash"];
       const promises = fallbackHeroes.map((h) =>
@@ -61,9 +69,8 @@ const fetchComics = async (category: string, hero?: string) => {
       return responses.flatMap((res) => res.data.slice(0, 3)).slice(0, 9);
     }
 
-    // For Others, load fallback characters when no hero is selected
     if (category === "Others" && !hero) {
-      const fallbackHeroes = ["Bleach","Bebop","Star Wars"];
+      const fallbackHeroes = ["Bleach", "Bebop", "Star Wars"];
       const promises = fallbackHeroes.map((h) =>
         axios.get(`${BASE_URL}?category=${category.toLowerCase()}&name=${encodeURIComponent(h)}`)
       );
@@ -91,14 +98,14 @@ export default function ReadComics() {
   const [comics, setComics] = useState<any[]>([]);
   const [selectedHero, setSelectedHero] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [selectedComic, setSelectedComic] = useState<any | null>(null);
 
   useEffect(() => {
-
     const load = async () => {
       setLoading(true);
       const data = await fetchComics(activeCategory, selectedHero);
       setComics(data);
-      setTimeout(() => setLoading(false), 700); // delay to show animation
+      setTimeout(() => setLoading(false), 700);
     };
     load();
   }, [activeCategory, selectedHero]);
@@ -142,13 +149,10 @@ export default function ReadComics() {
             value={selectedHero}
             onChange={(e) => setSelectedHero(e.target.value)}
             className="sm:ml-auto pl-3 pr-6 py-2 rounded-lg bg-earth-forest text-earth-cream shadow border border-earth-clay text-sm sm:text-base w-fit"
-
           >
-            <option value="">{
-              activeCategory === "Others"
-                ? "Famous Titles"
-                : `${activeCategory} Heroes`
-            }</option>
+            <option value="">
+              {activeCategory === "Others" ? "Famous Titles" : `${activeCategory} Heroes`}
+            </option>
             {heroOptions[activeCategory]?.map((hero) => (
               <option key={hero} value={hero}>{hero}</option>
             ))}
@@ -156,29 +160,34 @@ export default function ReadComics() {
         </div>
 
         <div key={activeCategory} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
-        {loading
-          ? Array.from({ length: 9 }).map((_, i) => <LoadingCard key={i} />)
-          : comics.map((comic) => (
-            <div
-              key={comic.id}
-              className={`rounded-2xl shadow-lg p-6 hover:scale-[1.03] transition-transform duration-300 text-center ${
-                categoryStyles[activeCategory] || "bg-white text-black"
-              }`}
-            >
-              {comic.image && (
-                <img
-                  src={comic.image}
-                  alt={comic.title}
-                  className="w-full h-64 object-cover object-top rounded-xl mb-4"
-                />
-              )}
-              <h2 className="text-lg sm:text-xl font-bold mb-2">{comic.title}</h2>
-              <p className="text-sm sm:text-base opacity-80">
-                {comic.description.replace(/<[^>]*>?/gm, "").slice(0, 160)}
-              </p>
-            </div>
-          ))}
+          {loading
+            ? Array.from({ length: 9 }).map((_, i) => <LoadingCard key={i} />)
+            : comics.map((comic) => (
+                <div
+                  key={comic.id}
+                  className={`rounded-2xl shadow-lg p-6 hover:scale-[1.03] transition-transform duration-300 text-center cursor-pointer ${
+                    categoryStyles[activeCategory] || "bg-white text-black"
+                  }`}
+                  onClick={() => setSelectedComic(comic)}
+                >
+                  {comic.image && (
+                    <img
+                      src={comic.image}
+                      alt={comic.title}
+                      className="w-full h-64 object-cover object-top rounded-xl mb-4"
+                    />
+                  )}
+                  <h2 className="text-lg sm:text-xl font-bold mb-2">{comic.title}</h2>
+                  <p className="text-sm sm:text-base opacity-80">
+                    {comic.description.replace(/<[^>]*>?/gm, "").slice(0, 160)}
+                  </p>
+                </div>
+              ))}
         </div>
+
+        {selectedComic && (
+          <ComicsModal comic={selectedComic} onClose={() => setSelectedComic(null)} />
+        )}
       </div>
     </div>
   );
