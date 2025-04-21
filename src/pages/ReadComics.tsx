@@ -11,11 +11,16 @@ const categoryStyles: Record<string, string> = {
   Others: "bg-earth-clay text-white",
 };
 
-const BASE_URL = "/.netlify/functions/comicvine"; // your Netlify Function
+const heroOptions: Record<string, string[]> = {
+  DC: ["Superman", "Batman", "Wonder Woman", "The Flash", "Green Lantern", "Aquaman", "Cyborg", "Nightwing", "Shazam"],
+  Marvel: ["Iron Man", "Spider-Man", "Wolverine", "Captain America", "Thor", "Hulk", "Black Widow", "Doctor Strange", "Black Panther"],
+  Others: ["Neo", "Motoko", "Tetsuo", "Kaneda", "Alita", "Spike", "Vash", "Major", "Batou"]
+};
 
-const fetchComics = async (category: string) => {
+const BASE_URL = "/.netlify/functions/comicvine";
+
+const fetchComics = async (category: string, hero?: string) => {
   try {
-    // Mock fallback for Others
     if (category === "Others") {
       return Array.from({ length: 9 }, (_, i) => ({
         id: `others-${i}`,
@@ -25,9 +30,8 @@ const fetchComics = async (category: string) => {
       }));
     }
 
-    // ComicVine API for DC or Marvel
     const response = await axios.get(
-      `/.netlify/functions/comicvine?category=${category.toLowerCase()}`
+      `/.netlify/functions/comicvine?category=${category.toLowerCase()}${hero ? `&name=${encodeURIComponent(hero)}` : ""}`
     );
 
     const data = response.data;
@@ -41,29 +45,24 @@ const fetchComics = async (category: string) => {
   }
 };
 
-
-
 export default function ReadComics() {
   const [activeCategory, setActiveCategory] = useState("DC");
   const [comics, setComics] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [selectedHero, setSelectedHero] = useState<string>("");
 
   useEffect(() => {
     const load = async () => {
       console.log("Fetching category:", activeCategory);
-      const data = await fetchComics(activeCategory);
+      const data = await fetchComics(activeCategory, selectedHero);
       console.log("Fetched comics titles:", data.map((c) => c.title));
       setComics(data);
     };
     load();
-  }, [activeCategory]);
-  
-  
+  }, [activeCategory, selectedHero]);
 
   return (
     <div className="min-h-screen bg-earth-olive text-earth-cream px-4 py-10 sm:py-12">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8 sm:mb-10 gap-4 px-2">
           <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold text-center sm:text-left">
             Advised Comics by Sci-Fi Magazine
@@ -76,24 +75,43 @@ export default function ReadComics() {
           </Link>
         </div>
 
-        {/* Category buttons */}
-        <div className="flex justify-center flex-wrap gap-3 mb-8 sm:mb-10 px-2">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-4 py-2 rounded-full font-semibold shadow-md transition-all duration-200 text-sm sm:text-base hover:scale-105 ${
-                activeCategory === cat
-                  ? "bg-white text-earth-forest border-2 border-earth-clay"
-                  : "bg-earth-forest text-earth-cream"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 px-2 relative z-10">
+
+
+          <div className="flex flex-wrap gap-3">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => {
+                  setActiveCategory(cat);
+                  setSelectedHero("");
+                }}
+                className={`px-4 py-2 rounded-md font-semibold shadow-md transition-all duration-200 text-sm sm:text-base hover:scale-105 ${
+                  activeCategory === cat
+                    ? "bg-white text-earth-forest border-2 border-earth-clay"
+                    : "bg-earth-forest text-earth-cream"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Hero Dropdown */}
+          <select
+            value={selectedHero}
+            onChange={(e) => setSelectedHero(e.target.value)}
+            className="sm:ml-auto px-3 py-2 rounded-lg bg-earth-forest text-earth-cream shadow border border-earth-clay text-sm sm:text-base w-fit"
+          >
+
+
+            <option value="">All {activeCategory} Heroes</option>
+            {heroOptions[activeCategory]?.map((hero) => (
+              <option key={hero} value={hero}>{hero}</option>
+            ))}
+          </select>
         </div>
 
-        {/* Comic grid */}
         <div key={activeCategory} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
           {comics.map((comic) => (
             <div
