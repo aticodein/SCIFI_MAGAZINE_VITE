@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import LoadingCard from "../components/LoadingCard";
+
 
 const categories = ["DC", "Marvel", "Others"];
 
@@ -88,13 +90,15 @@ export default function ReadComics() {
   const [activeCategory, setActiveCategory] = useState("DC");
   const [comics, setComics] = useState<any[]>([]);
   const [selectedHero, setSelectedHero] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+
     const load = async () => {
-      console.log("Fetching category:", activeCategory);
+      setLoading(true);
       const data = await fetchComics(activeCategory, selectedHero);
-      console.log("Fetched comics titles:", data.map((c) => c.title));
       setComics(data);
+      setTimeout(() => setLoading(false), 700); // delay to show animation
     };
     load();
   }, [activeCategory, selectedHero]);
@@ -152,7 +156,9 @@ export default function ReadComics() {
         </div>
 
         <div key={activeCategory} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
-          {comics.map((comic) => (
+        {loading
+          ? Array.from({ length: 9 }).map((_, i) => <LoadingCard key={i} />)
+          : comics.map((comic) => (
             <div
               key={comic.id}
               className={`rounded-2xl shadow-lg p-6 hover:scale-[1.03] transition-transform duration-300 text-center ${

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import fallbackCover from "../assets/images/movie1.jpg";
 import BookModal from "../components/BookModal";
+import LoadingBookCard from "../components/LoadingBookCard";
 
 const preferredAuthors = [
   "isaac asimov",
@@ -22,10 +23,12 @@ export default function ReadBooks() {
   const [activeTab, setActiveTab] = useState(0);
   const [modalBook, setModalBook] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchBooksByAuthors() {
       try {
+        setLoading(true); // start loading
         const authorPromises = preferredAuthors.map((author) =>
           axios.get(
             `https://www.googleapis.com/books/v1/volumes?q=inauthor:${encodeURIComponent(
@@ -42,10 +45,14 @@ export default function ReadBooks() {
         setRecommendedBooks(uniqueBooks.slice(0, 100));
       } catch (err) {
         console.error("Failed to fetch recommended books", err);
+      } finally {
+        setTimeout(() => setLoading(false), 1000); // delay for visual effect
       }
     }
+  
     fetchBooksByAuthors();
   }, []);
+  
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -129,7 +136,9 @@ export default function ReadBooks() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {chunked[activeTab]?.map((book) => {
+        {loading
+          ? Array.from({ length: 9 }).map((_, i) => <LoadingBookCard key={i} />)
+           : chunked[activeTab]?.map((book) => {
             const info = book.volumeInfo;
             const hasImage = info.imageLinks?.thumbnail;
             return (
