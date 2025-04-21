@@ -1,6 +1,7 @@
 // src/pages/ReadComics.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const categories = ["DC", "Marvel", "Others"];
 
@@ -10,16 +11,54 @@ const categoryStyles: Record<string, string> = {
   Others: "bg-earth-clay text-white",
 };
 
-const generateComics = (category: string) =>
-  Array.from({ length: 9 }, (_, i) => ({
-    id: `${category}-${i}`,
-    title: `${category} Comic ${i + 1}`,
-    description: `Explore the universe of ${category}. Issue ${i + 1}`,
-  }));
+const BASE_URL = "/.netlify/functions/comicvine"; // your Netlify Function
+
+const fetchComics = async (category: string) => {
+  try {
+    // Mock fallback for Others
+    if (category === "Others") {
+      return Array.from({ length: 9 }, (_, i) => ({
+        id: `others-${i}`,
+        title: `Cyberpunk Saga ${i + 1}`,
+        description: `An underground manga epic set in Neo-Tokyo. Volume ${i + 1}`,
+        image: `https://placehold.co/300x400?text=Cyberpunk+${i + 1}`,
+      }));
+    }
+
+    // ComicVine API for DC or Marvel
+    const response = await axios.get(
+      `/.netlify/functions/comicvine?category=${category.toLowerCase()}`
+    );
+
+    const data = response.data;
+    if (Array.isArray(data)) return data;
+    if (Array.isArray(data.results)) return data.results;
+
+    return [];
+  } catch (error) {
+    console.error("Error fetching comics:", error);
+    return [];
+  }
+};
+
+
 
 export default function ReadComics() {
   const [activeCategory, setActiveCategory] = useState("DC");
-  const comics = generateComics(activeCategory);
+  const [comics, setComics] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const load = async () => {
+      console.log("Fetching category:", activeCategory);
+      const data = await fetchComics(activeCategory);
+      console.log("Fetched comics titles:", data.map((c) => c.title));
+      setComics(data);
+    };
+    load();
+  }, [activeCategory]);
+  
+  
 
   return (
     <div className="min-h-screen bg-earth-olive text-earth-cream px-4 py-10 sm:py-12">
@@ -29,7 +68,6 @@ export default function ReadComics() {
           <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold text-center sm:text-left">
             Advised Comics by Sci-Fi Magazine
           </h1>
-
           <Link
             to="/read"
             className="px-4 py-2 bg-earth-forest text-earth-cream rounded-md shadow hover:bg-earth-clay transition text-sm sm:text-base"
@@ -38,7 +76,7 @@ export default function ReadComics() {
           </Link>
         </div>
 
-        {/* Tabs */}
+        {/* Category buttons */}
         <div className="flex justify-center flex-wrap gap-3 mb-8 sm:mb-10 px-2">
           {categories.map((cat) => (
             <button
@@ -55,8 +93,8 @@ export default function ReadComics() {
           ))}
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
+        {/* Comic grid */}
+        <div key={activeCategory} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
           {comics.map((comic) => (
             <div
               key={comic.id}
@@ -64,8 +102,17 @@ export default function ReadComics() {
                 categoryStyles[activeCategory] || "bg-white text-black"
               }`}
             >
+              {comic.image && (
+                <img
+                  src={comic.image}
+                  alt={comic.title}
+                  className="w-full h-64 object-cover object-top rounded-xl mb-4"
+                />
+              )}
               <h2 className="text-lg sm:text-xl font-bold mb-2">{comic.title}</h2>
-              <p className="text-sm sm:text-base opacity-80">{comic.description}</p>
+              <p className="text-sm sm:text-base opacity-80">
+                {comic.description.replace(/<[^>]*>?/gm, "").slice(0, 160)}
+              </p>
             </div>
           ))}
         </div>

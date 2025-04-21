@@ -4,16 +4,16 @@ import fallbackCover from "../assets/images/movie1.jpg";
 import BookModal from "../components/BookModal";
 
 const preferredAuthors = [
-  "asimov",
+  "isaac asimov",
   "orson scott card",
   "frank herbert",
-  "isaac asimov",
+  "istvan nemere",
   "philip k. dick",
   "ray bradbury",
   "arthur c. clarke",
   "h.g. wells",
-  "william gibson",
-  "neal stephenson"
+  "william gibson"
+  
 ];
 
 export default function ReadBooks() {
