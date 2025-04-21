@@ -75,8 +75,16 @@ const fetchComics = async (category: string, hero?: string) => {
         axios.get(`${BASE_URL}?category=${category.toLowerCase()}&name=${encodeURIComponent(h)}`)
       );
       const responses = await Promise.all(promises);
-      return responses.flatMap((res) => res.data.slice(0, 3)).slice(0, 9);
+      const enrichedJikanResults = responses
+        .flatMap((res) => res.data.slice(0, 3)) // adjust this if your response is res.data.data
+        .map((item) => ({
+          ...item,
+          source: "jikan", // <- This tags the Others content
+        }));
+    
+      return enrichedJikanResults.slice(0, 9);
     }
+    
 
     const response = await axios.get(
       `${BASE_URL}?category=${category.toLowerCase()}${hero ? `&name=${encodeURIComponent(hero)}` : ""}`

@@ -17,7 +17,7 @@ const handler: Handler = async (event) => {
       };
     }
 
-    const prompt = `You are a comic book historian. Given the following "${title}", and description, intelligently guess the main characters, at least 6, but do not list the same character with different name, and notable creators, at least 4, (writers, artists, etc.) even if not explicitly listed. Base your guess on similar comics from the same era or publisher. Always respond in this format:
+    const prompt = `You are a comic book historian. Given the following "${title}", and description, intelligently guess the main characters, at least 6, but do not list the same character with different name, and notable creators, at least 4,gpt-enrich.ts (writers, artists, etc.) even if not explicitly listed. Base your guess on similar comics from the same era or publisher. Always respond in this format:
 
     Characters: [comma-separated list]
     Creators: [comma-separated list]

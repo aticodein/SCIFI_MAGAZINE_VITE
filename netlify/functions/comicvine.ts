@@ -26,13 +26,15 @@ export const handler = async (event: any) => {
 
       const data = response.data.results;
 
+      const plainDescription = data.description?.replace(/<[^>]+>/g, "").trim() || "No description available.";
+
       const cleanData = {
         name: data.name,
         publisher: data.publisher,
         start_year: data.start_year,
         count_of_issues: data.count_of_issues,
         image: data.image,
-        description: data.description || "No description available.",
+        description: plainDescription,
       };
 
       return {

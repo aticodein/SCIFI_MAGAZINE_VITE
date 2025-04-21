@@ -30,7 +30,66 @@ export default function ComicsModal({ comic, onClose }: ComicsModalProps) {
     async function fetchDetails() {
       setLoading(true);
 
+      // ⛔ Skip ComicVine for Jikan entries
+      if (typeof comic?.id === "string" && comic.id.startsWith("anime-")) {
+        const cleanDescription = comic.description?.replace(/<[^>]*>?/gm, "") || "No description available.";
+  
+        const enriched = await enrichWithGPT(comic.title, cleanDescription);
+  
+        const detailsJikan = {
+          name: comic.title,
+          publisher: { name: "Jikan API" },
+          start_year: "Unknown",
+          count_of_issues: "N/A",
+          description: cleanDescription,
+          image: { original_url: comic.image },
+          characters: enriched.characters
+            ? enriched.characters.split(",").map((name: string) => ({ name: name.trim() }))
+            : [],
+          person_credits: enriched.creators
+            ? enriched.creators.split(",").map((name: string) => ({ name: name.trim() }))
+            : [],
+        };
+  
+        setDetails(detailsJikan);
+        setAiFlags({ characters: true, creators: true });
+        setLoading(false);
+        return;
+      }
+
       try {
+        if (comic.source === "jikan") {
+          const cleanDescription = comic.synopsis?.replace(/<[^>]*>?/gm, "") || "No description available.";
+
+          const baseDetails = {
+            name: comic.title,
+            publisher: { name: "Jikan API" },
+            start_year: comic.aired?.prop?.from?.year || "Unknown",
+            count_of_issues: comic.episodes || "N/A",
+            description: cleanDescription,
+            image: { original_url: comic.images?.jpg?.large_image_url || comic.images?.jpg?.image_url },
+            characters: [],
+            person_credits: [],
+          };
+
+          const enriched = await enrichWithGPT(comic.title, cleanDescription);
+          const newFlags = { characters: false, creators: false };
+
+          if (enriched.characters) {
+            baseDetails.characters = enriched.characters.split(",").map((name: string) => ({ name: name.trim() }));
+            newFlags.characters = true;
+          }
+          if (enriched.creators) {
+            baseDetails.person_credits = enriched.creators.split(",").map((name: string) => ({ name: name.trim() }));
+            newFlags.creators = true;
+          }
+
+          setDetails(baseDetails);
+          setAiFlags(newFlags);
+          setLoading(false);
+          return;
+        }
+
         const response = await axios.get(`/.netlify/functions/comicvine?volumeId=${comic.id}`);
         const data = response.data;
 
@@ -46,16 +105,12 @@ export default function ComicsModal({ comic, onClose }: ComicsModalProps) {
           const enriched = await enrichWithGPT(title, rawDescription);
 
           if (charactersMissing && enriched.characters) {
-            data.characters = enriched.characters.split(",").map((name: string) => ({
-              name: name.trim(),
-            }));
+            data.characters = enriched.characters.split(",").map((name: string) => ({ name: name.trim() }));
             newFlags.characters = true;
           }
 
           if (creatorsMissing && enriched.creators) {
-            data.person_credits = enriched.creators.split(",").map((name: string) => ({
-              name: name.trim(),
-            }));
+            data.person_credits = enriched.creators.split(",").map((name: string) => ({ name: name.trim() }));
             newFlags.creators = true;
           }
         }
@@ -70,7 +125,7 @@ export default function ComicsModal({ comic, onClose }: ComicsModalProps) {
       }
     }
 
-    if (comic?.id) {
+    if (comic?.id || comic?.mal_id) {
       fetchDetails();
     }
   }, [comic]);
@@ -83,13 +138,12 @@ export default function ComicsModal({ comic, onClose }: ComicsModalProps) {
     return () => window.removeEventListener("keydown", handleEscape);
   }, [onClose]);
 
-  const cleanDescription = comic.description?.replace(/<[^>]*>?/gm, "") || "No additional description available.";
-
+  const cleanDescription = details?.description || "No additional description available.";
   const title = comic?.title || comic?.name || details?.name || "Unknown Title";
   const publisher = details?.publisher?.name ?? "Unavailable";
   const releaseDate = details?.start_year ?? "Unavailable";
   const pageCount = details?.count_of_issues ?? "Unavailable";
-  const volumeImage = comic?.image?.original_url || details?.image?.original_url;
+  const volumeImage = details?.image?.original_url || comic?.images?.jpg?.large_image_url || comic?.images?.jpg?.image_url;
 
   const characters =
     details?.characters?.length > 0
@@ -111,7 +165,12 @@ export default function ComicsModal({ comic, onClose }: ComicsModalProps) {
           ×
         </button>
 
-        <h2 className="text-2xl font-bold mb-3 text-center">{title}</h2>
+        <h2 className="text-2xl font-bold mb-3 text-center">
+          {title}
+          {comic.source === "jikan" && (
+            <span className="ml-2 text-sm italic text-brand-600">(Anime)</span>
+          )}
+        </h2>
 
         {loading ? (
           <p className="text-center py-8 text-sm italic">Loading comic details…</p>
