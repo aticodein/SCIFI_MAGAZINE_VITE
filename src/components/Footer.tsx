@@ -1,10 +1,17 @@
 // src/components/Footer.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Moon, Sun } from "lucide-react";
 
 export default function Footer() {
-  const [footerDarkMode, setFooterDarkMode] = useState(false);
+  const [footerDarkMode, setFooterDarkMode] = useState(() => {
+    const stored = localStorage.getItem("footerDarkMode");
+    return stored ? JSON.parse(stored) : false;
+  });
+  
+  useEffect(() => {
+    localStorage.setItem("footerDarkMode", JSON.stringify(footerDarkMode));
+  }, [footerDarkMode]);
 
   return (
     <footer className={`w-full py-6 relative ${footerDarkMode ? "bg-gray-900 text-white" : "bg-white text-earth-forest"}`}>
