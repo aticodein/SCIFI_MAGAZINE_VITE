@@ -29,8 +29,11 @@ const sampleTools = [
 
 
 export default function Create() {
-  const [isDark, setIsDark] = useState(false);
-
+  const [isDark, setIsDark] = useState(() => {
+    const stored = localStorage.getItem("createDarkMode");
+    return stored ? JSON.parse(stored) : false;
+  });
+  
   useEffect(() => {
     const root = document.documentElement;
     if (isDark) {
@@ -38,7 +41,9 @@ export default function Create() {
     } else {
       root.classList.remove("dark");
     }
+    localStorage.setItem("createDarkMode", JSON.stringify(isDark));
   }, [isDark]);
+  
 
   return (
     <div className="min-h-screen bg-earth-olive dark:bg-gray-900 px-4 py-12 transition-colors">
