@@ -167,6 +167,12 @@ export default function ReadComics() {
           </select>
         </div>
 
+        {loading && (
+          <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm text-white text-lg sm:text-xl font-semibold">
+            Loading Comics…
+          </div>
+      )}
+
         <div key={activeCategory} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
           {loading
             ? Array.from({ length: 9 }).map((_, i) => <LoadingCard key={i} />)
