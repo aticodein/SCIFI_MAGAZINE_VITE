@@ -19,7 +19,7 @@ export default function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
-    }, 5000);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
@@ -46,7 +46,7 @@ export default function App() {
           {images.map((img, i) => (
             <div
               key={i}
-              className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out rounded-lg ${i === index ? "opacity-100 z-10" : "opacity-0 z-0"}`}
+              className={`absolute inset-0 w-full h-full transition-opacity duration-3000 ease-in-out rounded-lg ${i === index ? "opacity-100 z-10" : "opacity-0 z-0"}`}
             >
               <img
                 src={img}
@@ -55,7 +55,7 @@ export default function App() {
               />
               {/* fading dark overlay */}
               <div
-                className="absolute inset-0 bg-black transition-opacity duration-[3000ms] delay-[1000ms] rounded-lg"
+                className="absolute inset-0 bg-black transition-opacity duration-[3000ms] delay-[500ms] rounded-lg"
                 style={{ opacity: i === index ? 0.7 : 0 }}
               />
             </div>
