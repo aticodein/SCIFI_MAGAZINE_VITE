@@ -2,6 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+
 // Import your background images
 import warImg from "../assets/images/war.png";
 import movie2Img from "../assets/images/movie2.jpg";
@@ -89,5 +90,6 @@ export default function Read() {
         </div>
       </div>
     </div>
+
   );
 }

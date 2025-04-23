@@ -1,8 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-
-
 export default function App() {
   return (
     <div className="min-h-screen bg-earth-olive text-brand-light flex flex-col items-center justify-center px-4 py-20">
@@ -18,6 +16,7 @@ export default function App() {
           Explore Tools
         </button>
       </Link>
+      
     </div>
   );
 }

@@ -1,6 +1,9 @@
+//src/Layout.tsx
 import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import React from "react";
+import Footer from "./components/footer";
+
 
 
 export default function Layout() {
@@ -10,6 +13,7 @@ export default function Layout() {
       <main className="p-1 bg-earth-olive">
         <Outlet />
       </main>
+      <Footer />
     </div>
   );
 }
