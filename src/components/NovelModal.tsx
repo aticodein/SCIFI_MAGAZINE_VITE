@@ -12,6 +12,7 @@ const NovelModal: React.FC<NovelModalProps> = ({ novel, onClose }) => {
   const [aiFlags, setAiFlags] = useState({ authors: false, year: false, desc: false, themes: false });
 
   useEffect(() => {
+    if (!novel || enriched) return;
     async function fetchEnrichment() {
       const needsDesc = !novel?.description;
       const needsAuthors = !novel?.author_name?.length;
@@ -83,16 +84,16 @@ const NovelModal: React.FC<NovelModalProps> = ({ novel, onClose }) => {
 
         <div className="text-sm mb-4 text-center">
           <p><span className="font-semibold">Author:</span> {authors.join(", ")}
-            {aiFlags.authors && <span className="ml-2 text-xs italic text-brand-600">(AI-enriched)</span>}</p>
+            {aiFlags.authors && <span className="ml-2 text-xs italic text-brand-600">(AI-enriched-text)</span>}</p>
           <p><span className="font-semibold">First Published:</span> {first_publish_year}
-            {aiFlags.year && <span className="ml-2 text-xs italic text-brand-600">(AI-enriched)</span>}</p>
+            {aiFlags.year && <span className="ml-2 text-xs italic text-brand-600">(AI-enriched-text)</span>}</p>
         </div>
 
         {description && (
           <div className="bg-white text-black rounded-md p-4 mb-4 text-sm max-h-64 overflow-y-auto">
             <p className="whitespace-pre-line leading-relaxed">
               {description}
-              {aiFlags.desc && <span className="block text-xs italic text-brand-600 mt-2">(AI-enriched)</span>}
+              {aiFlags.desc && <span className="block text-xs italic text-brand-600 mt-2">(AI-enriched-text)</span>}
             </p>
           </div>
         )}
@@ -104,7 +105,7 @@ const NovelModal: React.FC<NovelModalProps> = ({ novel, onClose }) => {
                 {subject.trim()}
               </span>
             ))}
-            {aiFlags.themes && <span className="text-xs italic text-brand-600 ml-2">(AI-enriched)</span>}
+            {aiFlags.themes && <span className="text-xs italic text-brand-600 ml-2">(AI-enriched-text)</span>}
           </div>
         )}
       </div>
