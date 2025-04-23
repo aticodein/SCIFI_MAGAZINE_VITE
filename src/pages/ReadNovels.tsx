@@ -21,7 +21,8 @@ export default function ReadNovels() {
   const [loading, setLoading] = useState(false);
   const [activeGenre, setActiveGenre] = useState("science_fiction");
   const [selected, setSelected] = useState<Novel | null>(null);
-  const [selectedTheme, setSelectedTheme] = useState("all");
+  const [selectedTheme, setSelectedTheme] = useState("");
+  const [query, setQuery] = useState("");
 
   const genreOptions = [
     { label: "Hard Sci-Fi", value: "hard_science_fiction" },
@@ -33,7 +34,6 @@ export default function ReadNovels() {
   ];
 
   const themeOptions = [
-    "all",
     "Utopias",
     "Aliens",
     "Robots",
@@ -71,15 +71,48 @@ export default function ReadNovels() {
     }
   };
 
+  const searchBooks = async () => {
+    if (!query.trim()) {
+      fetchNovelsByGenre(activeGenre);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=18`);
+      const data = await res.json();
+
+      const formatted = (data.docs || []).map((novel: any) => ({
+        key: novel.key,
+        title: novel.title,
+        author_name: novel.author_name || [],
+        cover_url: novel.cover_i
+          ? `https://covers.openlibrary.org/b/id/${novel.cover_i}-L.jpg`
+          : "/src/assets/images/movie2.jpg",
+        first_publish_year: novel.first_publish_year,
+        description: novel.subtitle || novel.notes || null,
+        subjects: novel.subject || [],
+      }));
+
+      setNovels(formatted);
+    } catch (err) {
+      console.error("Search failed:", err);
+      setNovels([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchNovelsByGenre(activeGenre);
+    if (!query.trim()) {
+      fetchNovelsByGenre(activeGenre);
+    }
   }, [activeGenre]);
 
-  const filteredNovels = selectedTheme === "all"
-    ? novels
-    : novels.filter(novel => novel.subjects?.some((s) =>
-        s.toLowerCase().includes(selectedTheme.toLowerCase())
-      ));
+  const filteredNovels = novels.filter((novel) => {
+    if (!selectedTheme) return true;
+    return novel.subjects?.some((s) => s.toLowerCase().includes(selectedTheme.toLowerCase()));
+  });
 
   return (
     <div className="min-h-screen bg-earth-olive text-earth-cream px-4 py-10 sm:py-12">
@@ -94,6 +127,22 @@ export default function ReadNovels() {
           >
             ← Back to Read
           </Link>
+        </div>
+
+        <div className="mb-6 px-2 w-full flex flex-col sm:flex-row sm:items-center sm:gap-4">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search novels by title, author, keywords..."
+            className="w-full px-4 py-2 rounded bg-earth-cream text-black placeholder:text-sm shadow-md"
+          />
+          <button
+            onClick={searchBooks}
+            className="bg-brand-yellow text-brand-dark hover:bg-brand-orange transition px-4 py-2 rounded font-semibold"
+          >
+            Search
+          </button>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 px-2 relative z-10">
@@ -141,12 +190,19 @@ export default function ReadNovels() {
                   onClick={() => setSelected(novel)}
                 >
                   {novel.cover_url && (
-                    <img
-                      src={novel.cover_url}
-                      alt={novel.title}
-                      className="w-full h-64 object-cover object-top rounded-xl mb-4"
-                    />
-                  )}
+                   <div className="relative w-full h-64 mb-4">
+                     <img
+                       src={novel.cover_url}
+                       alt={novel.title}
+                       className="w-full h-full object-cover object-top rounded-xl"
+                       />
+                     {novel.cover_url.includes('movie2') && (
+                     <span className="absolute inset-0 flex items-center justify-center text-white font-semibold text-sm bg-black/60 rounded-xl">
+                       Book cover unavailable
+                      </span>
+                           )}
+                        </div>
+)}
                   <h2 className="text-lg sm:text-xl font-bold mb-2">{novel.title}</h2>
                   {novel.description && (
                     <p className="text-sm sm:text-base opacity-80">
