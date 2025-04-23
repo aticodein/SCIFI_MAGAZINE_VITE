@@ -1,3 +1,4 @@
+//src/router.tsx
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./Layout";
 import App from "./App";
