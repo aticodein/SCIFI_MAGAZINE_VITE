@@ -1,13 +1,24 @@
 // src/components/Footer.tsx
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Moon, Sun } from "lucide-react";
 
 export default function Footer() {
+  const [footerDarkMode, setFooterDarkMode] = useState(false);
+
   return (
-    <footer className="w-full bg-white text-earth-forest py-6">
+    <footer className={`w-full py-6 relative ${footerDarkMode ? "bg-gray-900 text-white" : "bg-white text-earth-forest"}`}>
+      {/* Dark Mode Button */}
+      <button
+        onClick={() => setFooterDarkMode(!footerDarkMode)}
+        className="absolute top-4 right-6 p-2 rounded-full bg-earth-olive text-white hover:bg-brand-orange transition"
+        aria-label="Toggle dark mode"
+      >
+        {footerDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+      </button>
+
       <div className="max-w-7xl mx-auto px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Column 1 */}
           <div>
             <h3 className="font-bold text-lg mb-3">Sci-Fi Magazine</h3>
             <p className="text-sm leading-relaxed">
@@ -15,7 +26,6 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Column 2 */}
           <div>
             <h4 className="font-semibold mb-2">Explore</h4>
             <ul className="space-y-1 text-sm">
@@ -26,7 +36,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3 */}
           <div>
             <h4 className="font-semibold mb-2">About</h4>
             <ul className="space-y-1 text-sm">
@@ -36,7 +45,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4 */}
           <div>
             <h4 className="font-semibold mb-2">Stay Connected</h4>
             <p className="text-sm">Follow us for updates and new drops:</p>
