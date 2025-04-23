@@ -201,8 +201,8 @@ export default function ComicsModal({ comic, onClose }: ComicsModalProps) {
             </div>
 
             <div className="bg-earth-cream text-black rounded-md p-4 text-sm mb-4">
-              <p><span className="font-semibold">Characters:</span> {characters} {aiFlags.characters && <span className="ml-2 px-2 py-0.5 text-xs bg-brand-600 text-earth-clay rounded">AI-enriched</span>}</p>
-              <p><span className="font-semibold">Creators:</span> {creators} {aiFlags.creators && <span className="ml-2 px-2 py-0.5 text-xs bg-brand-600 text-earth-clay rounded">AI-enriched</span>}</p>
+              <p><span className="font-semibold">Characters:</span> {characters} {aiFlags.characters && <span className="ml-2 px-2 py-0.5 text-xs bg-brand-600 text-earth-clay rounded">AI-enriched-result</span>}</p>
+              <p><span className="font-semibold">Creators:</span> {creators} {aiFlags.creators && <span className="ml-2 px-2 py-0.5 text-xs bg-brand-600 text-earth-clay rounded">AI-enriched-result</span>}</p>
             </div>
           </>
         )}
