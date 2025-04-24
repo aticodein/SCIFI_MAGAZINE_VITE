@@ -1,5 +1,6 @@
 // src/pages/Retro.tsx
 import React, { useEffect, useRef, useState } from "react";
+import RetroModal from "../components/RetroModal";
 
 const randomTextLines = [
   "[INFO] Data initialization started",
@@ -9,15 +10,19 @@ const randomTextLines = [
   "[AUTH] Login attempt received from 172.16.254.1",
   "[ALERT] Memory surge at Sector 12B",
   "[COMMAND] Reroute signal through relay delta",
-  "[LOG] Quantum flux recalibrated",
+  "[LOG2] Quantum flux recalibrated",
   "[INFO] Uplink channel secured",
   "[SYSTEM] Checkpoint 42 achieved"
+  
 ];
 
 export default function Retro() {
   const [lines, setLines] = useState<string[]>(["/decoding/signal--trace--192.168.xx.xxx", "", "-- fragment --", "01100011 01101111 01101110 01110100 01110010 01101111 01101100", "/command/reroute initialized..."]);
   const [paused, setPaused] = useState(false);
   const decoderRef = useRef<HTMLDivElement>(null);
+  const [showDecoderModal, setShowDecoderModal] = useState(false);
+  const [selectedNode, setSelectedNode] = useState<number | null>(null);
+
 
   useEffect(() => {
     if (paused) return;
@@ -94,27 +99,42 @@ Decode. Discover. Dominate.
         <div className="bg-[#111] border border-green-400 p-4 rounded shadow-md">
           <h2 className="text-lg font-bold mb-2 border-b border-green-400 pb-1">System Nodes</h2>
           <div className="grid grid-cols-3 gap-3 text-center">
-            {[...Array(6)].map((_, i) => (
-              <div
-                key={i}
-                className="border border-green-600 py-3 px-2 text-xs hover:bg-green-700/30 transition"
-              >
-                Node #{i + 1}
-              </div>
-            ))}
+          {[...Array(15)].map((_, i) => (
+            <div
+              key={i}
+              className="border border-green-600 py-3 px-2 text-xs hover:bg-green-700/30 transition cursor-pointer"
+              onClick={() => setSelectedNode(i + 1)}
+            >
+              Node #{i + 1}
+            </div>
+          ))}
+
+
           </div>
         </div>
 
         {/* Signal Decoder Panel */}
         <div className="bg-[#111] border border-green-400 p-4 rounded shadow-md col-span-1 md:col-span-2 relative">
           <h2 className="text-lg font-bold mb-2 border-b border-green-400 pb-1 ">Signal Decoder</h2>
-          <div ref={decoderRef} className="text-sm text-green-300 h-64 overflow-y-auto whitespace-pre-wrap">
+          {/* Signal Decoder Panel */}
+          <div
+             ref={decoderRef}
+            className="text-sm text-green-300 h-64 overflow-y-auto whitespace-pre-wrap"
+    >
+
             {lines.map((line, index) => (
-              <div key={index} className="animate-glitch text-green-300">
+             <div
+               key={index}
+               className={`animate-glitch ${
+                 line.includes("[LOG2]") ? "font-bold text-yellow-400 cursor-pointer" : "text-green-300"
+              }`}
+                onClick={() => line.includes("[LOG2]") && setShowDecoderModal(true)}
+              >
                 {line}
               </div>
             ))}
-          </div>
+</div>
+
           <button
             onClick={() => setPaused(!paused)}
             className="absolute top-4 right-4 bg-green-700 text-white text-xs px-3 py-1 rounded hover:bg-green-500"
@@ -134,6 +154,22 @@ Decode. Discover. Dominate.
           </ul>
         </div>
       </div>
+      {showDecoderModal && (
+          <RetroModal
+            onClose={() => setShowDecoderModal(false)}
+             type="decoder"
+           />
+         )}
+
+        {selectedNode && (
+          <RetroModal
+             onClose={() => setSelectedNode(null)}
+              type="node"
+             nodeNumber={selectedNode}
+             />
+        )}
+
+
     </div>
   );
 }
