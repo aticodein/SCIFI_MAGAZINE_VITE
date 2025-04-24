@@ -1,10 +1,11 @@
 /* src/index.css */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 .perspective {
     perspective: 1000px;
   }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
   
+/* Required for the Vitals Feed bar animation */
