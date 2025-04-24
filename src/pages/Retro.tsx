@@ -1,6 +1,7 @@
 // src/pages/Retro.tsx
 import React, { useEffect, useRef, useState } from "react";
 import RetroModal from "../components/RetroModal";
+import fluxImg from "../assets/images/flux.png";
 
 const randomTextLines = [
   "[INFO] Data initialization started",
@@ -49,11 +50,11 @@ export default function Retro() {
         <h1 className="text-4xl md:text-5xl font-extrabold text-green-200 mb-4">Retro Commander Interface</h1>
         <div className="flex flex-col lg:flex-row items-center justify-center gap-40 max-w-8xl mx-auto">
           <div className="animate-spin-reverse" >
-            <img
-              src="/src/assets/images/flux.png"
-              alt="Retro Dashboard"
-              className="w-36 max-w-xs rounded-full shadow-xl"
-            />
+          <img
+           src={fluxImg} // or use /assets/flux.png if placed in public folder
+           alt="Retro Dashboard"
+           className="w-36 max-w-xs rounded-full shadow-xl animate-spin-slow-reverse"
+          />
           </div>
           <p className="text-green-100 max-w-xl text-sm md:text-base text-left">
           Welcome to the Retro Commander Interface — your gateway to a lost era of deep space ops.
@@ -61,7 +62,7 @@ Monitor vitals, intercept binary transmissions, and scan live system logs from a
 
 But this isn’t just a dashboard… it’s a <b>challenge.</b> <br />
 Hidden within this interface are 5 secret elements.
-Find them all to unlock your Entry Code — granting you 1 Month of Pro Access to Sci-Fi Magazine’s AI core.
+Find them all to unlock your Entry Code — granting you 1 Month of Pro Access to Sci-Fi Magazine’s AI core. Look for Anomalies!
 
 Decode. Discover. Dominate.
           </p>

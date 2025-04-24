@@ -24,3 +24,9 @@
 .bold {
  font-weight: bold !important;
 }
+
+
+.animate-spin-slow-reverse {
+  animation: spin-reverse 5s linear infinite;
+}
+
