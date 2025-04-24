@@ -38,73 +38,101 @@ export default function Retro() {
   }, [paused]);
 
   return (
-    <div className="min-h-screen bg-black text-green-400 font-mono p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {/* Code Streaming Panel */}
-      <div className="bg-[#111] border border-green-600 p-4 rounded shadow-md animate-pulse overflow-hidden">
-        <h2 className="text-lg font-bold mb-2 border-b border-green-600 pb-1">Live Terminal</h2>
-        <div className="text-sm leading-snug h-64 overflow-y-auto whitespace-pre-wrap animate-fade-in">
-          <pre>
-            {"[INFO] Booting Retro Commander Interface...\n[OK] Subsystem A1 online\n[OK] Loading memory banks...\n[LOG] Initializing neon HUD\n[DATA] Signal locked | Source: Mars Relay 03\n[WARN] Anomaly detected in Sector 7G\n[LOG] Auto-correcting...\n[OK] Stream stabilized\n[INFO] Awaiting input...\n_"}
-          </pre>
+    <div className="min-h-screen bg-black text-green-400 font-mono">
+      {/* Header Banner */}
+      <div className="w-full bg-green-900 text-center py-10 px-6">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-green-200 mb-4">Retro Commander Interface</h1>
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-40 max-w-8xl mx-auto">
+          <div className="animate-spin-reverse" >
+            <img
+              src="/src/assets/images/flux.png"
+              alt="Retro Dashboard"
+              className="w-36 max-w-xs rounded-full shadow-xl"
+            />
+          </div>
+          <p className="text-green-100 max-w-xl text-sm md:text-base text-left">
+          Welcome to the Retro Commander Interface — your gateway to a lost era of deep space ops.
+Monitor vitals, intercept binary transmissions, and scan live system logs from across the galaxy.
+
+But this isn’t just a dashboard… it’s a <b>challenge.</b> <br />
+Hidden within this interface are 5 secret elements.
+Find them all to unlock your Entry Code — granting you 1 Month of Pro Access to Sci-Fi Magazine’s AI core.
+
+Decode. Discover. Dominate.
+          </p>
         </div>
       </div>
 
-      {/* Vitals Feed – Static Single Bar aligned at the bottom */}
-      <div className="bg-[#111] border border-blue-500 p-4 rounded shadow-md">
-        <h2 className="text-lg font-bold mb-2 border-b border-blue-500 pb-1">Vitals Feed</h2>
-        <div className="flex justify-center h-40 mt-20">
-          <div className="flex flex-col justify-end items-center h-full">
-            <div
-              className="w-6 rounded-t shadow-lg"
-              style={{ height: "70%", backgroundColor: "#34D399" }}
-            />
-            <span className="text-xs mt-2 text-white">Alfa Synus</span>
+      <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Code Streaming Panel */}
+        <div className="bg-[#111] border border-green-600 p-4 rounded shadow-md  overflow-hidden">
+          <h2 className="text-lg font-bold mb-2 border-b border-green-600 pb-1">Live Terminal</h2>
+          <div className="text-sm leading-snug h-64 overflow-y-auto whitespace-pre-wrap animate-fade-in">
+            <pre>
+              {"[INFO] Booting Retro Commander Interface...\n[OK] Subsystem A1 online\n[OK] Loading memory banks...\n[LOG] Initializing neon HUD\n[DATA] Signal locked | Source: Mars Relay 03\n[WARN] Anomaly detected in Sector 7G\n[LOG] Auto-correcting...\n[OK] Stream stabilized\n[INFO] Awaiting input...\n_"}
+            </pre>
           </div>
         </div>
-      </div>
 
-      {/* System Nodes Display */}
-      <div className="bg-[#111] border border-green-400 p-4 rounded shadow-md">
-        <h2 className="text-lg font-bold mb-2 border-b border-green-400 pb-1">System Nodes</h2>
-        <div className="grid grid-cols-3 gap-3 text-center">
-          {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className="border border-green-600 py-3 px-2 text-xs hover:bg-green-700/30 transition"
-            >
-              Node #{i + 1}
+        {/* Vitals Feed – Static Single Bar aligned at the bottom */}
+        <div className="bg-[#111] border border-blue-500 p-4 rounded shadow-md">
+          <h2 className="text-lg font-bold mb-2 border-b border-blue-500 pb-1">Vitals Feed</h2>
+          <span className="text-xs mt-2 text-white">[Alfa Synus] [Thermal Read] [CPU Cpacity] [Decoder Status]</span>
+          <div className="flex justify-center h-40 mt-20">
+            <div className="flex flex-col justify-end items-left h-full animate-pulse">
+              <div
+                className="w-1 rounded-t shadow-lg"
+                style={{ height: "90%", backgroundColor: "#34D399", animationDuration: "2.5s" }}
+              />
+              
             </div>
-          ))}
+            
+          </div>
         </div>
-      </div>
 
-      {/* Signal Decoder Panel */}
-      <div className="bg-[#111] border border-green-400 p-4 rounded shadow-md col-span-1 md:col-span-2 relative">
-        <h2 className="text-lg font-bold mb-2 border-b border-green-400 pb-1">Signal Decoder</h2>
-        <div ref={decoderRef} className="text-sm text-green-300 h-64 overflow-y-auto whitespace-pre-wrap">
-          {lines.map((line, index) => (
-            <div key={index} className="animate-glitch text-green-300">
-              {line}
-            </div>
-          ))}
+        {/* System Nodes Display */}
+        <div className="bg-[#111] border border-green-400 p-4 rounded shadow-md">
+          <h2 className="text-lg font-bold mb-2 border-b border-green-400 pb-1">System Nodes</h2>
+          <div className="grid grid-cols-3 gap-3 text-center">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="border border-green-600 py-3 px-2 text-xs hover:bg-green-700/30 transition"
+              >
+                Node #{i + 1}
+              </div>
+            ))}
+          </div>
         </div>
-        <button
-          onClick={() => setPaused(!paused)}
-          className="absolute top-4 right-4 bg-green-700 text-white text-xs px-3 py-1 rounded hover:bg-green-500"
-        >
-          {paused ? "Resume" : "Pause"}
-        </button>
-      </div>
 
-      {/* Diagnostics Panel */}
-      <div className="bg-[#111] border border-yellow-300 p-4 rounded shadow-md">
-        <h2 className="text-lg font-bold mb-2 border-b border-yellow-300 pb-1">Diagnostics</h2>
-        <ul className="text-sm space-y-1">
-          <li>⚙️ Drive Spin Rate: <span className="text-yellow-200">5420 RPM</span></li>
-          <li>🔋 Power Cell: <span className="text-yellow-200">87%</span></li>
-          <li>📡 Uplink Status: <span className="text-yellow-200">Stable</span></li>
-          <li>💾 Memory Usage: <span className="text-yellow-200">68%</span></li>
-        </ul>
+        {/* Signal Decoder Panel */}
+        <div className="bg-[#111] border border-green-400 p-4 rounded shadow-md col-span-1 md:col-span-2 relative">
+          <h2 className="text-lg font-bold mb-2 border-b border-green-400 pb-1 ">Signal Decoder</h2>
+          <div ref={decoderRef} className="text-sm text-green-300 h-64 overflow-y-auto whitespace-pre-wrap">
+            {lines.map((line, index) => (
+              <div key={index} className="animate-glitch text-green-300">
+                {line}
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={() => setPaused(!paused)}
+            className="absolute top-4 right-4 bg-green-700 text-white text-xs px-3 py-1 rounded hover:bg-green-500"
+          >
+            {paused ? "Resume" : "Pause"}
+          </button>
+        </div>
+
+        {/* Diagnostics Panel */}
+        <div className="bg-[#111] border border-yellow-300 p-4 rounded shadow-md">
+          <h2 className="text-lg font-bold mb-2 border-b border-yellow-300 pb-1">Diagnostics</h2>
+          <ul className="text-sm space-y-1">
+            <li>⚙️ Drive Spin Rate: <span className="text-yellow-200">5420 RPM</span></li>
+            <li>🔋 Power Cell: <span className="text-yellow-200">87%</span></li>
+            <li>📡 Uplink Status: <span className="text-yellow-200">Stable</span></li>
+            <li>💾 Memory Usage: <span className="text-yellow-200">68%</span></li>
+          </ul>
+        </div>
       </div>
     </div>
   );

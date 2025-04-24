@@ -8,9 +8,9 @@ import logo from "../assets/images/scifim.png";
 
 const navItems = [
   { name: "Home", path: "/" },
-  { name: "Create", path: "/create" },
-  { name: "Watch", path: "/watch" },
-  { name: "Read", path: "/read" },
+  { name: "Createor", path: "/create" },
+  { name: "Reader", path: "/read" },
+  { name: "Watcher", path: "/watch" },
   { name: "Retro Zone", path: "/retro" },
   { name: "Pro", path: "/pro" },
   { name: "About", path: "/about" },
