@@ -1,5 +1,4 @@
-// src/pages/Retro.tsx
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import RetroModal from "../components/RetroModal";
 import fluxImg from "../assets/images/flux.png";
 
@@ -17,12 +16,22 @@ const randomTextLines = [
   
 ];
 
+interface Vital {
+  name: string;
+  value: number;
+}
+
 export default function Retro() {
   const [lines, setLines] = useState<string[]>(["/decoding/signal--trace--192.168.xx.xxx", "", "-- fragment --", "01100011 01101111 01101110 01110100 01110010 01101111 01101100", "/command/reroute initialized..."]);
   const [paused, setPaused] = useState(false);
   const decoderRef = useRef<HTMLDivElement>(null);
   const [showDecoderModal, setShowDecoderModal] = useState(false);
   const [selectedNode, setSelectedNode] = useState<number | null>(null);
+  const [vitals, setVitals] = useState<Vital[]>([
+    { name: "Alfa Synus", value: 0 },
+    { name: "Thermal Read", value: 0 },
+    { name: "CPU Cpacity", value: 0 },
+  ]);
 
 
   useEffect(() => {
@@ -43,9 +52,30 @@ export default function Retro() {
     return () => clearInterval(interval);
   }, [paused]);
 
+  const updateVitals = useCallback(() => {
+    setVitals((prevVitals) =>
+      prevVitals.map((vital) => ({
+        ...vital,
+        value: Math.max(0, Math.min(100, vital.value + (Math.random() - 0.5) * 20)),
+      }))
+    );
+  }, []);
+  
+  useEffect(() => {
+    const vitalInterval = setInterval(updateVitals, 100);
+
+    return () => clearInterval(vitalInterval);
+  }, [updateVitals]);
+  
+  const getLineStyle = (index: number) => {
+    const colors = ["#34D399", "#6EE7B7", "#10B981"]; // Different green shades
+    const heightOffset = [45, 55, 35]; // Different heights
+    const baseHeight = 20; // Baseline height
+    return { height: `${baseHeight + heightOffset[index]}%`, backgroundColor: colors[index] };
+  };
+
   return (
     <div className="min-h-screen bg-black text-green-400 font-mono">
-      {/* Header Banner */}
       <div className="w-full bg-green-900 text-center py-10 px-6">
         <h1 className="text-4xl md:text-5xl font-extrabold text-green-200 mb-4">Retro Commander Interface</h1>
         <div className="flex flex-col lg:flex-row items-center justify-center gap-40 max-w-8xl mx-auto">
@@ -70,8 +100,7 @@ Decode. Discover. Dominate.
       </div>
 
       <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Code Streaming Panel */}
-        <div className="bg-[#111] border border-green-600 p-4 rounded shadow-md  overflow-hidden">
+        <div className="bg-[#111] border border-green-600 p-4 rounded shadow-md overflow-hidden">
           <h2 className="text-lg font-bold mb-2 border-b border-green-600 pb-1">Live Terminal</h2>
           <div className="text-sm leading-snug h-64 overflow-y-auto whitespace-pre-wrap animate-fade-in">
             <pre>
@@ -80,23 +109,33 @@ Decode. Discover. Dominate.
           </div>
         </div>
 
-        {/* Vitals Feed – Static Single Bar aligned at the bottom */}
-        <div className="bg-[#111] border border-blue-500 p-4 rounded shadow-md">
-          <h2 className="text-lg font-bold mb-2 border-b border-blue-500 pb-1">Vitals Feed</h2>
-          <span className="text-xs mt-2 text-white">[Alfa Synus] [Thermal Read] [CPU Cpacity] [Decoder Status]</span>
-          <div className="flex justify-center h-40 mt-20">
-            <div className="flex flex-col justify-end items-left h-full animate-pulse">
-              <div
-                className="w-1 rounded-t shadow-lg"
-                style={{ height: "90%", backgroundColor: "#34D399", animationDuration: "2.5s" }}
-              />
-              
-            </div>
-            
+        <div className="bg-[#111] border border-blue-500 p-4 rounded shadow-md flex-col flex justify-center">
+          <h2 className="text-lg font-bold mb-2 border-b border-blue-500 pb-1 text-center">Vitals Feed</h2>
+          <div className="flex flex-col gap-4 justify-center items-center h-full">
+            {vitals.map((vital, index) => (
+              <div key={index} className="w-full flex flex-col items-center gap-1">
+                <span className="text-xs text-white">{vital.name}</span>
+                <div className="relative w-full h-10">
+                  <div className="absolute left-0 bottom-0 w-full h-full bg-black/60 rounded-full overflow-hidden">
+                    <div
+                      className={`w-1 rounded-full shadow-lg transition-all duration-100`}
+                      style={{
+                        ...getLineStyle(index),
+                        width: "100%",
+                        position: "absolute",
+                        left: "0",
+                        bottom: "0",
+                      }}
+                    />
+                    <span className="absolute text-xs text-white top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                      {vital.value.toFixed(0)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-
-        {/* System Nodes Display */}
         <div className="bg-[#111] border border-green-400 p-4 rounded shadow-md">
           <h2 className="text-lg font-bold mb-2 border-b border-green-400 pb-1">System Nodes</h2>
           <div className="grid grid-cols-3 gap-3 text-center">
@@ -109,13 +148,9 @@ Decode. Discover. Dominate.
               Node #{i + 1}
             </div>
           ))}
-
-
           </div>
         </div>
-
-        {/* Signal Decoder Panel */}
-        <div className="bg-[#111] border border-green-400 p-4 rounded shadow-md col-span-1 md:col-span-2 relative">
+         <div className="bg-[#111] border border-green-400 p-4 rounded shadow-md col-span-1 md:col-span-2 relative">
           <h2 className="text-lg font-bold mb-2 border-b border-green-400 pb-1 ">Signal Decoder</h2>
           {/* Signal Decoder Panel */}
           <div
@@ -143,8 +178,6 @@ Decode. Discover. Dominate.
             {paused ? "Resume" : "Pause"}
           </button>
         </div>
-
-        {/* Diagnostics Panel */}
         <div className="bg-[#111] border border-yellow-300 p-4 rounded shadow-md">
           <h2 className="text-lg font-bold mb-2 border-b border-yellow-300 pb-1">Diagnostics</h2>
           <ul className="text-sm space-y-1">
@@ -154,23 +187,21 @@ Decode. Discover. Dominate.
             <li>💾 Memory Usage: <span className="text-yellow-200">68%</span></li>
           </ul>
         </div>
-      </div>
-      {showDecoderModal && (
-          <RetroModal
-            onClose={() => setShowDecoderModal(false)}
-             type="decoder"
-           />
-         )}
-
-        {selectedNode && (
-          <RetroModal
-             onClose={() => setSelectedNode(null)}
-              type="node"
-             nodeNumber={selectedNode}
-             />
-        )}
-
-
     </div>
+      {showDecoderModal && (
+        <RetroModal
+          onClose={() => setShowDecoderModal(false)}
+          type="decoder"
+        />
+      )}
+
+      {selectedNode && (
+        <RetroModal
+          onClose={() => setSelectedNode(null)}
+          type="node"
+          nodeNumber={selectedNode}
+        />
+      )}
+    </div >
   );
 }

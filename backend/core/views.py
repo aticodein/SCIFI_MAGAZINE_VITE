@@ -1,9 +1,11 @@
+from datetime import timedelta
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.timezone import now
 from django.http import JsonResponse
 import json
 from .models import RedeemedToken, UserProfile
+from django.shortcuts import render
 
 def ping(request):
     return JsonResponse({"message": "pong"})
@@ -45,3 +47,6 @@ def redeem_token(request):
         "message": "Token redeemed! Tier 3 unlocked for 30 days.",
         "expires": expires.strftime("%Y-%m-%d %H:%M:%S")
     })
+
+def landing_page(request):
+    return render(request, "landing_page.html")

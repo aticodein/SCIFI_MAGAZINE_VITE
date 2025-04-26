@@ -1,5 +1,7 @@
 import os
 from pathlib import Path
+import jazzmin  # 👈 ensures jazzmin is loaded early
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -61,6 +63,9 @@ DATABASES = {
     }
 }
 
+# sci_fi_magazine/settings.py
+
+
 AUTH_PASSWORD_VALIDATORS = []
 
 LANGUAGE_CODE = "en-us"
@@ -72,3 +77,38 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Sci-Fi Magazine Admin",
+    "site_brand": "Sci-FiMag",
+    "welcome_sign": "Welcome to the Sci-Fi Magazine Admin Panel",
+    "copyright": "",
+
+    "topmenu_links": [
+        {"name": "Landing Page", "url": "/", "new_window": True},
+        {"name": "Frontend (Netlify)", "url": "https://golden-lebkuchen-879258.netlify.app", "new_window": True},
+    ],
+
+    "usermenu_links": [
+        {"name": "Return to Landing", "url": "/", "icon": "fas fa-rocket", "new_window": True},
+    ],
+
+    "show_sidebar": True,
+    "navigation_expanded": True,
+
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "core.UserProfile": "fas fa-user-astronaut",
+        "core.RetroToken": "fas fa-key",
+    },
+
+    "default_icon_parents": "fas fa-cogs",
+    "default_icon_children": "fas fa-dot-circle",
+
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "darkly",
+}
+
+

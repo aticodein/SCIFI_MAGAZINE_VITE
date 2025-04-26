@@ -1,6 +1,7 @@
+# core/models.py
+
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import timedelta
 from django.utils import timezone
 
 class UserProfile(models.Model):
@@ -21,10 +22,14 @@ class UserProfile(models.Model):
 
 
 class RetroToken(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    token = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)  # <-- updated
+    token = models.CharField(max_length=100, unique=True)
     used = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.token
+
 
 class RedeemedToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
