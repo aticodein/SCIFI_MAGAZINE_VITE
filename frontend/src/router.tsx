@@ -2,7 +2,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./Layout";
 import App from "./App";
-import Create from "./pages/Create";
 import Watch from "./pages/Watch";
 import Read from "./pages/Read";
 import Retro from "./pages/Retro";
@@ -13,7 +12,7 @@ import ReadBooks from "./pages/ReadBooks";
 import ReadNovels from "./pages/ReadNovels";
 import ReadComics from "./pages/ReadComics";
 import ReadGolden from "./pages/ReadGolden"; 
-
+import { CreateUsername } from "./components/User/CreateUsername"; 
 
 
 
@@ -23,7 +22,8 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: "/", element: <App /> },
-      { path: "/create", element: <Create /> },
+      { path: "/create", element: <CreateUsername /> },
+      
       { path: "/watch", element: <Watch /> },
       { path: "/read", element: <Read /> },
       { path: "/retro", element: <Retro /> },
