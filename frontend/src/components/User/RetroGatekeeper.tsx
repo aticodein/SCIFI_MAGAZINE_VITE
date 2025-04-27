@@ -1,7 +1,7 @@
 // src/components/User/RetroGatekeeper.tsx
 
 import React, { useEffect, useState } from "react";
-import RetroZoneDashboard from "../Retro-temp/RetroZoneDashboard.tsx";
+import RetroZoneDashboard from "../Retro/RetroZoneDashboard.tsx";
 import { CreateUsername } from "./CreateUsername.tsx";
 import { WelcomeBack } from "./WelcomeBack.tsx";
 
