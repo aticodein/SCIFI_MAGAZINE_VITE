@@ -1,10 +1,10 @@
 // Final refactored Retro.tsx using the separated components
 import React, { useState, useRef } from "react";
-import LiveTerminal from "../components/retro/LiveTerminal";
-import VitalsFeed from "../components/retro/VitalsFeed";
-import SystemNodes from "../components/retro/SystemNodes";
-import SignalDecoder from "../components/retro/SignalDecoder";
-import Diagnostics from "../components/retro/Diagnostics";
+import LiveTerminal from "../components/Retro/LiveTerminal";
+import VitalsFeed from "../components/Retro/VitalsFeed";
+import SystemNodes from "../components/Retro/SystemNodes";
+import SignalDecoder from "../components/Retro/SignalDecoder";
+import Diagnostics from "../components/Retro/Diagnostics";
 import RetroModal from "../components/RetroModal";
 import fluxImg from "../assets/images/flux.png";
 

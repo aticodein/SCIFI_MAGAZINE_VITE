@@ -1,7 +1,7 @@
 // src/pages/Pro.tsx
 import React, { useState, useEffect } from "react";
-import { CodeCollector } from "../components/pro/CodeCollector";
-import { ProgressTracker } from "../components/pro/ProgressTracker";
+import { CodeCollector } from "../components/Pro/CodeCollector";
+import { ProgressTracker } from "../components/Pro/ProgressTracker";
 
 type CodesState = { [key: string]: string | null };
 

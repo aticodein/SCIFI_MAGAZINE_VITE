@@ -10,6 +10,7 @@ import heroImg6 from "./assets/images/war.png";
 import heroImg7 from "./assets/images/golden-age2.png";
 import heroImg8 from "./assets/images/movie3.png";
 import "./index.css";
+import { Username } from "./components/User/Username";
 
 const images = [heroImg1, heroImg2, heroImg3, heroImg4, heroImg5, heroImg6, heroImg7, heroImg8];
 
@@ -34,6 +35,9 @@ export default function App() {
           <p className="text-lg sm:text-xl text-earth-cream mb-6">
             Your portal to futuristic storytelling, AI-powered creativity, and classic sci-fi gems.
           </p>
+          <div className="mt-8">
+            <Username />
+          </div>
           <Link
             to="/create"
             className="inline-block bg-brand-yellow text-brand-dark font-semibold px-6 py-3 rounded-md hover:bg-brand-orange transition-all"
@@ -41,6 +45,7 @@ export default function App() {
             Explore Creator Tools
           </Link>
         </div>
+        
 
         <div className="w-full md:w-1/3 mt-6 overflow-hidden rounded-lg shadow-lg relative h-80">
           {images.map((img, i) => (
