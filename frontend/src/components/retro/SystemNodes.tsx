@@ -66,7 +66,7 @@ export default function SystemNodes() {
       {showModal && activeCode && activeType && (
         <RetroModal
           onClose={() => setShowModal(false)}
-          type={activeType}
+          source={activeType}
           code={activeCode}
           nodeNumber={7}
         />

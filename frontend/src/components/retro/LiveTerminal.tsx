@@ -126,7 +126,7 @@ export default function LiveTerminal() {
       {showModal && activeCode && activeType && (
         <RetroModal
           onClose={() => setShowModal(false)}
-          type={activeType}
+          source={activeType}
           code={activeCode}
         />
       )}

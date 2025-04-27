@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import React from "react";
 import Footer from "./components/Footer";
+import { CookieConsent } from "./components/User/CookieConsent"; // Ensure this file exists or adjust the path
 
 
 
@@ -14,6 +15,7 @@ export default function Layout() {
         <Outlet />
       </main>
       <Footer />
+      <CookieConsent />
     </div>
   );
 }

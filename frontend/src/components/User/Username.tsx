@@ -2,10 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 
-export function Username() {
+interface UsernameProps {
+  mode?: "default" | "retro";
+}
+
+export function Username({ mode = "default" }: UsernameProps) {
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [countdown, setCountdown] = useState<number | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("usernames");
@@ -13,6 +18,20 @@ export function Username() {
       localStorage.setItem("usernames", JSON.stringify([]));
     }
   }, []);
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    if (mode === "retro") {
+      if (countdown !== null && countdown > 0) {
+        timer = setTimeout(() => setCountdown(countdown - 1), 1500);
+      } else if (countdown === 0) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 800);
+      }
+    }
+    return () => clearTimeout(timer);
+  }, [countdown, mode]);
 
   const validateUsername = (name: string) => {
     const regex = /^[a-zA-Z0-9]{3,20}$/;
@@ -36,13 +55,17 @@ export function Username() {
 
     savedUsernames.push(username);
     localStorage.setItem("usernames", JSON.stringify(savedUsernames));
-    localStorage.setItem("username", username); // Save current username separately too
+    localStorage.setItem("username", username);
     setError("");
     setSuccess(true);
+
+    if (mode === "retro") {
+      setCountdown(3); // Only start countdown if in Retro mode
+    }
   };
 
   return (
-    <div className="mt-8 text-center">
+    <div className="mt-8 text-center mb-8">
       {/* Input field + Clear X */}
       <div className="relative inline-block w-72 mb-4">
         <input
@@ -66,7 +89,7 @@ export function Username() {
           </button>
         )}
       </div>
-  
+
       {/* Save Username Button */}
       <div>
         <button
@@ -76,10 +99,29 @@ export function Username() {
           Save Username
         </button>
       </div>
-  
+
       {/* Error or Success Messages */}
       {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
-      {success && <p className="text-green-400 mt-2 text-sm">Username saved successfully!</p>}
+
+      {success && (
+        <div className="mt-4 text-green-400 text-center">
+          {mode === "retro" ? (
+            countdown !== null && countdown > 0 ? (
+              <div className="text-4xl animate-pulse transition-transform transform scale-110">
+                Username created! Entering RetroZone in {countdown}!
+              </div>
+            ) : (
+              <div className="text-lg mt-2 animate-bounce">
+                ENTER
+              </div>
+            )
+          ) : (
+            <div className="text-lg mt-2">
+              Username created successfully!
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
-}  
+}

@@ -105,7 +105,7 @@ export default function VitalsFeed() {
       {showModal && activeCode && activeType && (
         <RetroModal
           onClose={() => setShowModal(false)}
-          type={activeType}
+          source={activeType}
           code={activeCode}
         />
       )}

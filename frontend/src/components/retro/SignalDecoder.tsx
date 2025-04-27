@@ -83,7 +83,7 @@ export default function SignalDecoder() {
       {showModal && activeCode && activeType && (
         <RetroModal
           onClose={() => setShowModal(false)}
-          type={activeType}
+          source={activeType}
           code={activeCode}
         />
       )}

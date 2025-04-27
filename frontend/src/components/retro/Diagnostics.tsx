@@ -84,41 +84,35 @@ export default function Diagnostics() {
         <li>📶 Signal Strength: <span className={`text-yellow-200 ${signalStrength < 70 ? "text-red-500 animate-pulse" : ""}`}>{signalStrength}%</span></li>
         <li>🛡️ Shield Integrity: <span className={`text-yellow-200 ${shieldIntegrity < 60 ? "text-red-500 animate-pulse" : ""}`}>{shieldIntegrity}%</span></li>
 
-        {oxygenLevel >= 65 && oxygenLevel < 85 ? (
-          <button
+        <li
             onClick={() => {
-              setActiveCode("E-17");
-              setActiveType("emergency");
-              setShowModal(true);
+              if (oxygenLevel >= 65 && oxygenLevel < 85) {
+                setActiveCode("E-17");
+                setActiveType("diagnostics");
+                setShowModal(true);
+              }
             }}
-            className="flex items-center text-orange-400 hover:text-orange-300 transition p-2 rounded w-full text-left"
+            className="flex items-center gap-2 cursor-pointer hover:text-orange-300 min-h-[1.5rem]"
           >
-            ⚠️ Oxygen Level:
-            <span className={`ml-2 ${
-              oxygenLevel >= 85
-                ? "text-green-400"
-                : oxygenLevel >= 65
-                ? "text-orange-400"
-                : "text-red-500 animate-pulse"
-            }`}>
-              {Math.round(oxygenLevel)}%
-            </span>
-          </button>
-        ) : (
-          <li className="flex items-center gap-2">
-            <span className="text-earth-cream">🫧</span>
-            Oxygen Level:
-            <span className={`ml-2 ${
-              oxygenLevel >= 85
-                ? "text-green-400"
-                : oxygenLevel >= 65
-                ? "text-orange-400"
-                : "text-red-500 animate-pulse"
-            }`}>
-              {Math.round(oxygenLevel)}%
-            </span>
-          </li>
-        )}
+            {oxygenLevel >= 65 && oxygenLevel < 85 ? (
+              <>
+                ⚠️ Oxygen Level:
+                <span className="ml-2 text-orange-400">{Math.round(oxygenLevel)}%</span>
+              </>
+            ) : (
+              <>
+                🫧 Oxygen Level:
+                <span className={`ml-2 ${
+                  oxygenLevel >= 85
+                    ? "text-green-400"
+                    : "text-red-500 animate-pulse"
+                }`}>
+                  {Math.round(oxygenLevel)}%
+                </span>
+              </>
+            )}
+        </li>
+
 
         <li>⛽ Fuel Reserve: <span className={`text-yellow-200 ${fuelReserve < 40 ? "text-red-500 animate-pulse" : ""}`}>{fuelReserve}%</span></li>
         <li>💥 Core Pressure: <span className={`text-yellow-200 ${corePressure > 215 ? "text-red-500 animate-pulse" : ""}`}>{corePressure} PSI</span></li>
@@ -128,7 +122,7 @@ export default function Diagnostics() {
       {showModal && activeCode && activeType && (
         <RetroModal
           onClose={() => setShowModal(false)}
-          type={activeType}
+          source={activeType}
           code={activeCode}
         />
       )}

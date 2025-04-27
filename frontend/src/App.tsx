@@ -28,16 +28,16 @@ export default function App() {
     <div className="min-h-screen bg-earth-olive text-earth-cream">
       {/* Hero Section */}
       <div className="flex flex-col md:flex-row items-center justify-between px-6 py-20 max-w-7xl mx-auto gap-10">
-        <div className="max-w-xl">
+        <div className="max-w-xl text-center">
           <h1 className="text-4xl sm:text-5xl font-bold leading-tight mb-6">
             Welcome to <span className="text-brand-yellow">Sci-Fi Magazine</span>
           </h1>
+          
+          
           <p className="text-lg sm:text-xl text-earth-cream mb-6">
             Your portal to futuristic storytelling, AI-powered creativity, and classic sci-fi gems.
           </p>
-          <div className="mt-8">
-            <Username />
-          </div>
+          
           <Link
             to="/create"
             className="inline-block bg-brand-yellow text-brand-dark font-semibold px-6 py-3 rounded-md hover:bg-brand-orange transition-all"
@@ -72,6 +72,9 @@ export default function App() {
       <div className="bg-earth-forest py-16 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-8 text-earth-cream">Discover More</h2>
+          <div className="mt-8">
+          <Username mode="default" />
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <Link to="/read" className="bg-white text-earth-forest p-6 rounded-lg shadow hover:scale-105 transition">
               <h3 className="font-bold text-lg mb-2">Read</h3>
@@ -86,7 +89,7 @@ export default function App() {
               <p className="text-sm">Check out upcoming sci-fi movies and AI predictions.</p>
             </Link>
             <Link to="/retro" className="bg-white text-earth-forest p-6 rounded-lg shadow hover:scale-105 transition">
-              <h3 className="font-bold text-lg mb-2">Retro</h3>
+              <h3 className="font-bold text-lg mb-2">Retro Zone</h3>
               <p className="text-sm">Explore vintage media from the golden age of science fiction.</p>
             </Link>
           </div>
