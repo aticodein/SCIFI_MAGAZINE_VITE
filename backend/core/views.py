@@ -1,3 +1,4 @@
+# views.py
 from datetime import timedelta
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -6,9 +7,48 @@ from django.http import JsonResponse
 import json
 from .models import RedeemedToken, UserProfile
 from django.shortcuts import render
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import UserMiningProgress
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.contrib.auth import logout
+
+@api_view(["POST"])
+def logout_view(request):
+    logout(request)  # Clears the Django session
+    return Response({"message": "Logged out successfully"}, status=200)
+
+
+@csrf_exempt
+def check_username(request):
+    if request.method == 'GET':
+        username = request.session.get('username')  # ← if you save username in session
+        if username:
+            return JsonResponse({'username': username})
+        else:
+            return JsonResponse({'username': None})
+
+@api_view(["POST"])
+def create_username(request):
+    username = request.data.get("username")
+    if not username:
+        return Response({"error": "Username required"}, status=400)
+
+    user, created = UserMiningProgress.objects.get_or_create(username=username)
+
+    if created:
+        request.session['username'] = username
+        return Response({"message": "Username created successfully"}, status=201)  # 201 Created
+    else:
+        request.session['username'] = username
+        return Response({"error": "Username already exists"}, status=409)  # 🔥 409 Conflict
+
+
 
 def ping(request):
     return JsonResponse({"message": "pong"})
+
 
 
 @csrf_exempt

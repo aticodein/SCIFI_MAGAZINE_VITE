@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { CodeCollector } from "../components/Pro/CodeCollector";
 import { ProgressTracker } from "../components/Pro/ProgressTracker";
 
-// Define a strong type for Codes
 type CodesState = Record<"A" | "B" | "C" | "D" | "E", string | null>;
 
 export default function ProPage() {
@@ -17,10 +16,29 @@ export default function ProPage() {
   });
 
   useEffect(() => {
-    const saved = localStorage.getItem("proCodes");
-    if (saved) {
-      setCodes(JSON.parse(saved));
+    const savedCodes = localStorage.getItem("proCodes");
+    const activated = localStorage.getItem("activatedCode");
+
+    let initialCodes: CodesState = {
+      A: null,
+      B: null,
+      C: null,
+      D: null,
+      E: null,
+    };
+
+    if (savedCodes) {
+      initialCodes = JSON.parse(savedCodes);
     }
+
+    if (activated) {
+      const part = activated[0] as keyof CodesState;
+      console.log("ProPage caught Activated Code:", activated, " for part:", part);
+      initialCodes[part] = activated;
+      localStorage.removeItem("activatedCode"); // Clean up
+    }
+
+    setCodes(initialCodes);
   }, []);
 
   useEffect(() => {

@@ -12,7 +12,8 @@ import React from "react";
 import ReadBooks from "./pages/ReadBooks";
 import ReadNovels from "./pages/ReadNovels";
 import ReadComics from "./pages/ReadComics";
-import ReadGolden from "./pages/ReadGolden"; // or the correct path
+import ReadGolden from "./pages/ReadGolden"; 
+
 
 
 

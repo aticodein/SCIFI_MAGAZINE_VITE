@@ -5,6 +5,10 @@ from . import views
 urlpatterns = [
     path('ping/', views.ping),
     path('token/redeem/', views.redeem_token),
-    path('', views.landing_page, name='landing_page'),  # Serve landing page at "/api/"
+    path('create-username/', views.create_username, name='create-username'),  # <-- no "api/" here
+    path('check-username/', views.check_username, name='check_username'),      # <-- no "api/" here
+    path('', views.landing_page, name='landing_page'),
+    path('logout/', views.logout_view, name='logout'),
 ]
+
 

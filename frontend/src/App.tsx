@@ -10,7 +10,7 @@ import heroImg6 from "./assets/images/war.png";
 import heroImg7 from "./assets/images/golden-age2.png";
 import heroImg8 from "./assets/images/movie3.png";
 import "./index.css";
-import { Username } from "./components/User/Username";
+
 
 const images = [heroImg1, heroImg2, heroImg3, heroImg4, heroImg5, heroImg6, heroImg7, heroImg8];
 
@@ -44,6 +44,7 @@ export default function App() {
           >
             Explore Creator Tools
           </Link>
+          
         </div>
         
 
@@ -73,7 +74,7 @@ export default function App() {
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-8 text-earth-cream">Discover More</h2>
           <div className="mt-8">
-          <Username mode="default" />
+          
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <Link to="/read" className="bg-white text-earth-forest p-6 rounded-lg shadow hover:scale-105 transition">

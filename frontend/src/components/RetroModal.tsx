@@ -12,12 +12,18 @@ interface RetroModalProps {
 export default function RetroModal({ onClose, source, code }: RetroModalProps) {
   const navigate = useNavigate();
 
-  console.log("RetroModal source:", source); // 💬 This is your debug print Captain!
+  console.log("RetroModal source:", source);
+
+  const handleActivate = () => {
+    localStorage.setItem("activatedCode", code); // 🚀 Save found code before navigating
+    onClose();
+    navigate("/pro");
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center">
       <div className="bg-[#111] border border-green-500 p-6 rounded-lg shadow-lg text-green-300 max-w-sm w-full text-center">
-      
+
         {/* === Display Different Text Based on Source === */}
 
         {source === "vitals" && (
@@ -73,10 +79,7 @@ export default function RetroModal({ onClose, source, code }: RetroModalProps) {
         {/* === Buttons === */}
         <button
           className="bg-yellow-400 text-black font-bold px-4 py-2 rounded hover:bg-yellow-300 transition w-full mt-4"
-          onClick={() => {
-            onClose();
-            navigate("/pro");
-          }}
+          onClick={handleActivate} // 🚀 new
         >
           Activate {code}
         </button>
