@@ -1,8 +1,8 @@
 // src/pages/Pro.tsx
 
 import React, { useState, useEffect } from "react";
-import { CodeCollector } from "../components/Pro-temp/CodeCollector";
-import { ProgressTracker } from "../components/Pro-temp/ProgressTracker";
+import { CodeCollector } from "../components/Pro/CodeCollector";
+import { ProgressTracker } from "../components/Pro/ProgressTracker";
 
 type CodesState = Record<"A" | "B" | "C" | "D" | "E", string | null>;
 
