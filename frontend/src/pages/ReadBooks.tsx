@@ -177,7 +177,7 @@ export default function ReadBooks() {
                       />
                       {!hasImage && (
                         <p className="text-xs italic text-center text-black -mt-2 mb-2">
-                          Book cover unavailable
+                          Book cover unavailable.
                         </p>
                       )}
                     </div>
