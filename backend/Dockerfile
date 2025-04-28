@@ -5,13 +5,16 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Copy requirements and install them
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all project files
-COPY . .
+# Copy the backend code
+COPY backend/ .
 
-# Expose the port Railway expects
+# Set work directory to backend
+WORKDIR /app
+
+# Expose port 8080
 EXPOSE 8080
 
 # Run Gunicorn
