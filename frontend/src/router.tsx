@@ -12,7 +12,7 @@ import ReadBooks from "./pages/ReadBooks";
 import ReadNovels from "./pages/ReadNovels";
 import ReadComics from "./pages/ReadComics";
 import ReadGolden from "./pages/ReadGolden"; 
-import { CreateUsername } from "./components/User/CreateUsername"; 
+import Create from "./pages/Create";
 
 
 
@@ -22,8 +22,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: "/", element: <App /> },
-      { path: "/create", element: <CreateUsername /> },
-      
+      { path: "/create", element: <Create /> }, 
       { path: "/watch", element: <Watch /> },
       { path: "/read", element: <Read /> },
       { path: "/retro", element: <Retro /> },
