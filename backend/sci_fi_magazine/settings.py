@@ -13,7 +13,6 @@ DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
-    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -97,38 +96,5 @@ CORS_EXPOSE_HEADERS = [
 
 SESSION_COOKIE_SAMESITE = None
 SESSION_COOKIE_SECURE = False  # True if you are running HTTPS later
-
-JAZZMIN_SETTINGS = {
-    "site_title": "Sci-Fi Magazine Admin",
-    "site_brand": "Sci-FiMag",
-    "welcome_sign": "Welcome to the Sci-Fi Magazine Admin Panel",
-    "copyright": "",
-
-    "topmenu_links": [
-        {"name": "Landing Page", "url": "/", "new_window": True},
-        {"name": "Frontend (Netlify)", "url": "https://golden-lebkuchen-879258.netlify.app", "new_window": True},
-    ],
-
-    "usermenu_links": [
-        {"name": "Return to Landing", "url": "/", "icon": "fas fa-rocket", "new_window": True},
-    ],
-
-    "show_sidebar": True,
-    "navigation_expanded": True,
-
-    "icons": {
-        "auth": "fas fa-users-cog",
-        "core.UserProfile": "fas fa-user-astronaut",
-        "core.RetroToken": "fas fa-key",
-    },
-
-    "default_icon_parents": "fas fa-cogs",
-    "default_icon_children": "fas fa-dot-circle",
-
-}
-
-JAZZMIN_UI_TWEAKS = {
-    "theme": "darkly",
-}
 
 
