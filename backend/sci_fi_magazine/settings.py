@@ -97,4 +97,7 @@ CORS_EXPOSE_HEADERS = [
 SESSION_COOKIE_SAMESITE = None
 SESSION_COOKIE_SECURE = False  # True if you are running HTTPS later
 
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+
 
