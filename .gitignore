@@ -1,2 +1,17 @@
 # Local Netlify folder
 .netlify
+
+# Local Django settings
+db.sqlite3
+.env
+env/
+*.pyc
+__pycache__/
+*.log
+
+# VS Code settings
+.vscode/
+
+# Node modules (for frontend React app)
+frontend/node_modules/
+

@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import jazzmin  # 👈 ensures jazzmin is loaded early
+import dj_database_url
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -60,6 +61,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+        "default": dj_database_url.config(default=os.getenv("DATABASE_URL"))
     }
 }
 
