@@ -97,3 +97,8 @@ SESSION_COOKIE_SECURE = not DEBUG  # True in production, False locally
 STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://golden-lebkuchen-879258.netlify.app",
+]
+
