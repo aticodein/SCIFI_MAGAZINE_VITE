@@ -17,15 +17,49 @@ export function CreateUsername() {
       });
       const data = await res.json();
       console.log('🚪 Logout successful:', data);
-      window.location.reload(); // Reload to clear frontend session immediately
+      window.location.reload();
     } catch (error) {
       console.error('❌ Logout error:', error);
     }
   }
 
+  async function handleDeleteUser() {
+    const confirmed = window.confirm(
+      "⚠️ Are you absolutely sure you want to delete your user?\nThis will erase your access and data permanently."
+    );
+    if (!confirmed) return;
+
+    toast.loading("Deleting your data...");
+
+    try {
+      const res = await fetch("http://localhost:8000/api/delete-user/", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      toast.dismiss();
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success("User deleted.");
+        localStorage.clear();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        toast.error(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      toast.dismiss();
+      console.error("Delete user error:", error);
+      toast.error("🚫 Could not connect to server.");
+    }
+  }
+
   const handleSave = async () => {
     if (!validateUsername(username)) {
-      setError("Invalid username. Use 3-20 letters or numbers only.");
+      setError("Invalid username. Use 3–20 letters or numbers only.");
       return;
     }
 
@@ -35,9 +69,7 @@ export function CreateUsername() {
     try {
       const response = await fetch('http://localhost:8000/api/create-username/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username }),
         credentials: 'include',
       });
@@ -47,7 +79,7 @@ export function CreateUsername() {
       if (response.ok) {
         toast.success('Username created! Entering RetroZone 🚀');
         setTimeout(() => {
-          window.location.reload(); // Reload to re-fetch username and trigger WelcomeBack
+          window.location.reload();
         }, 1000);
       } else if (response.status === 409) {
         const errorData = await response.json();
@@ -112,6 +144,15 @@ export function CreateUsername() {
           className="text-sm underline text-earth-cream hover:text-brand-orange"
         >
           Force Logout (Clear Session)
+        </button>
+      </div>
+
+      <div className="mt-4">
+        <button
+          onClick={handleDeleteUser}
+          className="text-sm underline text-red-400 hover:text-red-600"
+        >
+          ⚠️ Delete My User Completely
         </button>
       </div>
     </div>

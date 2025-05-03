@@ -43,6 +43,21 @@ def create_username(request):
     else:
         request.session['username'] = username
         return Response({"error": "Username already exists"}, status=409)  # 🔥 409 Conflict
+    
+@api_view(["POST"])
+def delete_user(request):
+    username = request.session.get("username")
+    if not username:
+        return Response({"error": "Not logged in"}, status=401)
+
+    try:
+        user = UserMiningProgress.objects.get(username=username)
+        user.delete()
+        request.session.flush()  # Wipe session completely
+        return Response({"message": "User deleted successfully."}, status=200)
+    except UserMiningProgress.DoesNotExist:
+        return Response({"error": "User not found."}, status=404)
+
 
 
 
@@ -50,16 +65,15 @@ def ping(request):
     return JsonResponse({"message": "pong"})
 
 
-
 @csrf_exempt
 def redeem_token(request):
     if request.method != "POST":
         return JsonResponse({"error": "Only POST allowed"}, status=405)
 
-    if not request.user.is_authenticated:
-        return JsonResponse({"error": "Auth required"}, status=401)
-    
-    
+    # ✅ Use session-stored username instead of Django-auth user
+    username = request.session.get("username")
+    if not username:
+        return JsonResponse({"error": "Session login required"}, status=401)
 
     try:
         data = json.loads(request.body)
@@ -70,14 +84,26 @@ def redeem_token(request):
     if not token_input or "-" not in token_input:
         return JsonResponse({"error": "Invalid token format"}, status=400)
 
-    # Check if already redeemed
-    if RedeemedToken.objects.filter(user=request.user, token=token_input).exists():
+    # Check if user exists in mining progress
+    try:
+        user_progress = UserMiningProgress.objects.get(username=username)
+    except UserMiningProgress.DoesNotExist:
+        return JsonResponse({"error": "User not found"}, status=404)
+
+    # Optionally: Save token to code_A–E if not already present
+    part = token_input[0].upper()
+    if part in ['A', 'B', 'C', 'D', 'E']:
+        code_field = f"code_{part}"
+        setattr(user_progress, code_field, token_input)
+        user_progress.save()
+
+    # Token uniqueness check (optional for session users)
+    if RedeemedToken.objects.filter(token=token_input).exists():
         return JsonResponse({"error": "Token already redeemed."}, status=403)
 
-    # For demo: all tokens grant Tier 3
     expires = now() + timedelta(days=30)
     RedeemedToken.objects.create(
-        user=request.user,
+        user=None,  # You’re not linking to auth.User
         token=token_input,
         tier_granted=3,
         expires_at=expires
@@ -85,8 +111,6 @@ def redeem_token(request):
 
     return JsonResponse({
         "message": "Token redeemed! Tier 3 unlocked for 30 days.",
-        "expires": expires.strftime("%Y-%m-%d %H:%M:%S")
+        "expires": expires.strftime("%Y-%m-%d %H:%M:%S"),
+        "user": username,
     })
-
-def landing_page(request):
-    return render(request, "landing_page.html")

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import RetroZoneDashboard from "../Retro/RetroZoneDashboard.tsx";
 import { CreateUsername } from "./CreateUsername.tsx";
 import { WelcomeBack } from "./WelcomeBack.tsx";
+import { SessionLogin } from "./SessionLogin";
 
 export function RetroGatekeeper() {
   const [username, setUsername] = useState<string | null>(null);
@@ -39,7 +40,7 @@ export function RetroGatekeeper() {
   }
   
   if (!username) {
-    return <CreateUsername />;
+    return <SessionLogin onLogin={() => window.location.href = "/retro"} />;
   }
   
   if (!welcomeDone) {
