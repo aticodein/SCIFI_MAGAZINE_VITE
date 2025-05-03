@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { CodeCollector } from "../components/Pro/CodeCollector";
 import { ProgressTracker } from "../components/Pro/ProgressTracker";
 import { SessionLogin } from "../components/User/SessionLogin";
+import { API_BASE_URL } from "../config/api";
 
 type CodesState = Record<"A" | "B" | "C" | "D" | "E", string | null>;
 
@@ -24,7 +25,7 @@ export default function ProPage() {
   useEffect(() => {
     async function fetchUsername() {
       try {
-        const res = await fetch("http://localhost:8000/api/check-username/", {
+        const res = await fetch(`${API_BASE_URL}/api/check-username/`, {
           method: "GET",
           credentials: "include",
         });
@@ -93,7 +94,7 @@ export default function ProPage() {
   
     // 3. Send to backend
     try {
-      const response = await fetch("http://localhost:8000/api/token/redeem/", {
+      const response = await fetch(`${API_BASE_URL}/api/token/redeem/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -128,7 +129,7 @@ export default function ProPage() {
 
   async function handleLogout() {
     try {
-      const res = await fetch("http://localhost:8000/api/logout/", {
+      const res = await fetch(`${API_BASE_URL}/api/logout/`, {
         method: "POST",
         credentials: "include",
       });

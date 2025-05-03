@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { toast } from 'react-hot-toast';
+import { API_BASE_URL } from "../../config/api";
 
 export function CreateUsername() {
   const [username, setUsername] = useState("");
@@ -11,7 +12,7 @@ export function CreateUsername() {
 
   async function logoutUser() {
     try {
-      const res = await fetch('http://localhost:8000/api/logout/', {
+      const res = await fetch(`${API_BASE_URL}/api/logout/`, {
         method: 'POST',
         credentials: 'include',
       });
@@ -67,7 +68,7 @@ export function CreateUsername() {
     toast.loading('Saving username... 🚀');
 
     try {
-      const response = await fetch('http://localhost:8000/api/create-username/', {
+      const response = await fetch(`${API_BASE_URL}/api/create-username/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username }),

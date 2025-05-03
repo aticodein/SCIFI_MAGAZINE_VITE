@@ -5,6 +5,8 @@ import RetroZoneDashboard from "../Retro/RetroZoneDashboard.tsx";
 import { CreateUsername } from "./CreateUsername.tsx";
 import { WelcomeBack } from "./WelcomeBack.tsx";
 import { SessionLogin } from "./SessionLogin";
+import { API_BASE_URL } from "../../config/api";
+
 
 export function RetroGatekeeper() {
   const [username, setUsername] = useState<string | null>(null);
@@ -15,7 +17,7 @@ export function RetroGatekeeper() {
   useEffect(() => {
     async function fetchUsername() {
       try {
-        const res = await fetch('http://localhost:8000/api/check-username/', {
+        const res = await fetch(`${API_BASE_URL}/api/check-username/`, {
           method: 'GET',
           credentials: 'include',
         });
