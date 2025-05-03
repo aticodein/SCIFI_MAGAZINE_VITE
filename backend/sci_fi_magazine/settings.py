@@ -1,16 +1,16 @@
 import os
 from pathlib import Path
-import jazzmin  # 👈 ensures jazzmin is loaded early
 import dj_database_url
-
+import jazzmin  # ensures jazzmin is loaded early
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# ✅ Secure & toggleable
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "changeme")
+DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 
-DEBUG = True
-
-ALLOWED_HOSTS = ["*"]
+# ✅ Use env or fallback
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -21,15 +21,14 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
-    # your apps:
-    "core",  # (we’ll create this later)
+    "core",
 ]
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # ⬅ already good placement
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -57,16 +56,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "sci_fi_magazine.wsgi.application"
 
+# ✅ DATABASE toggle for Render
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-        "default": dj_database_url.config(default=os.getenv("DATABASE_URL"))
-    }
+    "default": dj_database_url.config(default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 }
-
-# sci_fi_magazine/settings.py
-
 
 AUTH_PASSWORD_VALIDATORS = []
 
@@ -77,10 +70,12 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# ✅ CORS SETTINGS for Netlify frontend + local dev
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8888",  # your frontend dev server
+    "http://localhost:8888",
+    "https://golden-lebkuchen-879258.netlify.app",  # ✅ YOUR ACTUAL FRONTEND
 ]
 
 CORS_ALLOW_HEADERS = [
@@ -94,13 +89,11 @@ CORS_EXPOSE_HEADERS = [
     "authorization",
 ]
 
-SESSION_COOKIE_SAMESITE = None
-SESSION_COOKIE_SECURE = False  # True if you are running HTTPS later
+# ✅ Cookies behave properly for cross-origin sessions
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = not DEBUG  # True in production, False locally
 
-
+# ✅ Static Files
 STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-
-
