@@ -150,21 +150,6 @@ export default function ProPage() {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold mb-8 text-center">Unlock Pro Access</h1>
 
-        {username && (
-          <div className="flex justify-end items-center text-sm mb-4 text-green-300 gap-2">
-          <span>
-            Logged in as <strong>{username}</strong>
-          </span>
-          <button
-            onClick={handleLogout}
-            className="text-red-400 underline hover:text-red-600"
-          >
-            Logout
-          </button>
-        </div>
-        
-        )}
-
         <ProgressTracker codes={codes} />
 
         <CodeCollector codes={codes} onFindCode={handleFakeAdd} />
