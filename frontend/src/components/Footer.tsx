@@ -47,6 +47,7 @@ export default function Footer() {
             <h4 className="font-semibold mb-2">About</h4>
             <ul className="space-y-1 text-sm">
               <li><Link to="/about" className="hover:underline">About Us</Link></li>
+              <li><Link to="/about" className="hover:underline">About Us</Link></li>
               <li><Link to="/pro" className="hover:underline">Pro Tools</Link></li>
               <li><a href="mailto:contact@scifimagazine.com" className="hover:underline">Contact</a></li>
             </ul>
