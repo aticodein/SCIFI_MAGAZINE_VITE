@@ -1,3 +1,5 @@
+//  /frontend/src/components/User/SessionLogin.tsx
+
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 
@@ -28,12 +30,12 @@ export function SessionLogin({ onLogin }: { onLogin: () => void }) {
       const data = await res.json();
 
       if (res.status === 201) {
-        toast.success("New user created. Welcome! 🚀");
-        setTimeout(() => onLogin(), 800);
+        toast.success(`New user: ${username} created. Welcome! 🚀`);
+        setTimeout(() => onLogin(), 4000);
       } else if (res.status === 409) {
         // Existing user — treat as login
-        toast.success("Welcome back! You're now logged in. 🚀");
-        setTimeout(() => onLogin(), 800);
+        toast.success(`Welcome back, ${username}! You're now logged in. 🚀`);
+        setTimeout(() => onLogin(), 4000);
       } else {
         setError(data.error || "Unknown error.");
         toast.error(`❌ ${data.error}`);
