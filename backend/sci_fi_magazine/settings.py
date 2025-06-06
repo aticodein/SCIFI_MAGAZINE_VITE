@@ -76,6 +76,8 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8888",
     "https://golden-lebkuchen-879258.netlify.app",  # ✅ YOUR ACTUAL FRONTEND
+    "https://6842f268ac8e1527c7aa38cd--golden-lebkuchen-879258.netlify.app",
+
 ]
 
 CORS_ALLOW_HEADERS = [
