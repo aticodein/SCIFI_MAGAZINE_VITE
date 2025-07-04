@@ -5,14 +5,11 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Copy requirements and install them
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the backend code
-COPY backend/ .
-
-# Set work directory to backend
-WORKDIR /app
+# Copy entire backend into /app
+COPY backend /app
 
 # Expose port 8080
 EXPOSE 8080
