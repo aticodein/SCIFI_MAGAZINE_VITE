@@ -15,3 +15,4 @@ __pycache__/
 # Node modules (for frontend React app)
 frontend/node_modules/
 
+frontend/.env.production
