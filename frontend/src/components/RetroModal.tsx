@@ -12,27 +12,18 @@ interface RetroModalProps {
 export default function RetroModal({ onClose, source, code }: RetroModalProps) {
   const navigate = useNavigate();
 
-  console.log("RetroModal source:", source);
-
   const handleActivate = () => {
-    console.log(`🎯 Activating code ${code} from ${source}`);
-    
     // Clear any existing activatedCode first
     localStorage.removeItem("activatedCode");
     
     // Set the new code
     localStorage.setItem("activatedCode", code);
     
-    // Verify it was set
-    const stored = localStorage.getItem("activatedCode");
-    console.log(`� Code stored in localStorage:`, stored);
-    
     // Also save to proCodes immediately for backup
     const existingCodes = JSON.parse(localStorage.getItem("proCodes") || '{"A":null,"B":null,"C":null,"D":null,"E":null}');
     const part = code[0] as 'A' | 'B' | 'C' | 'D' | 'E';
     existingCodes[part] = code;
     localStorage.setItem("proCodes", JSON.stringify(existingCodes));
-    console.log(`💾 Updated proCodes:`, existingCodes);
     
     // Add a small visual feedback
     const button = document.querySelector('.bg-yellow-400') as HTMLButtonElement;
