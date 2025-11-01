@@ -149,10 +149,24 @@ export default function ProPage() {
 
   if (checkingLogin) return <div className="p-6">Checking session...</div>;
 
+  const handleLoginSuccess = async () => {
+    console.log('🔄 ProPage: Login successful, refetching username...');
+    setCheckingLogin(true);
+    try {
+      // Small delay to ensure session is established
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await fetchUsername();
+    } catch (error) {
+      console.error('💥 ProPage: Post-login error:', error);
+      setUsername(null);
+      setCheckingLogin(false);
+    }
+  };
+
   if (!username) {
     return (
       <div className="min-h-screen bg-earth-olive text-earth-cream p-8">
-        <SessionLogin onLogin={fetchUsername} />
+        <SessionLogin onLogin={handleLoginSuccess} />
       </div>
     );
   }
