@@ -69,12 +69,40 @@ export default function ProPage() {
     setCodes(initialCodes);
   }, []);
 
+  // Listen for storage changes (when coming from Retro Zone)
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const activated = localStorage.getItem("activatedCode");
+      if (activated) {
+        const part = activated[0] as keyof CodesState;
+        console.log("Storage change detected - Activated Code:", activated, " for part:", part);
+        setCodes(prev => ({ ...prev, [part]: activated }));
+        localStorage.removeItem("activatedCode");
+      }
+    };
+
+    // Listen for storage events (from other tabs/navigation)
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also check on focus (when returning to this tab)
+    window.addEventListener('focus', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('focus', handleStorageChange);
+    };
+  }, []);
+
   useEffect(() => {
     localStorage.setItem("proCodes", JSON.stringify(codes));
   }, [codes]);
 
-  function handleFakeAdd(part: keyof CodesState) {
-    setCodes((prev) => ({ ...prev, [part]: generateCodePiece(part) }));
+  function handleFakeAdd(part: string | number | symbol) {
+    const codePart = part as keyof CodesState;
+    // Only add fake code if no real code exists for this part
+    if (!codes[codePart]) {
+      setCodes((prev) => ({ ...prev, [codePart]: generateCodePiece(codePart) }));
+    }
   }
 
   function generateCodePiece(part: keyof CodesState) {
