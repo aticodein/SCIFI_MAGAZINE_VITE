@@ -26,16 +26,26 @@ export default function ProPage() {
   const fetchUsername = async () => {
     setCheckingLogin(true);
     try {
+      console.log('🔄 ProPage: Checking username with API:', API_BASE_URL);
       const res = await fetch(`${API_BASE_URL}/api/check-username/`, {
         method: "GET",
         credentials: "include",
       });
+      console.log('🌐 ProPage: Response status:', res.status);
       const data = await res.json();
-      setUsername(data.username || null);
+      console.log('📡 ProPage: Response data:', data);
+      if (data.username) {
+        console.log('✅ ProPage: Found username:', data.username);
+        setUsername(data.username);
+      } else {
+        console.log('❌ ProPage: No username found');
+        setUsername(null);
+      }
     } catch (err) {
-      console.error("Error checking username:", err);
+      console.error("💥 ProPage: Error checking username:", err);
       setUsername(null);
     } finally {
+      console.log('🏁 ProPage: Setting checkingLogin to false');
       setCheckingLogin(false);
     }
   };
