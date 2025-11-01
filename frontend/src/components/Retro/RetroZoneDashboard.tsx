@@ -1,16 +1,16 @@
 // src/pages/Retro.tsx
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import fluxImg from "../../assets/images/flux.png";
+import { API_BASE_URL } from "../../config/api";
+import { clearSessionStoragePreservingPrefs } from "../../utils/session";
 import RetroModal from "../RetroModal";
 import Diagnostics from "./Diagnostics";
 import LiveTerminal from "./LiveTerminal";
 import SignalDecoder from "./SignalDecoder";
 import SystemNodes from "./SystemNodes";
 import VitalsFeed from "./VitalsFeed";
-import { API_BASE_URL } from "../../config/api";
-import { clearSessionStoragePreservingPrefs } from "../../utils/session";
 
 export default function Retro() {
   const navigate = useNavigate();
