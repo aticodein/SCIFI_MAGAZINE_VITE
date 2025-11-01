@@ -50,7 +50,7 @@ def create_username(request):
     if not username:
         return JsonResponse({"error": "Username required"}, status=400)
 
-    print(f"🚀 Login attempt for username: {username}")
+    print(f"🚀 PRODUCTION HOTFIX - Login attempt for username: {username}")
     user, created = UserMiningProgress.objects.get_or_create(username=username)
 
     request.session['username'] = username
