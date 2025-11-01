@@ -56,5 +56,5 @@ export function RetroGatekeeper() {
   }
   
   // Final stage: retrozone unlocked
-  return <RetroZoneDashboard />;
+  return <RetroZoneDashboard username={username} />;
 }

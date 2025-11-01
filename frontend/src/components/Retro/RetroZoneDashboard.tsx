@@ -10,11 +10,17 @@ import SignalDecoder from "./SignalDecoder";
 import SystemNodes from "./SystemNodes";
 import VitalsFeed from "./VitalsFeed";
 import { API_BASE_URL } from "../../config/api";
+import { clearSessionStoragePreservingPrefs } from "../../utils/session";
 
-export default function Retro() {
+interface RetroZoneDashboardProps {
+  username?: string;
+}
+
+export default function Retro({ username: propUsername }: RetroZoneDashboardProps = {}) {
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
   const [hasUsername, setHasUsername] = useState(false);
+  const [username, setUsername] = useState<string | null>(propUsername || null);
 
   const [showVitalsModal, setShowVitalsModal] = useState(false);
   const [showTerminalModal, setShowTerminalModal] = useState(false);
@@ -36,9 +42,11 @@ export default function Retro() {
         console.log("🟢 Server responded with:", data);
         if (data.username) {
           console.log("✅ Username found:", data.username);
+          setUsername(data.username);
           setHasUsername(true);
         } else {
           console.log("⛔ No username found in session.");
+          setUsername(null);
           setHasUsername(false);
         }
       } catch (error) {
@@ -75,10 +83,44 @@ export default function Retro() {
     return null;
   }
 
-  console.log("🛸 Username verified - rendering RetroZone dashboard!");
+  async function handleLogout() {
+    try {
+      console.log("🔄 RetroZone: Starting logout process...");
+      const res = await fetch(`${API_BASE_URL}/api/logout/`, {
+        method: "POST",
+        credentials: "include",
+      });
+      console.log("🌐 RetroZone: Logout API response status:", res.status);
+      const data = await res.json();
+      console.log("✅ RetroZone: Logout successful:", data);
+      console.log("🧹 RetroZone: Clearing session storage...");
+      clearSessionStoragePreservingPrefs();
+      console.log("🔄 RetroZone: Reloading page...");
+      window.location.reload();
+    } catch (err) {
+      console.error("❌ RetroZone: Logout failed:", err);
+      alert("❌ Failed to logout.");
+    }
+  }
+
+  console.log("�🛸 Username verified - rendering RetroZone dashboard!");
 
   return (
     <div className="min-h-screen bg-black text-green-400 font-mono">
+      {/* User Status Bar */}
+      <div className="bg-green-800 text-green-200 px-6 py-3 flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <span className="text-sm">COMMANDER:</span>
+          <strong className="text-green-100">{username}</strong>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 bg-orange-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-orange-500 transition font-bold text-base"
+        >
+          ⏻ LOGOUT
+        </button>
+      </div>
+
       {/* Header Banner */}
       <div className="w-full bg-green-900 text-center py-10 px-6">
         <h1 className="text-4xl md:text-5xl font-extrabold text-green-200 mb-4">
