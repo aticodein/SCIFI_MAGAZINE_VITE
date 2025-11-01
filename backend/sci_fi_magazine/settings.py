@@ -80,7 +80,13 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Common React dev port
     "https://golden-lebkuchen-879258.netlify.app",  # ✅ YOUR ACTUAL FRONTEND
     "https://6842f268ac8e1527c7aa38cd--golden-lebkuchen-879258.netlify.app",
+    "https://690686dcb7b40e00083f854d--golden-lebkuchen-879258.netlify.app",  # ✅ NEW DEPLOY
 
+]
+
+# ✅ Alternative: Allow all Netlify deploy previews
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://.*--golden-lebkuchen-879258\.netlify\.app$",
 ]
 
 CORS_ALLOW_HEADERS = [
@@ -110,6 +116,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5174",
     "http://localhost:3000",
     "https://golden-lebkuchen-879258.netlify.app",
+    "https://690686dcb7b40e00083f854d--golden-lebkuchen-879258.netlify.app",
 ]
 
 CSRF_COOKIE_SAMESITE = "Lax"
