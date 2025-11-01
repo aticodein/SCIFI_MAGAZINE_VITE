@@ -5,6 +5,7 @@ import { CodeCollector } from "../components/Pro/CodeCollector";
 import { ProgressTracker } from "../components/Pro/ProgressTracker";
 import { SessionLogin } from "../components/User/SessionLogin";
 import { API_BASE_URL } from "../config/api";
+import { clearSessionStoragePreservingPrefs } from "../utils/session";
 
 type CodesState = Record<"A" | "B" | "C" | "D" | "E", string | null>;
 
@@ -19,8 +20,6 @@ export default function ProPage() {
 
   const [username, setUsername] = useState<string | null>(null);
   const [checkingLogin, setCheckingLogin] = useState(true);
-  
-
 
   const fetchUsername = async () => {
     setCheckingLogin(true);
@@ -169,39 +168,56 @@ export default function ProPage() {
 
   async function handleLogout() {
     try {
+      console.log("🔄 ProPage: Starting logout process...");
       const res = await fetch(`${API_BASE_URL}/api/logout/`, {
         method: "POST",
         credentials: "include",
       });
+      console.log("🌐 ProPage: Logout API response status:", res.status);
       const data = await res.json();
-      console.log("🚪 Logged out:", data);
-      localStorage.clear(); // Clear token state too
+      console.log("✅ ProPage: Logout successful:", data);
+      console.log("🧹 ProPage: Clearing session storage...");
+      clearSessionStoragePreservingPrefs();
+      console.log("🔄 ProPage: Reloading page...");
       window.location.reload();
     } catch (err) {
-      console.error("Logout failed:", err);
+      console.error("❌ ProPage: Logout failed:", err);
       alert("❌ Failed to logout.");
     }
   }
-  
-
-  
 
   return (
-    <div className="min-h-screen bg-earth-olive text-earth-cream p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8 text-center">Unlock Pro Access</h1>
+    <div className="min-h-screen bg-earth-olive text-earth-cream">
+      {/* User Status Bar */}
+      <div className="bg-earth-clay text-earth-cream px-6 py-3 flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <span className="text-sm">USER:</span>
+          <strong className="text-yellow-300">{username}</strong>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 bg-orange-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-orange-500 transition font-bold text-base"
+        >
+          ⏻ LOGOUT
+        </button>
+      </div>
 
-        <ProgressTracker codes={codes} />
+      <div className="p-8">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-4xl font-bold mb-8 text-center">Unlock Pro Access</h1>
 
-        <CodeCollector codes={codes} onFindCode={handleFakeAdd} />
+          <ProgressTracker codes={codes} />
 
-        <div className="text-center mt-6">
-          <button
+          <CodeCollector codes={codes} onFindCode={handleFakeAdd} />
+
+          <div className="text-center mt-6">
+            <button
               className="bg-brand-dark text-earth-cream px-6 py-3 rounded-full font-semibold hover:bg-brand-light transition"
               onClick={handleSubmitCode}
             >
-            Submit Your Full Code
-          </button>
+              Submit Your Full Code
+            </button>
+          </div>
         </div>
       </div>
     </div>
