@@ -9,6 +9,7 @@ import LiveTerminal from "./LiveTerminal";
 import SignalDecoder from "./SignalDecoder";
 import SystemNodes from "./SystemNodes";
 import VitalsFeed from "./VitalsFeed";
+import { API_BASE_URL } from "../../config/api";
 
 export default function Retro() {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export default function Retro() {
     async function checkUsername() {
       console.log("🔵 Fetching username from backend...");
       try {
-        const res = await fetch('http://localhost:8000/api/check-username/', {
+        const res = await fetch(`${API_BASE_URL}/api/check-username/`, {
           method: 'GET',
           credentials: 'include',
         });

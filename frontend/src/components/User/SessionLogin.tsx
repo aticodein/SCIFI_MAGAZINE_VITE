@@ -20,6 +20,9 @@ export function SessionLogin({ onLogin }: { onLogin: () => void }) {
     toast.loading("Logging in...");
 
     try {
+      console.log("🔵 Making request to:", `${API_BASE_URL}/api/create-username/`);
+      console.log("🔵 Request body:", JSON.stringify({ username }));
+      
       const res = await fetch(`${API_BASE_URL}/api/create-username/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -27,8 +30,12 @@ export function SessionLogin({ onLogin }: { onLogin: () => void }) {
         credentials: "include",
       });
 
+      console.log("🔵 Response status:", res.status);
+      console.log("🔵 Response headers:", [...res.headers.entries()]);
+      
       toast.dismiss();
       const data = await res.json();
+      console.log("🟢 Response data:", data);
 
       if (res.status === 201) {
         toast.success(`New user: ${username} created. Welcome! 🚀`);
