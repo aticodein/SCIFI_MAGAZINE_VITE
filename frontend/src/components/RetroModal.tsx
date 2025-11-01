@@ -15,9 +15,20 @@ export default function RetroModal({ onClose, source, code }: RetroModalProps) {
   console.log("RetroModal source:", source);
 
   const handleActivate = () => {
+    console.log(`🎯 Activating code ${code} from ${source}`);
     localStorage.setItem("activatedCode", code); // 🚀 Save found code before navigating
-    onClose();
-    navigate("/pro");
+    
+    // Add a small visual feedback
+    const button = document.querySelector('.bg-yellow-400') as HTMLButtonElement;
+    if (button) {
+      button.textContent = `✅ Code ${code} Secured!`;
+      button.disabled = true;
+    }
+    
+    setTimeout(() => {
+      onClose();
+      navigate("/pro");
+    }, 1000); // Small delay for user feedback
   };
 
   return (
