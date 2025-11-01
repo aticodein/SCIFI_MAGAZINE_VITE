@@ -96,8 +96,8 @@ npm install
 netlify dev
 ```
 **Frontend URLs:**
-- Vite Dev Server: http://localhost:5173/
-- Netlify Dev Server: http://localhost:8888/
+- Vite Dev Server: http://localhost:5175/ (recommended for VS Code Simple Browser)
+- Netlify Dev Server: http://localhost:8888/ (may have React 19 compatibility issues)
 
 ### 🔄 Development Workflow
 
@@ -142,11 +142,21 @@ netlify dev
 | User Authentication | ✅ Ready | ✅ Ready |
 | Database Models | ✅ Ready | ✅ Ready |
 | CORS Configuration | ✅ Ready | ✅ Ready |
+| VS Code Workspace | ✅ Ready | ✅ Ready |
+| Login Flow Fixes | ✅ Ready | ✅ Ready |
+| Development Tools | ✅ Ready | ✅ Ready |
 | Token System | 🚧 In Progress | ⏳ Pending |
 | Blog APIs | 🚧 In Progress | ⏳ Pending |
 | Payment Integration | ⏳ Planned | ⏳ Planned |
 
 ## 📝 Development Notes
+
+### Recent Updates (November 2025)
+- **Login Flow Fixes**: Resolved redirect loops in RetroGatekeeper and Pro pages
+- **Authentication Improvements**: Better state management and API integration
+- **VS Code Workspace**: Complete development environment configuration
+- **Project Cleanup**: Removed cache files and optimized structure
+- **Development Tools**: Added debug configurations and build tasks
 
 ### Database Models
 - **UserMiningProgress**: Stores username and 5 token codes (A-E)
@@ -157,11 +167,13 @@ netlify dev
 - Cookie-based sessions for cross-origin authentication
 - Automatic session cleanup on logout
 - Secure cookie settings for production HTTPS
+- Fixed redirect loop issues in authentication flow
 
 ### Code Organization
 - **Frontend**: Component-based React architecture
 - **Backend**: Django app structure with clear separation of concerns
 - **APIs**: RESTful design with consistent error handling
+- **VS Code**: Comprehensive workspace configuration for optimal development
 
 ## 🤝 Contributing
 
@@ -223,12 +235,47 @@ npm cache clean --force
 # Reinstall dependencies
 rm -rf node_modules package-lock.json
 npm install
+
+# Try using VS Code task instead
+# Ctrl+Shift+P -> "Tasks: Run Task" -> "Vite: Run Dev Server"
 ```
 
 **CORS errors in browser:**
 - Check that backend is running on port 8000
-- Verify frontend is running on port 5173 or 8888
+- Verify frontend is running on port 5173 or 5175
 - Ensure both servers are running simultaneously
+
+**VS Code Simple Browser compatibility:**
+- Use Vite dev server directly: `http://localhost:5175/`
+- Netlify Dev may have compatibility issues with React 19
+- For full testing, use Chrome/Edge browser
+
+## 🎯 VS Code Development Setup
+
+### Quick Start with VS Code Tasks
+Use the built-in VS Code tasks for streamlined development:
+
+1. **Open Command Palette**: `Ctrl+Shift+P`
+2. **Run Task**: Type "Tasks: Run Task"
+3. **Choose task**:
+   - `"Start All Servers"` - Starts both Django + Vite simultaneously
+   - `"Django: Run Server"` - Backend only
+   - `"Vite: Run Dev Server"` - Frontend only
+   - `"Django: Migrate"` - Run database migrations
+   - `"Django: Make Migrations"` - Create new migrations
+
+### VS Code Extensions (Auto-Recommended)
+The workspace includes automatic extension recommendations:
+- **Python & Django**: Python, Pylance, Django snippets
+- **React & TypeScript**: ES7+ React snippets, TypeScript Importer
+- **Styling**: Tailwind CSS IntelliSense, Auto Rename Tag
+- **Development**: GitLens, Prettier, ESLint, REST Client
+- **Productivity**: Vite extension, Bracket Pair Colorizer
+
+### Debug Configuration
+- **F5**: Debug Django server with breakpoints
+- **Ctrl+F5**: Run without debugging
+- Configurations available for both Django and Vite
 
 ## 🚀 Deployment
 
