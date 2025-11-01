@@ -3,60 +3,84 @@ from datetime import timedelta
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.timezone import now
-from django.http import JsonResponse
 import json
-from .models import RedeemedToken, UserProfile
+from .models import RedeemedToken, UserProfile, UserMiningProgress
 from django.shortcuts import render
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .models import UserMiningProgress
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from django.contrib.auth import logout
 
-@api_view(["POST"])
+@csrf_exempt
 def logout_view(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
     logout(request)  # Clears the Django session
-    return Response({"message": "Logged out successfully"}, status=200)
+    return JsonResponse({"message": "Logged out successfully"}, status=200)
 
 
 @csrf_exempt
 def check_username(request):
     if request.method == 'GET':
         username = request.session.get('username')  # ← if you save username in session
+        print(f"🔍 Session check - Session ID: {request.session.session_key}")
+        print(f"🔍 Session data: {dict(request.session)}")
+        print(f"🔍 Username in session: {username}")
         if username:
             return JsonResponse({'username': username})
         else:
             return JsonResponse({'username': None})
 
-@api_view(["POST"])
+@csrf_exempt
 def create_username(request):
-    username = request.data.get("username")
+    print(f"🚀 create_username called - Method: {request.method}")
+    print(f"🚀 Headers: {dict(request.headers)}")
+    print(f"🚀 Origin: {request.headers.get('origin')}")
+    
+    if request.method != "POST":
+        print("❌ Method not POST")
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+    
+    try:
+        print(f"🚀 Request body: {request.body}")
+        data = json.loads(request.body)
+        username = data.get("username")
+        print(f"🚀 Parsed username: {username}")
+    except json.JSONDecodeError as e:
+        print(f"❌ JSON decode error: {e}")
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    
     if not username:
-        return Response({"error": "Username required"}, status=400)
+        return JsonResponse({"error": "Username required"}, status=400)
 
+    print(f"🚀 Login attempt for username: {username}")
     user, created = UserMiningProgress.objects.get_or_create(username=username)
 
+    request.session['username'] = username
+    request.session.save()  # Explicitly save the session
+    print(f"🔑 Session set - Session ID: {request.session.session_key}")
+    print(f"🔑 Session data: {dict(request.session)}")
+
     if created:
-        request.session['username'] = username
-        return Response({"message": "Username created successfully"}, status=201)  # 201 Created
+        print(f"✨ New user created: {username}")
+        return JsonResponse({"message": "Username created successfully"}, status=201)  # 201 Created
     else:
-        request.session['username'] = username
-        return Response({"error": "Username already exists"}, status=409)  # 🔥 409 Conflict
+        print(f"👋 Existing user login: {username}")
+        return JsonResponse({"error": "Username already exists"}, status=409)  # 🔥 409 Conflict
     
-@api_view(["POST"])
+@csrf_exempt
 def delete_user(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+        
     username = request.session.get("username")
     if not username:
-        return Response({"error": "Not logged in"}, status=401)
+        return JsonResponse({"error": "Not logged in"}, status=401)
 
     try:
         user = UserMiningProgress.objects.get(username=username)
         user.delete()
         request.session.flush()  # Wipe session completely
-        return Response({"message": "User deleted successfully."}, status=200)
+        return JsonResponse({"message": "User deleted successfully."}, status=200)
     except UserMiningProgress.DoesNotExist:
-        return Response({"error": "User not found."}, status=404)
+        return JsonResponse({"error": "User not found."}, status=404)
 
 
 

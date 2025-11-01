@@ -33,7 +33,7 @@ export function CreateUsername() {
     toast.loading("Deleting your data...");
 
     try {
-      const res = await fetch("http://localhost:8000/api/delete-user/", {
+      const res = await fetch(`${API_BASE_URL}/api/delete-user/`, {
         method: "POST",
         credentials: "include",
       });

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { clearSessionStoragePreservingPrefs } from "../../utils/session";
+import { API_BASE_URL } from "../../config/api";
 
 export function UserStatus() {
   const [username, setUsername] = useState<string | null>(null);
@@ -9,7 +10,7 @@ export function UserStatus() {
   useEffect(() => {
     async function fetchUsername() {
       try {
-        const res = await fetch("http://localhost:8000/api/check-username/", {
+        const res = await fetch(`${API_BASE_URL}/api/check-username/`, {
           method: "GET",
           credentials: "include",
         });
@@ -25,7 +26,7 @@ export function UserStatus() {
 
   async function handleLogout() {
     try {
-      const res = await fetch("http://localhost:8000/api/logout/", {
+      const res = await fetch(`${API_BASE_URL}/api/logout/`, {
         method: "POST",
         credentials: "include",
       });

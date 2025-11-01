@@ -78,6 +78,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Default Vite port
     "http://localhost:5174",  # Alternative Vite port (currently in use)
     "http://localhost:3000",  # Common React dev port
+    "http://127.0.0.1:5173",  # 127.0.0.1 Vite port - ADDED FOR CORS FIX
+    "http://127.0.0.1:5174",  # 127.0.0.1 Alternative Vite port - ADDED FOR CORS FIX
     "https://golden-lebkuchen-879258.netlify.app",  # ✅ YOUR ACTUAL FRONTEND
     "https://6842f268ac8e1527c7aa38cd--golden-lebkuchen-879258.netlify.app",
     "https://web-production-2e557.up.railway.app",  # ✅ BACKEND PRODUCTION URL

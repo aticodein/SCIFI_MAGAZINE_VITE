@@ -18,8 +18,8 @@
 
 [dev]
   framework = "#custom"
-  command = "powershell -Command \"Write-Host 'Proxying to Vite on 5175'; Start-Sleep -Seconds 3600\""
-  targetPort = 5175
+  command = "powershell -Command \"cd frontend; npm run dev\""
+  targetPort = 3000
   port = 8889
 
 [[headers]]
