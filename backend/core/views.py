@@ -129,12 +129,13 @@ def redeem_token(request):
     except UserMiningProgress.DoesNotExist:
         return JsonResponse({"error": "User not found"}, status=404)
 
+    # TODO: PRODUCTION HOTFIX - Temporarily disabled code_A-E fields until migrations run
     # Optionally: Save token to code_A–E if not already present
-    part = token_input[0].upper()
-    if part in ['A', 'B', 'C', 'D', 'E']:
-        code_field = f"code_{part}"
-        setattr(user_progress, code_field, token_input)
-        user_progress.save()
+    # part = token_input[0].upper()
+    # if part in ['A', 'B', 'C', 'D', 'E']:
+    #     code_field = f"code_{part}"
+    #     setattr(user_progress, code_field, token_input)
+    #     user_progress.save()
 
     # Token uniqueness check (optional for session users)
     if RedeemedToken.objects.filter(token=token_input).exists():
