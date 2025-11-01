@@ -18,6 +18,11 @@ export default function ProPage() {
     E: null,
   });
 
+  // Debug: Log codes state changes (can be removed in production)
+  // useEffect(() => {
+  //   console.log(`🔍 [Pro] Codes state changed:`, codes);
+  // }, [codes]);
+
   const [username, setUsername] = useState<string | null>(null);
   const [checkingLogin, setCheckingLogin] = useState(true);
 
@@ -43,6 +48,7 @@ export default function ProPage() {
   }, []);
 
   useEffect(() => {
+    // Load initial codes from localStorage
     const savedCodes = localStorage.getItem("proCodes");
     const activated = localStorage.getItem("activatedCode");
 
@@ -60,7 +66,6 @@ export default function ProPage() {
 
     if (activated) {
       const part = activated[0] as keyof CodesState;
-      console.log("ProPage caught Activated Code:", activated, " for part:", part);
       initialCodes[part] = activated;
       localStorage.removeItem("activatedCode");
     }
@@ -68,43 +73,20 @@ export default function ProPage() {
     setCodes(initialCodes);
   }, []);
 
-  // Listen for storage changes (when coming from Retro Zone)
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const activated = localStorage.getItem("activatedCode");
-      if (activated) {
-        const part = activated[0] as keyof CodesState;
-        console.log("📦 Storage change detected - Activated Code:", activated, " for part:", part);
-        setCodes(prev => {
-          const updated = { ...prev, [part]: activated };
-          console.log("🔄 Updated codes state:", updated);
-          return updated;
-        });
-        localStorage.removeItem("activatedCode");
-      }
-    };
 
-    // Check immediately when component mounts (for navigation from Retro Zone)
-    handleStorageChange();
-
-    // Listen for storage events (from other tabs/navigation)
-    window.addEventListener('storage', handleStorageChange);
-    
-    // Also check on focus (when returning to this tab)
-    window.addEventListener('focus', handleStorageChange);
-    
-    // Check periodically for direct navigation cases
-    const interval = setInterval(handleStorageChange, 500);
-    
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('focus', handleStorageChange);
-      clearInterval(interval);
-    };
-  }, []);
 
   useEffect(() => {
-    localStorage.setItem("proCodes", JSON.stringify(codes));
+    // Only update localStorage if we have actual codes or if localStorage is empty
+    const existingCodes = JSON.parse(localStorage.getItem("proCodes") || '{"A":null,"B":null,"C":null,"D":null,"E":null}');
+    const hasNewCodes = Object.values(codes).some(code => code !== null);
+    const hasExistingCodes = Object.values(existingCodes).some(code => code !== null);
+    
+    // Update localStorage if:
+    // 1. We have new codes to save, OR
+    // 2. There are no existing codes in localStorage
+    if (hasNewCodes || !hasExistingCodes) {
+      localStorage.setItem("proCodes", JSON.stringify(codes));
+    }
   }, [codes]);
 
   function handleFakeAdd(part: string | number | symbol) {
