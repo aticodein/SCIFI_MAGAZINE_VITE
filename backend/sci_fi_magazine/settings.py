@@ -121,13 +121,28 @@ CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_SECURE = False
 
-IS_PRODUCTION = os.getenv("DJANGO_PRODUCTION", "False") == "True"
+# 🔧 PRODUCTION DETECTION - Better Railway detection
+IS_PRODUCTION = (
+    os.getenv("RAILWAY_ENVIRONMENT") is not None or 
+    os.getenv("DJANGO_PRODUCTION", "False") == "True" or
+    "railway.app" in os.getenv("RAILWAY_PUBLIC_DOMAIN", "")
+)
+
+print(f"🌍 Production mode: {IS_PRODUCTION}")
+print(f"🌍 Railway environment: {os.getenv('RAILWAY_ENVIRONMENT')}")
+print(f"🌍 Railway domain: {os.getenv('RAILWAY_PUBLIC_DOMAIN')}")
 
 if IS_PRODUCTION:
     CSRF_COOKIE_SAMESITE = "None"
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "None"
     SESSION_COOKIE_SECURE = True
+    
+    # 🔧 Additional session settings for cross-origin
+    SESSION_COOKIE_DOMAIN = None  # Let Django handle it automatically
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_AGE = 86400 * 7  # 7 days
+    SESSION_SAVE_EVERY_REQUEST = True
     
     # ✅ Additional Production Security Settings
     SECURE_SSL_REDIRECT = True
@@ -143,4 +158,6 @@ else:
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SAMESITE = "Lax"
     SESSION_COOKIE_SECURE = False
+    SESSION_COOKIE_AGE = 86400 * 7  # 7 days
+    SESSION_SAVE_EVERY_REQUEST = False
 
