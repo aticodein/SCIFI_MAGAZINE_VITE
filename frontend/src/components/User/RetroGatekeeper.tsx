@@ -47,8 +47,37 @@ export function RetroGatekeeper() {
     return <div>Checking your RetroZone access...</div>;
   }
   
+  const handleLoginSuccess = async () => {
+    console.log('🔄 RetroGatekeeper: Login successful, refetching username...');
+    setChecking(true);
+    try {
+      // Small delay to ensure session is established
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const res = await fetch(`${API_BASE_URL}/api/check-username/`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+      console.log('🌐 RetroGatekeeper: Post-login response status:', res.status);
+      const data = await res.json();
+      console.log('📡 RetroGatekeeper: Post-login response data:', data);
+      if (data.username) {
+        console.log('✅ RetroGatekeeper: Post-login username found:', data.username);
+        setUsername(data.username);
+      } else {
+        console.log('❌ RetroGatekeeper: Post-login no username found');
+        setUsername(null);
+      }
+    } catch (error) {
+      console.error('💥 RetroGatekeeper: Post-login error:', error);
+      setUsername(null);
+    } finally {
+      setChecking(false);
+    }
+  };
+
   if (!username) {
-    return <SessionLogin onLogin={() => window.location.href = "/retro"} />;
+    return <SessionLogin onLogin={handleLoginSuccess} />;
   }
   
   if (!welcomeDone) {
