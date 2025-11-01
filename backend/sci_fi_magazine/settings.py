@@ -100,9 +100,7 @@ CORS_EXPOSE_HEADERS = [
     "authorization",
 ]
 
-# ✅ Cookies behave properly for cross-origin sessions
-SESSION_COOKIE_SAMESITE = "None"
-SESSION_COOKIE_SECURE = not DEBUG  # True in production, False locally
+# ✅ Session cookies configured below based on IS_PRODUCTION
 
 # ✅ Static Files
 STATIC_URL = "static/"
@@ -119,21 +117,29 @@ CSRF_TRUSTED_ORIGINS = [
     "https://690686dcb7b40e00083f854d--golden-lebkuchen-879258.netlify.app",
 ]
 
-CSRF_COOKIE_SAMESITE = "Lax"
-CSRF_COOKIE_SECURE = False
-SESSION_COOKIE_SAMESITE = "Lax"
-SESSION_COOKIE_SECURE = False
+# 🔧 Production detection: Check for Railway or explicit production flag
+IS_PRODUCTION = (
+    os.getenv("RAILWAY_ENVIRONMENT") == "production" or 
+    os.getenv("DJANGO_PRODUCTION", "False") == "True" or
+    not DEBUG
+)
 
-IS_PRODUCTION = os.getenv("DJANGO_PRODUCTION", "False") == "True"
+print(f"🌍 Production mode: {IS_PRODUCTION}")
+print(f"🌍 Railway environment: {os.getenv('RAILWAY_ENVIRONMENT', 'None')}")
+print(f"🌍 Railway domain: {os.getenv('RAILWAY_PUBLIC_DOMAIN', 'None')}")
 
 if IS_PRODUCTION:
+    # ✅ Production: Cross-origin cookies for Netlify → Railway
     CSRF_COOKIE_SAMESITE = "None"
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "None"
     SESSION_COOKIE_SECURE = True
+    print("🔐 Production cookies: SameSite=None, Secure=True")
 else:
+    # ✅ Development: Relaxed cookies for localhost
     CSRF_COOKIE_SAMESITE = "Lax"
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SAMESITE = "Lax"
     SESSION_COOKIE_SECURE = False
+    print("🔓 Development cookies: SameSite=Lax, Secure=False")
 
