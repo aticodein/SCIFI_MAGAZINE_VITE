@@ -1,6 +1,5 @@
 // src/components/RetroModal.tsx
 
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 interface RetroModalProps {
@@ -12,30 +11,31 @@ interface RetroModalProps {
 export default function RetroModal({ onClose, source, code }: RetroModalProps) {
   const navigate = useNavigate();
 
+  console.log("RetroModal source:", source);
+
   const handleActivate = () => {
-    // Clear any existing activatedCode first
-    localStorage.removeItem("activatedCode");
+    console.log("🔥 RetroModal: Activating code", code);
     
-    // Set the new code
+    // Store the activated code for Pro page pickup
     localStorage.setItem("activatedCode", code);
     
-    // Also save to proCodes immediately for backup
-    const existingCodes = JSON.parse(localStorage.getItem("proCodes") || '{"A":null,"B":null,"C":null,"D":null,"E":null}');
-    const part = code[0] as 'A' | 'B' | 'C' | 'D' | 'E';
-    existingCodes[part] = code;
-    localStorage.setItem("proCodes", JSON.stringify(existingCodes));
+    // Also update the proCodes backup to prevent loss
+    const existingCodes = localStorage.getItem("proCodes");
+    const proCodes = existingCodes ? JSON.parse(existingCodes) : {
+      A: null, B: null, C: null, D: null, E: null
+    };
     
-    // Add a small visual feedback
-    const button = document.querySelector('.bg-yellow-400') as HTMLButtonElement;
-    if (button) {
-      button.textContent = `✅ Code ${code} Secured!`;
-      button.disabled = true;
+    // Determine which part this code belongs to (A, B, C, D, or E)
+    const part = code[0] as string;
+    if (["A", "B", "C", "D", "E"].includes(part)) {
+      proCodes[part as keyof typeof proCodes] = code;
+      localStorage.setItem("proCodes", JSON.stringify(proCodes));
+      console.log("🔄 RetroModal: Updated proCodes backup", proCodes);
     }
     
-    setTimeout(() => {
-      onClose();
-      navigate("/pro");
-    }, 1200); // Slightly longer delay for user feedback
+    console.log("🚀 RetroModal: Navigating to Pro page");
+    onClose();
+    navigate("/pro");
   };
 
   return (

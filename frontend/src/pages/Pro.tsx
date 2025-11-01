@@ -1,6 +1,6 @@
 // src/pages/Pro.tsx
 
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CodeCollector } from "../components/Pro/CodeCollector";
 import { ProgressTracker } from "../components/Pro/ProgressTracker";
 import { SessionLogin } from "../components/User/SessionLogin";
@@ -18,13 +18,10 @@ export default function ProPage() {
     E: null,
   });
 
-  // Debug: Log codes state changes (can be removed in production)
-  // useEffect(() => {
-  //   console.log(`🔍 [Pro] Codes state changed:`, codes);
-  // }, [codes]);
-
   const [username, setUsername] = useState<string | null>(null);
   const [checkingLogin, setCheckingLogin] = useState(true);
+  
+
 
   const fetchUsername = async () => {
     setCheckingLogin(true);
@@ -48,7 +45,6 @@ export default function ProPage() {
   }, []);
 
   useEffect(() => {
-    // Load initial codes from localStorage
     const savedCodes = localStorage.getItem("proCodes");
     const activated = localStorage.getItem("activatedCode");
 
@@ -66,6 +62,7 @@ export default function ProPage() {
 
     if (activated) {
       const part = activated[0] as keyof CodesState;
+      console.log("ProPage caught Activated Code:", activated, " for part:", part);
       initialCodes[part] = activated;
       localStorage.removeItem("activatedCode");
     }
@@ -73,13 +70,15 @@ export default function ProPage() {
     setCodes(initialCodes);
   }, []);
 
-
-
+  // 🔧 FIXED: Protective localStorage update to prevent race condition overwrites
   useEffect(() => {
-    // Only update localStorage if we have actual codes or if localStorage is empty
-    const existingCodes = JSON.parse(localStorage.getItem("proCodes") || '{"A":null,"B":null,"C":null,"D":null,"E":null}');
+    // Only update localStorage if we actually have codes to save
     const hasNewCodes = Object.values(codes).some(code => code !== null);
-    const hasExistingCodes = Object.values(existingCodes).some(code => code !== null);
+    
+    // Check what's currently in localStorage
+    const existingCodes = localStorage.getItem("proCodes");
+    const parsedExisting = existingCodes ? JSON.parse(existingCodes) : {};
+    const hasExistingCodes = Object.values(parsedExisting).some(code => code !== null);
     
     // Update localStorage if:
     // 1. We have new codes to save, OR
@@ -167,6 +166,9 @@ export default function ProPage() {
       alert("❌ Failed to logout.");
     }
   }
+  
+
+  
 
   return (
     <div className="min-h-screen bg-earth-olive text-earth-cream">
@@ -188,15 +190,15 @@ export default function ProPage() {
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold mb-8 text-center">Unlock Pro Access</h1>
 
-          <ProgressTracker codes={codes} />
+        <ProgressTracker codes={codes} />
 
-          <CodeCollector codes={codes} onFindCode={handleFakeAdd} />
+        <CodeCollector codes={codes} onFindCode={handleFakeAdd} />
 
           <div className="text-center mt-6">
             <button
-              className="bg-brand-dark text-earth-cream px-6 py-3 rounded-full font-semibold hover:bg-brand-light transition"
-              onClick={handleSubmitCode}
-            >
+                className="bg-brand-dark text-earth-cream px-6 py-3 rounded-full font-semibold hover:bg-brand-light transition"
+                onClick={handleSubmitCode}
+              >
               Submit Your Full Code
             </button>
           </div>
