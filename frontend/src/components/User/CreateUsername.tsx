@@ -1,6 +1,6 @@
 // src/components/User/CreateUsername.tsx
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { toast } from 'react-hot-toast';
 import { API_BASE_URL } from "../../config/api";
 

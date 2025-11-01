@@ -1,8 +1,8 @@
 // src/components/User/UserStatus.tsx
 
-import React, { useEffect, useState } from "react";
-import { clearSessionStoragePreservingPrefs } from "../../utils/session";
+import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../../config/api";
+import { clearSessionStoragePreservingPrefs } from "../../utils/session";
 
 export function UserStatus() {
   const [username, setUsername] = useState<string | null>(null);
