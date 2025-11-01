@@ -12,14 +12,7 @@ class UserMiningProgress(models.Model):
     code_C = models.CharField(max_length=6, null=True, blank=True)  # 🚀
     code_D = models.CharField(max_length=6, null=True, blank=True)  # 🚀
     code_E = models.CharField(max_length=6, null=True, blank=True)  # 🚀
-
-    def __str__(self):
-        return self.username
-
-
-class UserMiningProgress(models.Model):
-    username = models.CharField(max_length=255, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)  # <-- add this!
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.username

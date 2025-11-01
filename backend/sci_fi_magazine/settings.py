@@ -75,8 +75,12 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8888",
+    "http://localhost:5173",  # Default Vite port
+    "http://localhost:5174",  # Alternative Vite port (currently in use)
+    "http://localhost:3000",  # Common React dev port
     "https://golden-lebkuchen-879258.netlify.app",  # ✅ YOUR ACTUAL FRONTEND
     "https://6842f268ac8e1527c7aa38cd--golden-lebkuchen-879258.netlify.app",
+    "https://web-production-2e557.up.railway.app",  # ✅ BACKEND PRODUCTION URL
 
 ]
 
@@ -103,7 +107,11 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:3000",
     "https://golden-lebkuchen-879258.netlify.app",
+    "https://web-production-2e557.up.railway.app",  # ✅ BACKEND PRODUCTION URL
 ]
 
 CSRF_COOKIE_SAMESITE = "Lax"
@@ -118,6 +126,16 @@ if IS_PRODUCTION:
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "None"
     SESSION_COOKIE_SECURE = True
+    
+    # ✅ Additional Production Security Settings
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    X_FRAME_OPTIONS = 'DENY'
+    
 else:
     CSRF_COOKIE_SAMESITE = "Lax"
     CSRF_COOKIE_SECURE = False
