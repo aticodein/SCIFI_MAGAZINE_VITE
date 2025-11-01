@@ -78,16 +78,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Default Vite port
     "http://localhost:5174",  # Alternative Vite port (currently in use)
     "http://localhost:3000",  # Common React dev port
-    "http://127.0.0.1:5173",  # 127.0.0.1 Vite port - ADDED FOR CORS FIX
-    "http://127.0.0.1:5174",  # 127.0.0.1 Alternative Vite port - ADDED FOR CORS FIX
     "https://golden-lebkuchen-879258.netlify.app",  # ✅ YOUR ACTUAL FRONTEND
     "https://6842f268ac8e1527c7aa38cd--golden-lebkuchen-879258.netlify.app",
-    "https://web-production-2e557.up.railway.app",  # ✅ BACKEND PRODUCTION URL
-]
 
-# 🔧 Allow all Netlify preview deployments with origin function
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https://.*--golden-lebkuchen-879258\.netlify\.app$",  # All Netlify preview deployments
 ]
 
 CORS_ALLOW_HEADERS = [
@@ -117,7 +110,6 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5174",
     "http://localhost:3000",
     "https://golden-lebkuchen-879258.netlify.app",
-    "https://web-production-2e557.up.railway.app",  # ✅ BACKEND PRODUCTION URL
 ]
 
 CSRF_COOKIE_SAMESITE = "Lax"
@@ -125,44 +117,16 @@ CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_SECURE = False
 
-# 🔧 PRODUCTION DETECTION - Better Railway detection
-IS_PRODUCTION = (
-    os.getenv("RAILWAY_ENVIRONMENT") is not None or 
-    os.getenv("DJANGO_PRODUCTION", "False") == "True" or
-    "railway.app" in os.getenv("RAILWAY_PUBLIC_DOMAIN", "")
-)
-
-print(f"🌍 Production mode: {IS_PRODUCTION}")
-print(f"🌍 Railway environment: {os.getenv('RAILWAY_ENVIRONMENT')}")
-print(f"🌍 Railway domain: {os.getenv('RAILWAY_PUBLIC_DOMAIN')}")
+IS_PRODUCTION = os.getenv("DJANGO_PRODUCTION", "False") == "True"
 
 if IS_PRODUCTION:
     CSRF_COOKIE_SAMESITE = "None"
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "None"
     SESSION_COOKIE_SECURE = True
-    
-    # 🔧 Additional session settings for cross-origin
-    SESSION_COOKIE_DOMAIN = None  # Let Django handle it automatically
-    SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_AGE = 86400 * 7  # 7 days
-    SESSION_SAVE_EVERY_REQUEST = True
-    
-    # ✅ Additional Production Security Settings
-    # 🚨 DISABLED: Railway handles SSL termination, internal communication is HTTP
-    # SECURE_SSL_REDIRECT = True  # This causes redirect loops on Railway
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_BROWSER_XSS_FILTER = True
-    X_FRAME_OPTIONS = 'DENY'
-    
 else:
     CSRF_COOKIE_SAMESITE = "Lax"
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SAMESITE = "Lax"
     SESSION_COOKIE_SECURE = False
-    SESSION_COOKIE_AGE = 86400 * 7  # 7 days
-    SESSION_SAVE_EVERY_REQUEST = False
 

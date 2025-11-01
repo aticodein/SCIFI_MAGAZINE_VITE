@@ -3,111 +3,66 @@ from datetime import timedelta
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.timezone import now
+from django.http import JsonResponse
 import json
-from .models import RedeemedToken, UserProfile, UserMiningProgress
+from .models import RedeemedToken, UserProfile
 from django.shortcuts import render
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import UserMiningProgress
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from django.contrib.auth import logout
-from django.contrib.auth.models import User
 
-@csrf_exempt
+@api_view(["POST"])
 def logout_view(request):
-    if request.method != "POST":
-        return JsonResponse({"error": "Only POST allowed"}, status=405)
     logout(request)  # Clears the Django session
-    return JsonResponse({"message": "Logged out successfully"}, status=200)
+    return Response({"message": "Logged out successfully"}, status=200)
 
 
 @csrf_exempt
 def check_username(request):
     if request.method == 'GET':
         username = request.session.get('username')  # ← if you save username in session
-        print(f"🔍 Session check - Session ID: {request.session.session_key}")
-        print(f"🔍 Session data: {dict(request.session)}")
-        print(f"🔍 Username in session: {username}")
         if username:
             return JsonResponse({'username': username})
         else:
             return JsonResponse({'username': None})
 
-@csrf_exempt
+@api_view(["POST"])
 def create_username(request):
-    print(f"🚀 create_username called - Method: {request.method}")
-    print(f"🚀 Headers: {dict(request.headers)}")
-    print(f"🚀 Origin: {request.headers.get('origin')}")
-    
-    if request.method != "POST":
-        print("❌ Method not POST")
-        return JsonResponse({"error": "Only POST allowed"}, status=405)
-    
-    try:
-        print(f"🚀 Request body: {request.body}")
-        data = json.loads(request.body)
-        username = data.get("username")
-        print(f"🚀 Parsed username: {username}")
-    except json.JSONDecodeError as e:
-        print(f"❌ JSON decode error: {e}")
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
-    
+    username = request.data.get("username")
     if not username:
-        return JsonResponse({"error": "Username required"}, status=400)
+        return Response({"error": "Username required"}, status=400)
 
-    print(f"🚀 PRODUCTION HOTFIX - Login attempt for username: {username}")
     user, created = UserMiningProgress.objects.get_or_create(username=username)
 
-    request.session['username'] = username
-    request.session.save()  # Explicitly save the session
-    print(f"🔑 Session set - Session ID: {request.session.session_key}")
-    print(f"🔑 Session data: {dict(request.session)}")
-
     if created:
-        print(f"✨ New user created: {username}")
-        return JsonResponse({"message": "Username created successfully"}, status=201)  # 201 Created
+        request.session['username'] = username
+        return Response({"message": "Username created successfully"}, status=201)  # 201 Created
     else:
-        print(f"👋 Existing user login: {username}")
-        return JsonResponse({"error": "Username already exists"}, status=409)  # 🔥 409 Conflict
+        request.session['username'] = username
+        return Response({"error": "Username already exists"}, status=409)  # 🔥 409 Conflict
     
-@csrf_exempt
+@api_view(["POST"])
 def delete_user(request):
-    if request.method != "POST":
-        return JsonResponse({"error": "Only POST allowed"}, status=405)
-        
     username = request.session.get("username")
     if not username:
-        return JsonResponse({"error": "Not logged in"}, status=401)
+        return Response({"error": "Not logged in"}, status=401)
 
     try:
         user = UserMiningProgress.objects.get(username=username)
         user.delete()
         request.session.flush()  # Wipe session completely
-        return JsonResponse({"message": "User deleted successfully."}, status=200)
+        return Response({"message": "User deleted successfully."}, status=200)
     except UserMiningProgress.DoesNotExist:
-        return JsonResponse({"error": "User not found."}, status=404)
+        return Response({"error": "User not found."}, status=404)
 
 
 
 
 def ping(request):
-    return JsonResponse({
-        "message": "pong", 
-        "timestamp": "2025-11-01-v2",
-        "admin_available": True,
-        "latest_deploy": "admin-debug-endpoints-added"
-    })
-
-def home(request):
-    """Simple home page for the backend API"""
-    return JsonResponse({
-        "message": "🚀 Sci-Fi Magazine Backend API",
-        "version": "1.0",
-        "admin": "/admin/",
-        "api_endpoints": {
-            "check_username": "/api/check-username/",
-            "create_username": "/api/create-username/",
-            "logout": "/api/logout/",
-            "token_redeem": "/api/token/redeem/",
-            "ping": "/api/ping/"
-        }
-    })
+    return JsonResponse({"message": "pong"})
 
 
 @csrf_exempt
@@ -135,13 +90,12 @@ def redeem_token(request):
     except UserMiningProgress.DoesNotExist:
         return JsonResponse({"error": "User not found"}, status=404)
 
-    # TODO: PRODUCTION HOTFIX - Temporarily disabled code_A-E fields until migrations run
     # Optionally: Save token to code_A–E if not already present
-    # part = token_input[0].upper()
-    # if part in ['A', 'B', 'C', 'D', 'E']:
-    #     code_field = f"code_{part}"
-    #     setattr(user_progress, code_field, token_input)
-    #     user_progress.save()
+    part = token_input[0].upper()
+    if part in ['A', 'B', 'C', 'D', 'E']:
+        code_field = f"code_{part}"
+        setattr(user_progress, code_field, token_input)
+        user_progress.save()
 
     # Token uniqueness check (optional for session users)
     if RedeemedToken.objects.filter(token=token_input).exists():
@@ -160,163 +114,3 @@ def redeem_token(request):
         "expires": expires.strftime("%Y-%m-%d %H:%M:%S"),
         "user": username,
     })
-
-
-@csrf_exempt
-def create_admin_user(request):
-    """Temporary endpoint to create admin user - REMOVE AFTER USE"""
-    if request.method != "POST":
-        return JsonResponse({"error": "Only POST allowed"}, status=405)
-    
-    try:
-        data = json.loads(request.body)
-        username = data.get("username", "admin")
-        password = data.get("password", "adminpass123")
-        
-        if User.objects.filter(username=username).exists():
-            return JsonResponse({"error": "Admin user already exists"}, status=409)
-        
-        user = User.objects.create_superuser(
-            username=username,
-            email="admin@scifimagazine.com",
-            password=password
-        )
-        
-        return JsonResponse({
-            "message": f"Superuser '{username}' created successfully!",
-            "login_url": "/admin/",
-            "note": "IMPORTANT: Remove this endpoint after use!"
-        })
-        
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
-
-
-@csrf_exempt  
-def view_users(request):
-    """Temporary endpoint to view user data - REMOVE AFTER USE"""
-    if request.method != "GET":
-        return JsonResponse({"error": "Only GET allowed"}, status=405)
-    
-    try:
-        users = UserMiningProgress.objects.all().values('username', 'created_at')
-        user_count = UserMiningProgress.objects.count()
-        
-        return JsonResponse({
-            "total_users": user_count,
-            "users": list(users),
-            "note": "IMPORTANT: Remove this endpoint after use!"
-        })
-        
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
-
-
-@csrf_exempt  
-def check_admin_status(request):
-    """Check admin interface status and superuser existence"""
-    try:
-        from django.contrib.auth.models import User
-        from django.urls import reverse
-        from django.contrib import admin
-        from django.conf import settings
-        
-        # Check if any superuser exists
-        superusers = User.objects.filter(is_superuser=True)
-        admin_users = list(superusers.values('username', 'email', 'is_active', 'date_joined'))
-        
-        # Check admin URL resolution
-        try:
-            admin_url = reverse('admin:index')
-            admin_url_works = True
-        except Exception as url_error:
-            admin_url_works = False
-            admin_url = f"Error resolving admin URL: {str(url_error)}"
-        
-        return JsonResponse({
-            "admin_url_resolution": admin_url_works,
-            "admin_url": admin_url,
-            "superuser_count": len(admin_users),
-            "superusers": admin_users,
-            "admin_site_name": admin.site.site_header if hasattr(admin.site, 'site_header') else "Django Administration",
-            "debug": settings.DEBUG,
-            "production_admin_url": "https://scifi-magazine-vite-production.up.railway.app/admin/"
-        })
-        
-    except Exception as e:
-        return JsonResponse({"error": str(e), "traceback": str(e)}, status=500)
-
-
-@csrf_exempt
-def simple_admin_check(request):
-    """Simple admin check that should work"""
-    try:
-        from django.contrib.auth.models import User
-        
-        # Count users and superusers
-        total_users = User.objects.count()
-        superuser_count = User.objects.filter(is_superuser=True).count()
-        
-        # Get superuser names
-        superuser_names = list(User.objects.filter(is_superuser=True).values_list('username', flat=True))
-        
-        return JsonResponse({
-            "status": "Admin check working",
-            "total_users": total_users,
-            "superuser_count": superuser_count,
-            "superuser_names": superuser_names,
-            "admin_url": "/admin/",
-            "message": "If superuser_count > 0, admin should work"
-        })
-        
-    except Exception as e:
-        return JsonResponse({
-            "error": "Database or admin issue",
-            "details": str(e),
-            "suggestion": "Try create-admin endpoint first"
-        }, status=500)
-
-
-@csrf_exempt
-def force_create_admin(request):
-    """Force create admin user (GET request version)"""
-    try:
-        from django.contrib.auth.models import User
-        
-        # Check if admin already exists
-        existing_admin = User.objects.filter(username='admin').first()
-        if existing_admin:
-            # Update password for existing admin
-            existing_admin.set_password('SciFi2024!')
-            existing_admin.is_superuser = True
-            existing_admin.is_staff = True
-            existing_admin.save()
-            
-            return JsonResponse({
-                "status": "Admin password reset",
-                "username": "admin",
-                "password": "SciFi2024!",
-                "message": "Existing admin user password updated",
-                "admin_url": "/admin/"
-            })
-        else:
-            # Create new admin user
-            admin_user = User.objects.create_superuser(
-                username='admin',
-                password='SciFi2024!',
-                email='admin@scifi.com'
-            )
-            
-            return JsonResponse({
-                "status": "Admin created successfully",
-                "username": "admin", 
-                "password": "SciFi2024!",
-                "message": "New admin user created",
-                "admin_url": "/admin/"
-            })
-            
-    except Exception as e:
-        return JsonResponse({
-            "error": "Failed to create admin",
-            "details": str(e)
-        }, status=500)
