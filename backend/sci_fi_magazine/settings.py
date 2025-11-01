@@ -145,7 +145,8 @@ if IS_PRODUCTION:
     SESSION_SAVE_EVERY_REQUEST = True
     
     # ✅ Additional Production Security Settings
-    SECURE_SSL_REDIRECT = True
+    # 🚨 DISABLED: Railway handles SSL termination, internal communication is HTTP
+    # SECURE_SSL_REDIRECT = True  # This causes redirect loops on Railway
     SECURE_HSTS_SECONDS = 31536000  # 1 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
