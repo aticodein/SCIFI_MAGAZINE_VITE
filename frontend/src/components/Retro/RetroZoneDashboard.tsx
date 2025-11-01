@@ -78,8 +78,42 @@ export default function Retro() {
 
   console.log("🛸 Username verified - rendering RetroZone dashboard!");
 
+  async function handleLogout() {
+    try {
+      console.log("🔄 RetroZone: Starting logout process...");
+      const res = await fetch(`${API_BASE_URL}/api/logout/`, {
+        method: "POST",
+        credentials: "include",
+      });
+      console.log("🌐 RetroZone: Logout API response status:", res.status);
+      const data = await res.json();
+      console.log("✅ RetroZone: Logout successful:", data);
+      console.log("🧹 RetroZone: Clearing session storage...");
+      clearSessionStoragePreservingPrefs();
+      console.log("🔄 RetroZone: Reloading page...");
+      window.location.reload();
+    } catch (err) {
+      console.error("❌ RetroZone: Logout failed:", err);
+      alert("❌ Failed to logout.");
+    }
+  }
+
   return (
     <div className="min-h-screen bg-black text-green-400 font-mono">
+      {/* User Status Bar */}
+      <div className="bg-green-800 text-green-200 px-6 py-3 flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <span className="text-sm">COMMANDER:</span>
+          <strong className="text-green-100">USER_LOGGED_IN</strong>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 bg-orange-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-orange-500 transition font-bold text-base"
+        >
+          ⏻ LOGOUT
+        </button>
+      </div>
+
       {/* Header Banner */}
       <div className="w-full bg-green-900 text-center py-10 px-6">
         <h1 className="text-4xl md:text-5xl font-extrabold text-green-200 mb-4">
