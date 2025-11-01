@@ -75,11 +75,18 @@ export default function ProPage() {
       const activated = localStorage.getItem("activatedCode");
       if (activated) {
         const part = activated[0] as keyof CodesState;
-        console.log("Storage change detected - Activated Code:", activated, " for part:", part);
-        setCodes(prev => ({ ...prev, [part]: activated }));
+        console.log("📦 Storage change detected - Activated Code:", activated, " for part:", part);
+        setCodes(prev => {
+          const updated = { ...prev, [part]: activated };
+          console.log("🔄 Updated codes state:", updated);
+          return updated;
+        });
         localStorage.removeItem("activatedCode");
       }
     };
+
+    // Check immediately when component mounts (for navigation from Retro Zone)
+    handleStorageChange();
 
     // Listen for storage events (from other tabs/navigation)
     window.addEventListener('storage', handleStorageChange);
@@ -87,9 +94,13 @@ export default function ProPage() {
     // Also check on focus (when returning to this tab)
     window.addEventListener('focus', handleStorageChange);
     
+    // Check periodically for direct navigation cases
+    const interval = setInterval(handleStorageChange, 500);
+    
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('focus', handleStorageChange);
+      clearInterval(interval);
     };
   }, []);
 
