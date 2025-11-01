@@ -87,7 +87,12 @@ def delete_user(request):
 
 
 def ping(request):
-    return JsonResponse({"message": "pong"})
+    return JsonResponse({
+        "message": "pong", 
+        "timestamp": "2025-11-01-v2",
+        "admin_available": True,
+        "latest_deploy": "admin-debug-endpoints-added"
+    })
 
 def home(request):
     """Simple home page for the backend API"""
@@ -240,3 +245,33 @@ def check_admin_status(request):
         
     except Exception as e:
         return JsonResponse({"error": str(e), "traceback": str(e)}, status=500)
+
+
+@csrf_exempt
+def simple_admin_check(request):
+    """Simple admin check that should work"""
+    try:
+        from django.contrib.auth.models import User
+        
+        # Count users and superusers
+        total_users = User.objects.count()
+        superuser_count = User.objects.filter(is_superuser=True).count()
+        
+        # Get superuser names
+        superuser_names = list(User.objects.filter(is_superuser=True).values_list('username', flat=True))
+        
+        return JsonResponse({
+            "status": "Admin check working",
+            "total_users": total_users,
+            "superuser_count": superuser_count,
+            "superuser_names": superuser_names,
+            "admin_url": "/admin/",
+            "message": "If superuser_count > 0, admin should work"
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            "error": "Database or admin issue",
+            "details": str(e),
+            "suggestion": "Try create-admin endpoint first"
+        }, status=500)

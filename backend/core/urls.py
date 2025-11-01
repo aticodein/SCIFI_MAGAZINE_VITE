@@ -12,6 +12,7 @@ urlpatterns = [
     path('delete-user/', views.delete_user, name='delete_user'),
     path('create-admin/', views.create_admin_user, name='create_admin'),  # 🚨 TEMPORARY - REMOVE AFTER USE
     path('check-admin/', views.check_admin_status, name='check_admin'),  # 🚨 TEMPORARY - Admin debugging
+    path('admin-check/', views.simple_admin_check, name='simple_admin_check'),  # 🚨 Even simpler check
 
 ]
 
