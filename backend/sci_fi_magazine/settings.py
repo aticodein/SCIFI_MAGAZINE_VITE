@@ -83,7 +83,11 @@ CORS_ALLOWED_ORIGINS = [
     "https://golden-lebkuchen-879258.netlify.app",  # ✅ YOUR ACTUAL FRONTEND
     "https://6842f268ac8e1527c7aa38cd--golden-lebkuchen-879258.netlify.app",
     "https://web-production-2e557.up.railway.app",  # ✅ BACKEND PRODUCTION URL
+]
 
+# 🔧 Allow all Netlify preview deployments with origin function
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://.*--golden-lebkuchen-879258\.netlify\.app$",  # All Netlify preview deployments
 ]
 
 CORS_ALLOW_HEADERS = [
