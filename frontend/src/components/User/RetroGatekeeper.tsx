@@ -13,46 +13,36 @@ export function RetroGatekeeper() {
   const [checking, setChecking] = useState(true);
   const [welcomeDone, setWelcomeDone] = useState(false);
 
-  const fetchUsername = async () => {
-    setChecking(true);
-    try {
-      console.log("🔍 RetroGatekeeper: Fetching username from:", `${API_BASE_URL}/api/check-username/`);
-      const res = await fetch(`${API_BASE_URL}/api/check-username/`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-      console.log("🔍 RetroGatekeeper: Response status:", res.status);
-      console.log("🔍 RetroGatekeeper: Response headers:", [...res.headers.entries()]);
-      const data = await res.json();
-      console.log("🔍 RetroGatekeeper: Response data:", data);
-      if (data.username) {
-        setUsername(data.username);
-      } else {
-        setUsername(null);
-      }
-    } catch (error) {
-      console.error('❌ RetroGatekeeper: Error fetching username:', error);
-      setUsername(null);
-    } finally {
-      setChecking(false);
-    }
-  };
 
   useEffect(() => {
+    async function fetchUsername() {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/check-username/`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const data = await res.json();
+        if (data.username) {
+          setUsername(data.username);
+        } else {
+          setUsername(null);
+        }
+      } catch (error) {
+        console.error('Error fetching username:', error);
+      } finally {
+        setChecking(false);
+      }
+    }
+
     fetchUsername();
   }, []);
-
-  const handleLoginSuccess = () => {
-    // Re-fetch username instead of page reload
-    fetchUsername();
-  };
 
   if (checking) {
     return <div>Checking your RetroZone access...</div>;
   }
   
   if (!username) {
-    return <SessionLogin onLogin={handleLoginSuccess} />;
+    return <SessionLogin onLogin={() => window.location.href = "/retro"} />;
   }
   
   if (!welcomeDone) {
@@ -60,5 +50,5 @@ export function RetroGatekeeper() {
   }
   
   // Final stage: retrozone unlocked
-  return <RetroZoneDashboard username={username} />;
+  return <RetroZoneDashboard />;
 }
