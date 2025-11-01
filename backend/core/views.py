@@ -185,3 +185,58 @@ def create_admin_user(request):
         
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+
+
+@csrf_exempt  
+def view_users(request):
+    """Temporary endpoint to view user data - REMOVE AFTER USE"""
+    if request.method != "GET":
+        return JsonResponse({"error": "Only GET allowed"}, status=405)
+    
+    try:
+        users = UserMiningProgress.objects.all().values('username', 'created_at')
+        user_count = UserMiningProgress.objects.count()
+        
+        return JsonResponse({
+            "total_users": user_count,
+            "users": list(users),
+            "note": "IMPORTANT: Remove this endpoint after use!"
+        })
+        
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
+@csrf_exempt  
+def check_admin_status(request):
+    """Check admin interface status and superuser existence"""
+    try:
+        from django.contrib.auth.models import User
+        from django.urls import reverse
+        from django.contrib import admin
+        from django.conf import settings
+        
+        # Check if any superuser exists
+        superusers = User.objects.filter(is_superuser=True)
+        admin_users = list(superusers.values('username', 'email', 'is_active', 'date_joined'))
+        
+        # Check admin URL resolution
+        try:
+            admin_url = reverse('admin:index')
+            admin_url_works = True
+        except Exception as url_error:
+            admin_url_works = False
+            admin_url = f"Error resolving admin URL: {str(url_error)}"
+        
+        return JsonResponse({
+            "admin_url_resolution": admin_url_works,
+            "admin_url": admin_url,
+            "superuser_count": len(admin_users),
+            "superusers": admin_users,
+            "admin_site_name": admin.site.site_header if hasattr(admin.site, 'site_header') else "Django Administration",
+            "debug": settings.DEBUG,
+            "production_admin_url": "https://scifi-magazine-vite-production.up.railway.app/admin/"
+        })
+        
+    except Exception as e:
+        return JsonResponse({"error": str(e), "traceback": str(e)}, status=500)
