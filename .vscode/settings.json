@@ -1,0 +1,63 @@
+{
+  "python.defaultInterpreterPath": "./backend/env/Scripts/python.exe",
+  "python.terminal.activateEnvironment": true,
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": true,
+  "python.formatting.provider": "black",
+  "python.analysis.typeCheckingMode": "basic",
+  
+  "eslint.workingDirectories": ["frontend"],
+  "prettier.configPath": "./frontend/.prettierrc",
+  
+  "tailwindCSS.includeLanguages": {
+    "typescript": "typescript",
+    "typescriptreact": "typescriptreact"
+  },
+  
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/node_modules": true,
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/*.pyc": true,
+    "**/.vite": true,
+    "**/.netlify": true,
+    "**/dist": true
+  },
+  
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  
+  "emmet.includeLanguages": {
+    "typescriptreact": "html"
+  },
+  
+  "git.autofetch": true,
+  "git.enableSmartCommit": true,
+  
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  
+  "[python]": {
+    "editor.rulers": [88],
+    "editor.tabSize": 4
+  },
+  
+  "[typescript]": {
+    "editor.tabSize": 2,
+    "editor.rulers": [100]
+  },
+  
+  "[typescriptreact]": {
+    "editor.tabSize": 2,
+    "editor.rulers": [100]
+  },
+  
+  "[json]": {
+    "editor.tabSize": 2
+  }
+}
