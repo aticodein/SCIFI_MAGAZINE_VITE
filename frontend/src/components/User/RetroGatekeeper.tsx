@@ -13,36 +13,42 @@ export function RetroGatekeeper() {
   const [checking, setChecking] = useState(true);
   const [welcomeDone, setWelcomeDone] = useState(false);
 
+  const fetchUsername = async () => {
+    setChecking(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/check-username/`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+      const data = await res.json();
+      if (data.username) {
+        setUsername(data.username);
+      } else {
+        setUsername(null);
+      }
+    } catch (error) {
+      console.error('Error fetching username:', error);
+      setUsername(null);
+    } finally {
+      setChecking(false);
+    }
+  };
 
   useEffect(() => {
-    async function fetchUsername() {
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/check-username/`, {
-          method: 'GET',
-          credentials: 'include',
-        });
-        const data = await res.json();
-        if (data.username) {
-          setUsername(data.username);
-        } else {
-          setUsername(null);
-        }
-      } catch (error) {
-        console.error('Error fetching username:', error);
-      } finally {
-        setChecking(false);
-      }
-    }
-
     fetchUsername();
   }, []);
+
+  const handleLoginSuccess = () => {
+    // Re-fetch username instead of page reload
+    fetchUsername();
+  };
 
   if (checking) {
     return <div>Checking your RetroZone access...</div>;
   }
   
   if (!username) {
-    return <SessionLogin onLogin={() => window.location.href = "/retro"} />;
+    return <SessionLogin onLogin={handleLoginSuccess} />;
   }
   
   if (!welcomeDone) {

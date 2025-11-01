@@ -1,6 +1,6 @@
 [build]
-  publish = "dist"
-  command = "npm run build"
+  publish = "frontend/dist"
+  command = "cd frontend && npm run build"
 
 [build.environment]
   NODE_VERSION = "18"
@@ -17,10 +17,10 @@
   status = 200
 
 [dev]
-  command = "npm run dev"
-  port = 5173
-  targetPort = 5173
-  framework = "#static"
+  framework = "#custom"
+  command = "powershell -Command \"Write-Host 'Proxying to Vite on 5175'; Start-Sleep -Seconds 3600\""
+  targetPort = 5175
+  port = 8889
 
 [[headers]]
   for = "/*"

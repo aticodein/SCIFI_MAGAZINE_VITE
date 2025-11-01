@@ -22,22 +22,24 @@ export default function ProPage() {
   
 
 
-  useEffect(() => {
-    async function fetchUsername() {
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/check-username/`, {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await res.json();
-        setUsername(data.username || null);
-      } catch (err) {
-        console.error("Error checking username:", err);
-      } finally {
-        setCheckingLogin(false);
-      }
+  const fetchUsername = async () => {
+    setCheckingLogin(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/check-username/`, {
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await res.json();
+      setUsername(data.username || null);
+    } catch (err) {
+      console.error("Error checking username:", err);
+      setUsername(null);
+    } finally {
+      setCheckingLogin(false);
     }
+  };
 
+  useEffect(() => {
     fetchUsername();
   }, []);
 
@@ -121,10 +123,9 @@ export default function ProPage() {
   if (!username) {
     return (
       <div className="min-h-screen bg-earth-olive text-earth-cream p-8">
-        <SessionLogin onLogin={() => window.location.href = "/pro"} />
-
+        <SessionLogin onLogin={fetchUsername} />
       </div>
-  );
+    );
   }
 
   async function handleLogout() {
