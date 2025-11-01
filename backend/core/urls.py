@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('', views.home, name='home'),  # Root path
     path('ping/', views.ping),
     path('token/redeem/', views.redeem_token),
     path('create-username/', views.create_username, name='create-username'),  # <-- no "api/" here

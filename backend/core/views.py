@@ -64,6 +64,21 @@ def delete_user(request):
 def ping(request):
     return JsonResponse({"message": "pong"})
 
+def home(request):
+    """Simple home page for the backend API"""
+    return JsonResponse({
+        "message": "🚀 Sci-Fi Magazine Backend API",
+        "version": "1.0",
+        "admin": "/admin/",
+        "api_endpoints": {
+            "check_username": "/api/check-username/",
+            "create_username": "/api/create-username/",
+            "logout": "/api/logout/",
+            "token_redeem": "/api/token/redeem/",
+            "ping": "/api/ping/"
+        }
+    })
+
 
 @csrf_exempt
 def redeem_token(request):
