@@ -7,6 +7,7 @@ import json
 from .models import RedeemedToken, UserProfile, UserMiningProgress
 from django.shortcuts import render
 from django.contrib.auth import logout
+from django.contrib.auth.models import User
 
 @csrf_exempt
 def logout_view(request):
@@ -154,3 +155,33 @@ def redeem_token(request):
         "expires": expires.strftime("%Y-%m-%d %H:%M:%S"),
         "user": username,
     })
+
+
+@csrf_exempt
+def create_admin_user(request):
+    """Temporary endpoint to create admin user - REMOVE AFTER USE"""
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+    
+    try:
+        data = json.loads(request.body)
+        username = data.get("username", "admin")
+        password = data.get("password", "adminpass123")
+        
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({"error": "Admin user already exists"}, status=409)
+        
+        user = User.objects.create_superuser(
+            username=username,
+            email="admin@scifimagazine.com",
+            password=password
+        )
+        
+        return JsonResponse({
+            "message": f"Superuser '{username}' created successfully!",
+            "login_url": "/admin/",
+            "note": "IMPORTANT: Remove this endpoint after use!"
+        })
+        
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
