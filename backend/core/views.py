@@ -275,3 +275,48 @@ def simple_admin_check(request):
             "details": str(e),
             "suggestion": "Try create-admin endpoint first"
         }, status=500)
+
+
+@csrf_exempt
+def force_create_admin(request):
+    """Force create admin user (GET request version)"""
+    try:
+        from django.contrib.auth.models import User
+        
+        # Check if admin already exists
+        existing_admin = User.objects.filter(username='admin').first()
+        if existing_admin:
+            # Update password for existing admin
+            existing_admin.set_password('SciFi2024!')
+            existing_admin.is_superuser = True
+            existing_admin.is_staff = True
+            existing_admin.save()
+            
+            return JsonResponse({
+                "status": "Admin password reset",
+                "username": "admin",
+                "password": "SciFi2024!",
+                "message": "Existing admin user password updated",
+                "admin_url": "/admin/"
+            })
+        else:
+            # Create new admin user
+            admin_user = User.objects.create_superuser(
+                username='admin',
+                password='SciFi2024!',
+                email='admin@scifi.com'
+            )
+            
+            return JsonResponse({
+                "status": "Admin created successfully",
+                "username": "admin", 
+                "password": "SciFi2024!",
+                "message": "New admin user created",
+                "admin_url": "/admin/"
+            })
+            
+    except Exception as e:
+        return JsonResponse({
+            "error": "Failed to create admin",
+            "details": str(e)
+        }, status=500)
