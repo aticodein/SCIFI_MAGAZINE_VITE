@@ -46,3 +46,21 @@
   animation: pulse-short 0.6s infinite;
 }
 
+/* Custom scrollbar for AstraGuide */
+.scroll-panel {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.9) transparent; /* Firefox */
+}
+
+.scroll-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-panel::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.9);
+  border-radius: 9999px;
+}
