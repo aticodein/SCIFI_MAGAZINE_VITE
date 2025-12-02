@@ -80,13 +80,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Common React dev port
     "https://golden-lebkuchen-879258.netlify.app",  # ✅ YOUR ACTUAL FRONTEND
     "https://6842f268ac8e1527c7aa38cd--golden-lebkuchen-879258.netlify.app",
-    "https://690686dcb7b40e00083f854d--golden-lebkuchen-879258.netlify.app",  # ✅ NEW DEPLOY
 
-]
-
-# ✅ Alternative: Allow all Netlify deploy previews
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https://.*--golden-lebkuchen-879258\.netlify\.app$",
 ]
 
 CORS_ALLOW_HEADERS = [
@@ -100,7 +94,9 @@ CORS_EXPOSE_HEADERS = [
     "authorization",
 ]
 
-# ✅ Session cookies configured below based on IS_PRODUCTION
+# ✅ Cookies behave properly for cross-origin sessions
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = not DEBUG  # True in production, False locally
 
 # ✅ Static Files
 STATIC_URL = "static/"
@@ -114,32 +110,23 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5174",
     "http://localhost:3000",
     "https://golden-lebkuchen-879258.netlify.app",
-    "https://690686dcb7b40e00083f854d--golden-lebkuchen-879258.netlify.app",
 ]
 
-# 🔧 Production detection: Check for Railway or explicit production flag
-IS_PRODUCTION = (
-    os.getenv("RAILWAY_ENVIRONMENT") == "production" or 
-    os.getenv("DJANGO_PRODUCTION", "False") == "True" or
-    not DEBUG
-)
+CSRF_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SECURE = False
 
-print(f"🌍 Production mode: {IS_PRODUCTION}")
-print(f"🌍 Railway environment: {os.getenv('RAILWAY_ENVIRONMENT', 'None')}")
-print(f"🌍 Railway domain: {os.getenv('RAILWAY_PUBLIC_DOMAIN', 'None')}")
+IS_PRODUCTION = os.getenv("DJANGO_PRODUCTION", "False") == "True"
 
 if IS_PRODUCTION:
-    # ✅ Production: Cross-origin cookies for Netlify → Railway
     CSRF_COOKIE_SAMESITE = "None"
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "None"
     SESSION_COOKIE_SECURE = True
-    print("🔐 Production cookies: SameSite=None, Secure=True")
 else:
-    # ✅ Development: Relaxed cookies for localhost
     CSRF_COOKIE_SAMESITE = "Lax"
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SAMESITE = "Lax"
     SESSION_COOKIE_SECURE = False
-    print("🔓 Development cookies: SameSite=Lax, Secure=False")
 
