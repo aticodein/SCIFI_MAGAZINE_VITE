@@ -4,11 +4,29 @@ import astraAvatar from "../assets/images/astra9.png";
 
 type MessageId = "welcome" | "howItWorks" | "whatNext";
 
-const MESSAGES: Record<MessageId, string> = {
+const MESSAGES: Record<MessageId, React.ReactNode> = {
   welcome:
-    "Hey, I’m Astra-9, your guide in this sci-fi universe. I can walk you through how this site works and how to unlock your first AI tools.",
-  howItWorks:
-    "Short version: you create a username, collect 5 codes (A–E), go through a short decision path, verify your email, and then you unlock your first AI tool for 30 days.",
+    "Hey, I’m Astra-9, your guide in this sci-fi magazine universe. I’ll help you explore the site, understand the creative tools, and show you how to build and publish your own sci-fi stories.",
+  howItWorks: (
+    <>
+      <p className="mb-2">
+        This site is your gateway to exploring and creating sci-fi worlds. Here’s what you can do:
+      </p>
+      <ul className="list-disc pl-5 space-y-1">
+        <li>Publish your own short sci-fi stories for others to read</li>
+        <li>Write your story, with or without AI assistance</li>
+        <li>
+          Use AI-powered tools to help you build your universe — characters, planets, species,
+          weapons, timelines, and more
+        </li>
+        <li>Read and get inspired by stories created by other explorers in the Reader</li>
+      </ul>
+      <p className="mt-2">
+        The story is always yours. The AI tools simply help you shape the world around it. I’m here
+        to navigate the process whenever you need guidance.
+      </p>
+    </>
+  ),
   whatNext:
     "First step I recommend: create your username and start collecting codes. Once you have A–E, I’ll guide you through choosing your first tool."
 };
@@ -34,7 +52,7 @@ export const AstraGuide: React.FC = () => {
       >
         <img
           src={astraAvatar}
-          alt="Astra-9 AI guide"
+          alt="Astra-9 Navigator"
           className="w-10 h-10 rounded-full object-cover"
         />
       </button>
@@ -42,7 +60,6 @@ export const AstraGuide: React.FC = () => {
       {/* Guide panel */}
       {isOpen && (
         <div className="fixed top-[calc(10vh+7rem)] left-[6vw] z-40 w-80 max-w-[90vw] bg-slate-950/95 border border-cyan-500 rounded-xl shadow-2xl p-4 text-sm text-slate-100">
-
           <div className="flex items-center mb-3">
             <img
               src={astraAvatar}
@@ -50,9 +67,7 @@ export const AstraGuide: React.FC = () => {
               className="w-10 h-10 rounded-full object-cover mr-3"
             />
             <div>
-              <div className="text-xs uppercase tracking-wide text-cyan-300">
-                AI Guide
-              </div>
+              <div className="text-xs uppercase tracking-wide text-cyan-300">Navigator</div>
               <div className="font-semibold">Astra-9</div>
             </div>
             <button
@@ -63,7 +78,9 @@ export const AstraGuide: React.FC = () => {
             </button>
           </div>
 
-          <p className="mb-3 leading-relaxed">{MESSAGES[activeMessage]}</p>
+          <div className="mb-3 leading-relaxed max-h-48 overflow-y-auto pr-1 scroll-panel">
+           {MESSAGES[activeMessage]}
+          </div>
 
           <div className="flex flex-wrap gap-2">
             <button
