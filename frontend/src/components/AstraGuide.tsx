@@ -1,12 +1,12 @@
 // src/components/AstraGuide.tsx
-import React, { useState } from "react";
-import astraAvatar from "../assets/images/astra9.png";
+import React, { useState } from 'react';
+import astraAvatar from '../assets/images/astra9.png';
 
-type MessageId = "welcome" | "howItWorks" | "whatNext";
+type MessageId = 'welcome' | 'howItWorks' | 'whatNext';
 
 const MESSAGES: Record<MessageId, React.ReactNode> = {
   welcome:
-    "Hey, I’m Astra-9, your guide in this sci-fi magazine universe. I’ll help you explore the site, understand the creative tools, and show you how to build and publish your own sci-fi stories.",
+    'Hey, I’m Astra-9, your guide in this sci-fi magazine universe. I’ll help you explore the site, understand the creative tools, and show you how to build and publish your own sci-fi stories.',
   howItWorks: (
     <>
       <p className="mb-2">
@@ -28,16 +28,16 @@ const MESSAGES: Record<MessageId, React.ReactNode> = {
     </>
   ),
   whatNext:
-    "First step I recommend: create your username and start collecting codes. Once you have A–E, I’ll guide you through choosing your first tool."
+    'First step I recommend: create your username and start collecting codes. Once you have A–E, I’ll guide you through choosing your first tool.',
 };
 
 export const AstraGuide: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeMessage, setActiveMessage] = useState<MessageId>("welcome");
+  const [activeMessage, setActiveMessage] = useState<MessageId>('welcome');
 
   const handleOpen = () => {
     setIsOpen(true);
-    setActiveMessage("welcome");
+    setActiveMessage('welcome');
   };
 
   const handleClose = () => setIsOpen(false);
@@ -47,7 +47,7 @@ export const AstraGuide: React.FC = () => {
       {/* Floating button */}
       <button
         onClick={isOpen ? handleClose : handleOpen}
-        className="fixed top-[15vh] left-[10vw] z-40 rounded-full shadow-lg border border-cyan-400 bg-black/80 hover:bg-black/90 transition flex items-center justify-center w-14 h-14"
+        className="fixed top-[calc(15vh+30px)] left-[10vw] z-40 rounded-full shadow-lg border border-cyan-400 bg-black/80 hover:bg-black/90 transition-transform duration-300 ease-out hover:scale-[1.15] active:scale-[1.05] will-change-transform flex items-center justify-center w-14 h-14"
         aria-label="Open Astra-9 guide"
       >
         <img
@@ -59,7 +59,7 @@ export const AstraGuide: React.FC = () => {
 
       {/* Guide panel */}
       {isOpen && (
-        <div className="fixed top-[calc(10vh+7rem)] left-[6vw] z-40 w-80 max-w-[90vw] bg-slate-950/95 border border-cyan-500 rounded-xl shadow-2xl p-4 text-sm text-slate-100">
+        <div className="fixed top-[calc(10vh+7rem+30px)] left-[6vw] z-40 w-80 max-w-[90vw] bg-slate-950/95 border border-cyan-500 rounded-xl shadow-2xl p-4 text-sm text-slate-100">
           <div className="flex items-center mb-3">
             <img
               src={astraAvatar}
@@ -79,18 +79,18 @@ export const AstraGuide: React.FC = () => {
           </div>
 
           <div className="mb-3 leading-relaxed max-h-48 overflow-y-auto pr-1 scroll-panel">
-           {MESSAGES[activeMessage]}
+            {MESSAGES[activeMessage]}
           </div>
 
           <div className="flex flex-wrap gap-2">
             <button
-              onClick={() => setActiveMessage("howItWorks")}
+              onClick={() => setActiveMessage('howItWorks')}
               className="px-3 py-1 rounded-full bg-cyan-600/80 hover:bg-cyan-500 text-xs font-medium"
             >
               How does this site work?
             </button>
             <button
-              onClick={() => setActiveMessage("whatNext")}
+              onClick={() => setActiveMessage('whatNext')}
               className="px-3 py-1 rounded-full bg-purple-600/80 hover:bg-purple-500 text-xs font-medium"
             >
               What should I do first?

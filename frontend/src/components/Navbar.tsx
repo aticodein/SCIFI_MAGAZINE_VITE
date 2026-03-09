@@ -1,22 +1,17 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
-import React from "react";
-import logo from "../assets/images/scifim.png";
-import { UserStatus } from "../components/User/UserStatus";
-
-
-
-
+import { Menu, X } from 'lucide-react';
+import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import logo from '../assets/images/logo.png';
+import { UserStatus } from '../components/User/UserStatus';
 
 const navItems = [
-  { name: "Home", path: "/" },
-  { name: "Createor", path: "/create" },
-  { name: "Reader", path: "/read" },
-  { name: "Watcher", path: "/watch" },
-  { name: "Retro Zone", path: "/retro" },
-  { name: "Pro", path: "/pro" },
-  { name: "About", path: "/about" },
+  { name: 'Home', path: '/' },
+  { name: 'Createor', path: '/create' },
+  { name: 'Reader', path: '/read' },
+  { name: 'Watcher', path: '/watch' },
+  { name: 'Retro Zone', path: '/retro' },
+  { name: 'Pro', path: '/pro' },
+  { name: 'About', path: '/about' },
 ];
 
 export default function Navbar() {
@@ -28,15 +23,14 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 text-indigo-600">
-        <img
-  src={logo}
-  alt="Sci-Fi Logo"
-  className="h-12 w-10 object-contain transition-transform duration-300 ease-out hover:scale-[2.5] active:scale-[1.5] will-change-transform  translate-y-4"
-/>
+          <img
+            src={logo}
+            alt="Sci-Fi Logo"
+            className="h-[88px] w-[80px] object-contain transition-transform duration-300 ease-out hover:scale-[1.25] active:scale-[1.1] will-change-transform translate-y-4"
+          />
 
-           <span className="text-xl font-bold tracking-tight text-earth-clay">Sci-Fi Magazine</span>
+          <span className="text-xl font-bold tracking-tight text-earth-clay">Sci-Fi Magazine</span>
         </Link>
-
 
         {/* Hamburger Icon */}
         <button
@@ -54,9 +48,7 @@ export default function Navbar() {
               key={item.name}
               to={item.path}
               className={`px-3 py-1 rounded-md hover:bg-earth-cream hover:text-earth-olive transition ${
-                location.pathname === item.path
-                  ? "bg-earth-olive text-white font-semibold"
-                  : ""
+                location.pathname === item.path ? 'bg-earth-olive text-white font-semibold' : ''
               }`}
             >
               {item.name}
@@ -75,9 +67,7 @@ export default function Navbar() {
               to={item.path}
               onClick={() => setMenuOpen(false)}
               className={`block px-3 py-2 rounded-md hover:bg-indigo-100 hover:text-indigo-700 transition ${
-                location.pathname === item.path
-                  ? "bg-indigo-500 text-white font-semibold"
-                  : ""
+                location.pathname === item.path ? 'bg-indigo-500 text-white font-semibold' : ''
               }`}
             >
               {item.name}
