@@ -14,5 +14,6 @@ COPY backend /app
 # Expose port 8080
 EXPOSE 8080
 
-# Run Gunicorn
-CMD ["gunicorn", "sci_fi_magazine.wsgi:application", "--bind", "0.0.0.0:8080"]
+# Run startup script (migrate + collectstatic + gunicorn)
+RUN chmod +x /app/start.sh
+CMD ["/app/start.sh"]
