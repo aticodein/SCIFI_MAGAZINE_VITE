@@ -6,7 +6,7 @@ import { UserStatus } from '../components/User/UserStatus';
 
 const navItems = [
   { name: 'Home', path: '/' },
-  { name: 'Createor', path: '/create' },
+  { name: 'Creator', path: '/create' },
   { name: 'Reader', path: '/read' },
   { name: 'Watcher', path: '/watch' },
   { name: 'Retro Zone', path: '/retro' },

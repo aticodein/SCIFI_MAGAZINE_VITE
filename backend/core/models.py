@@ -78,3 +78,21 @@ class RedeemedToken(models.Model):
         else:
             who = "session-user"
         return f"{self.token} for {who} (Tier {self.tier_granted})"
+
+
+class CreatorUpload(models.Model):
+    username = models.CharField(max_length=255, db_index=True)
+    title = models.CharField(max_length=255)
+    file = models.FileField(upload_to="creator_uploads/%Y/%m/%d/")
+    preview_pdf = models.FileField(
+        upload_to="creator_uploads_previews/%Y/%m/%d/",
+        null=True,
+        blank=True,
+    )
+    original_filename = models.CharField(max_length=255)
+    content_type = models.CharField(max_length=100, blank=True, default="")
+    size_bytes = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.username})"
