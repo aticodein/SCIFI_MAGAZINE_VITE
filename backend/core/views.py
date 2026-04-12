@@ -4,6 +4,7 @@ import os
 import shutil
 import subprocess
 import tempfile
+import traceback
 from pathlib import Path
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -12,11 +13,32 @@ import json
 from .models import RedeemedToken, UserProfile, UserMiningProgress, CreatorUpload
 from django.shortcuts import render
 from django.core.files import File
+from django.core.management import call_command
+from django.db.utils import OperationalError, ProgrammingError
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth import logout
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
+
+
+def _auto_migrate_if_enabled() -> bool:
+    """Best-effort auto-migration for simple deployments.
+
+    This helps recover when the production DB is up but migrations haven't been applied yet,
+    which otherwise surfaces as a 500 on DB-touching endpoints.
+    """
+    enable = os.getenv("DJANGO_AUTO_MIGRATE", "True") == "True"
+    if not enable:
+        return False
+
+    try:
+        print("[auto-migrate] running migrations...")
+        call_command("migrate", interactive=False, verbosity=1)
+        return True
+    except Exception:
+        print("[auto-migrate] failed:\n" + traceback.format_exc())
+        return False
 
 # ------------------------------
 # LOGOUT
@@ -48,7 +70,21 @@ def create_username(request):
     if not username:
         return Response({"error": "Username required"}, status=400)
 
-    user, created = UserMiningProgress.objects.get_or_create(username=username)
+    try:
+        user, created = UserMiningProgress.objects.get_or_create(username=username)
+    except (OperationalError, ProgrammingError) as e:
+        # Most common production failure: DB exists but migrations/tables are missing.
+        print(f"[create-username] DB error: {e!r}")
+        if _auto_migrate_if_enabled():
+            user, created = UserMiningProgress.objects.get_or_create(username=username)
+        else:
+            return Response(
+                {"error": "Database not ready. Please apply migrations."},
+                status=503,
+            )
+    except Exception:
+        print("[create-username] Unexpected error:\n" + traceback.format_exc())
+        return Response({"error": "Server error"}, status=500)
 
     # Save username in session
     request.session['username'] = username
