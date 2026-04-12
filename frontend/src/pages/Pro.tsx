@@ -195,7 +195,7 @@ export default function ProPage() {
       {/* User Status Bar */}
       <div className="bg-earth-clay text-earth-cream px-6 py-3 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <span className="text-sm">USER:</span>
+          <span className="text-sm">Operator:</span>
           <strong className="text-yellow-300">{username}</strong>
         </div>
         <button
