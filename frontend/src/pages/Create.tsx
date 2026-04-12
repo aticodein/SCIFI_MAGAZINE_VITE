@@ -1,6 +1,6 @@
 // src/pages/Create.tsx
 import axios from 'axios';
-import { FolderKanban, Moon, Settings2, Sparkles, Sun, Wand2 } from 'lucide-react';
+import { FolderKanban, LogOut, Moon, Settings2, Sparkles, Sun, Wand2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import CardGrid from '../components/CardGrid';
 import { SessionLogin } from '../components/User/SessionLogin';
@@ -254,9 +254,10 @@ export default function Create() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="w-full sm:w-auto px-4 py-2 rounded-xl bg-earth-forest text-earth-cream hover:bg-earth-clay transition text-sm font-semibold"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-earth-forest text-earth-cream hover:bg-earth-clay transition text-sm font-semibold"
               >
-                Logout
+                <LogOut size={16} />
+                <span>Logout</span>
               </button>
             </div>
           ) : (

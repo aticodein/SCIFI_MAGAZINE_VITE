@@ -1,16 +1,17 @@
 // src/pages/Retro.tsx
 
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import fluxImg from "../../assets/images/flux.png";
-import { API_BASE_URL } from "../../config/api";
-import { clearSessionStoragePreservingPrefs } from "../../utils/session";
-import RetroModal from "../RetroModal";
-import Diagnostics from "./Diagnostics";
-import LiveTerminal from "./LiveTerminal";
-import SignalDecoder from "./SignalDecoder";
-import SystemNodes from "./SystemNodes";
-import VitalsFeed from "./VitalsFeed";
+import { LogOut } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import fluxImg from '../../assets/images/flux.png';
+import { API_BASE_URL } from '../../config/api';
+import { clearSessionStoragePreservingPrefs } from '../../utils/session';
+import RetroModal from '../RetroModal';
+import Diagnostics from './Diagnostics';
+import LiveTerminal from './LiveTerminal';
+import SignalDecoder from './SignalDecoder';
+import SystemNodes from './SystemNodes';
+import VitalsFeed from './VitalsFeed';
 
 export default function Retro() {
   const navigate = useNavigate();
@@ -27,26 +28,26 @@ export default function Retro() {
 
   useEffect(() => {
     async function checkUsername() {
-      console.log("🔵 Fetching username from backend...");
+      console.log('🔵 Fetching username from backend...');
       try {
         const res = await fetch(`${API_BASE_URL}/api/check-username/`, {
           method: 'GET',
           credentials: 'include',
         });
         const data = await res.json();
-        console.log("🟢 Server responded with:", data);
+        console.log('🟢 Server responded with:', data);
         if (data.username) {
-          console.log("✅ Username found:", data.username);
+          console.log('✅ Username found:', data.username);
           setHasUsername(true);
         } else {
-          console.log("⛔ No username found in session.");
+          console.log('⛔ No username found in session.');
           setHasUsername(false);
         }
       } catch (error) {
-        console.error("❌ Error fetching username:", error);
+        console.error('❌ Error fetching username:', error);
         setHasUsername(false);
       } finally {
-        console.log("🟡 Finished checking. Updating state...");
+        console.log('🟡 Finished checking. Updating state...');
         setChecking(false);
       }
     }
@@ -55,46 +56,44 @@ export default function Retro() {
   }, []);
 
   useEffect(() => {
-    console.log("⚡ Checking effect: checking =", checking, ", hasUsername =", hasUsername);
+    console.log('⚡ Checking effect: checking =', checking, ', hasUsername =', hasUsername);
     if (!checking && !hasUsername) {
-      console.log("🚪 No username - redirecting to /");
+      console.log('🚪 No username - redirecting to /');
       navigate('/');
     }
   }, [checking, hasUsername, navigate]);
 
   if (checking) {
-    console.log("🔄 Still checking - showing loading message.");
+    console.log('🔄 Still checking - showing loading message.');
     return (
-      <div className="text-center py-20 text-green-400">
-        Checking your RetroZone access...
-      </div>
+      <div className="text-center py-20 text-green-400">Checking your RetroZone access...</div>
     );
   }
 
   if (!hasUsername) {
-    console.log("🚷 No username - not rendering dashboard (should be redirecting).");
+    console.log('🚷 No username - not rendering dashboard (should be redirecting).');
     return null;
   }
 
-  console.log("🛸 Username verified - rendering RetroZone dashboard!");
+  console.log('🛸 Username verified - rendering RetroZone dashboard!');
 
   async function handleLogout() {
     try {
-      console.log("🔄 RetroZone: Starting logout process...");
+      console.log('🔄 RetroZone: Starting logout process...');
       const res = await fetch(`${API_BASE_URL}/api/logout/`, {
-        method: "POST",
-        credentials: "include",
+        method: 'POST',
+        credentials: 'include',
       });
-      console.log("🌐 RetroZone: Logout API response status:", res.status);
+      console.log('🌐 RetroZone: Logout API response status:', res.status);
       const data = await res.json();
-      console.log("✅ RetroZone: Logout successful:", data);
-      console.log("🧹 RetroZone: Clearing session storage...");
+      console.log('✅ RetroZone: Logout successful:', data);
+      console.log('🧹 RetroZone: Clearing session storage...');
       clearSessionStoragePreservingPrefs();
-      console.log("🔄 RetroZone: Reloading page...");
+      console.log('🔄 RetroZone: Reloading page...');
       window.location.reload();
     } catch (err) {
-      console.error("❌ RetroZone: Logout failed:", err);
-      alert("❌ Failed to logout.");
+      console.error('❌ RetroZone: Logout failed:', err);
+      alert('❌ Failed to logout.');
     }
   }
 
@@ -110,7 +109,8 @@ export default function Retro() {
           onClick={handleLogout}
           className="flex items-center gap-2 bg-orange-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-orange-500 transition font-bold text-base"
         >
-          ⏻ LOGOUT
+          <LogOut size={18} />
+          <span>LOGOUT</span>
         </button>
       </div>
 
@@ -129,7 +129,8 @@ export default function Retro() {
           </div>
           <p className="text-green-100 max-w-xl text-sm md:text-base text-left">
             Welcome to the Retro Commander Interface — your gateway to a lost era of deep space ops.
-            <br /><br />
+            <br />
+            <br />
             Find 5 secret elements hidden across this system to unlock Pro Access!
           </p>
         </div>
@@ -146,32 +147,16 @@ export default function Retro() {
 
       {/* Modals */}
       {showVitalsModal && (
-        <RetroModal
-          onClose={() => setShowVitalsModal(false)}
-          source="vitals"
-          code="B-64"
-        />
+        <RetroModal onClose={() => setShowVitalsModal(false)} source="vitals" code="B-64" />
       )}
       {showTerminalModal && (
-        <RetroModal
-          onClose={() => setShowTerminalModal(false)}
-          source="terminal"
-          code="A-94"
-        />
+        <RetroModal onClose={() => setShowTerminalModal(false)} source="terminal" code="A-94" />
       )}
       {showDecoderModal && (
-        <RetroModal
-          onClose={() => setShowDecoderModal(false)}
-          source="decoder"
-          code="D-82"
-        />
+        <RetroModal onClose={() => setShowDecoderModal(false)} source="decoder" code="D-82" />
       )}
       {showNodeModal && (
-        <RetroModal
-          onClose={() => setShowNodeModal(false)}
-          source="node"
-          code="C-71"
-        />
+        <RetroModal onClose={() => setShowNodeModal(false)} source="node" code="C-71" />
       )}
       {showDiagnosticsModal && (
         <RetroModal
