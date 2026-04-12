@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import dj_database_url
 import jazzmin  # ensures jazzmin is loaded early
+from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,6 +26,10 @@ INSTALLED_APPS = [
     "rest_framework",
     "core",
 ]
+
+DJANGO_STORAGE_BACKEND = os.getenv("DJANGO_STORAGE_BACKEND", "local").lower()
+if DJANGO_STORAGE_BACKEND == "s3":
+    INSTALLED_APPS.append("storages")
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",      # <-- MUST BE FIRST!
@@ -89,6 +94,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5174",
     "http://localhost:3000",
     "http://localhost:8888",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:5174",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8888",
     "https://golden-lebkuchen-879258.netlify.app",   # <-- main production site
 ]
 
@@ -97,9 +106,9 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https:\/\/.*--golden-lebkuchen-879258\.netlify\.app$",
 ]
 
-CORS_ALLOW_HEADERS = ["*"]
+CORS_ALLOW_HEADERS = list(default_headers)
 CORS_EXPOSE_HEADERS = ["content-type", "authorization"]
-CORS_ALLOW_METHODS = ["GET", "POST", "OPTIONS"]
+CORS_ALLOW_METHODS = ["GET", "POST", "DELETE", "OPTIONS"]
 
 # ------------------------------------------
 # COOKIE & CSRF CONFIGURATION
@@ -119,6 +128,9 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:5174",
     "http://localhost:3000",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:5174",
+    "http://127.0.0.1:3000",
     "https://golden-lebkuchen-879258.netlify.app",
 ]
 
@@ -137,4 +149,51 @@ if IS_PRODUCTION:
 
 STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+}
+
+if DJANGO_STORAGE_BACKEND == "s3":
+    STORAGES["default"] = {
+        "BACKEND": "storages.backends.s3.S3Storage",
+    }
+
+# If your host uses Whitenoise, keep static files local.
+# MEDIA uploads can be local or S3/Spaces based on DJANGO_STORAGE_BACKEND.
+
+# ------------------------------------------
+# MEDIA (USER UPLOADS)
+# ------------------------------------------
+
+MEDIA_URL = os.getenv("DJANGO_MEDIA_URL", "/media/")
+MEDIA_ROOT = os.getenv("DJANGO_MEDIA_ROOT", str(BASE_DIR / "media"))
+
+# ------------------------------------------
+# S3/Spaces (only used when DJANGO_STORAGE_BACKEND=s3)
+# ------------------------------------------
+
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID", "")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", "")
+AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME", "")
+
+# DigitalOcean Spaces example endpoint:
+#   https://nyc3.digitaloceanspaces.com
+AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL", "")
+AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "")
+
+# For public file URLs. Example:
+#   <bucket>.<region>.digitaloceanspaces.com
+AWS_S3_CUSTOM_DOMAIN = os.getenv("AWS_S3_CUSTOM_DOMAIN", "")
+
+# If you want public-read URLs (matches current Reader UI which links directly):
+AWS_QUERYSTRING_AUTH = os.getenv("AWS_QUERYSTRING_AUTH", "False") == "True"
+AWS_DEFAULT_ACL = os.getenv("AWS_DEFAULT_ACL", "public-read")
+
+_upload_max_mb = int(os.getenv("DJANGO_UPLOAD_MAX_MB", "25"))
+DATA_UPLOAD_MAX_MEMORY_SIZE = _upload_max_mb * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = _upload_max_mb * 1024 * 1024

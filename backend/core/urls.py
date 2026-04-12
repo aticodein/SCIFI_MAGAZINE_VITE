@@ -10,6 +10,11 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('delete-user/', views.delete_user, name='delete_user'),
 
+    path('uploads/', views.upload_creator_novel, name='upload_creator_novel'),
+    path('uploads/mine/', views.list_my_creator_novels, name='list_my_creator_novels'),
+    path('uploads/public/', views.list_public_creator_novels, name='list_public_creator_novels'),
+    path('uploads/<int:upload_id>/', views.delete_creator_upload, name='delete_creator_upload'),
+
 ]
 
 

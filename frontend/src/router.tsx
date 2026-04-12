@@ -1,49 +1,51 @@
 //src/router.tsx
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Layout from "./Layout";
-import App from "./App";
-import Watch from "./pages/Watch";
-import Read from "./pages/Read";
-import Retro from "./pages/Retro";
-import Pro from "./pages/Pro";
-import About from "./pages/About";
-import React from "react";
-import ReadBooks from "./pages/ReadBooks";
-import ReadNovels from "./pages/ReadNovels";
-import ReadComics from "./pages/ReadComics";
-import ReadGolden from "./pages/ReadGolden"; 
-import Create from "./pages/Create";
-
-
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import App from './App';
+import Layout from './Layout';
+import About from './pages/About';
+import Create from './pages/Create';
+import Pro from './pages/Pro';
+import Read from './pages/Read';
+import ReadBooks from './pages/ReadBooks';
+import ReadComics from './pages/ReadComics';
+import ReadGolden from './pages/ReadGolden';
+import ReadNovels from './pages/ReadNovels';
+import ReadUserNovels from './pages/ReadUserNovels';
+import Retro from './pages/Retro';
+import Watch from './pages/Watch';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Layout />,
     children: [
-      { path: "/", element: <App /> },
-      { path: "/create", element: <Create /> }, 
-      { path: "/watch", element: <Watch /> },
-      { path: "/read", element: <Read /> },
-      { path: "/retro", element: <Retro /> },
-      { path: "/pro", element: <Pro /> },
-      { path: "/about", element: <About /> },
+      { path: '/', element: <App /> },
+      { path: '/create', element: <Create /> },
+      { path: '/watch', element: <Watch /> },
+      { path: '/read', element: <Read /> },
+      { path: '/retro', element: <Retro /> },
+      { path: '/pro', element: <Pro /> },
+      { path: '/about', element: <About /> },
       {
-        path: "/read/books",
+        path: '/read/books',
         element: <ReadBooks />,
       },
       {
-        path: "/read/novels",
+        path: '/read/novels',
         element: <ReadNovels />,
       },
       {
-        path: "/read/comics",
+        path: '/read/comics',
         element: <ReadComics />,
       },
       {
-        path: "/read/golden",
+        path: '/read/golden',
         element: <ReadGolden />,
-      } 
+      },
+      {
+        path: '/read/user-novels',
+        element: <ReadUserNovels />,
+      },
     ],
   },
 ]);
