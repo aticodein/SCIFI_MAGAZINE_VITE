@@ -59,7 +59,7 @@ export function UserStatus() {
   return (
     <div className="flex items-center text-sm text-earth-clay gap-2">
       <span>
-        Logged in: <strong>{username}</strong>
+        Operator: <strong>{username}</strong>
       </span>
       <button onClick={handleLogout} className="text-red-400 underline hover:text-red-600">
         Logout

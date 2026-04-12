@@ -248,7 +248,7 @@ export default function Create() {
           {username ? (
             <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <p className="text-sm text-earth-olive-700 dark:text-gray-200">
-                Logged in as{' '}
+                Operator:{' '}
                 <strong className="text-brand-dark dark:text-earth-cream">{username}</strong>
               </p>
               <button
@@ -306,7 +306,7 @@ export default function Create() {
                   </div>
                 ) : (
                   <div className="text-sm text-earth-olive-700 dark:text-gray-200">
-                    Logged in as:{' '}
+                    Operator:{' '}
                     <strong className="text-brand-dark dark:text-earth-cream">{username}</strong>
                   </div>
                 )}
