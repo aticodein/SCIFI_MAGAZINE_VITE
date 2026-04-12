@@ -55,10 +55,10 @@ def logout_view(request):
 # CHECK USERNAME (GET)
 # ------------------------------
 @csrf_exempt
+@api_view(["GET"])
 def check_username(request):
-    if request.method == 'GET':
-        username = request.session.get('username')
-        return JsonResponse({'username': username})
+    username = request.session.get("username")
+    return Response({"username": username}, status=200)
 
 
 # ------------------------------
