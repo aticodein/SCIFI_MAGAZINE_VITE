@@ -61,6 +61,7 @@ Netlify settings:
 
 - Ensure the site deploy includes `frontend/public/_redirects`.
 - No `VITE_API_URL` is required (API defaults to same-origin `/api`).
+- If you previously set `VITE_API_URL` in Netlify, remove it to avoid accidentally forcing cross-site sessions.
 
 Full Localstack (Frontend + Functions): cd SCI-FI-MAGAZINE-V3-UPDATED netlify dev
 
