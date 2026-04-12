@@ -1,17 +1,15 @@
 // src/components/User/RetroGatekeeper.tsx
 
-import { useEffect, useState } from "react";
-import { API_BASE_URL } from "../../config/api";
-import RetroZoneDashboard from "../Retro/RetroZoneDashboard.tsx";
-import { SessionLogin } from "./SessionLogin";
-import { WelcomeBack } from "./WelcomeBack.tsx";
-
+import { useEffect, useState } from 'react';
+import { API_BASE_URL } from '../../config/api';
+import RetroZoneDashboard from '../Retro/RetroZoneDashboard.tsx';
+import { SessionLogin } from './SessionLogin';
+import { WelcomeBack } from './WelcomeBack.tsx';
 
 export function RetroGatekeeper() {
   const [username, setUsername] = useState<string | null>(null);
   const [checking, setChecking] = useState(true);
   const [welcomeDone, setWelcomeDone] = useState(false);
-
 
   useEffect(() => {
     async function fetchUsername() {
@@ -46,14 +44,14 @@ export function RetroGatekeeper() {
   if (checking) {
     return <div>Checking your RetroZone access...</div>;
   }
-  
+
   const handleLoginSuccess = async () => {
     console.log('🔄 RetroGatekeeper: Login successful, refetching username...');
     setChecking(true);
     try {
       // Small delay to ensure session is established
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       const res = await fetch(`${API_BASE_URL}/api/check-username/`, {
         method: 'GET',
         credentials: 'include',
@@ -77,13 +75,13 @@ export function RetroGatekeeper() {
   };
 
   if (!username) {
-    return <SessionLogin onLogin={handleLoginSuccess} />;
+    return <SessionLogin onLogin={handleLoginSuccess} onLoginDelayMs={250} />;
   }
-  
+
   if (!welcomeDone) {
     return <WelcomeBack username={username} onCountdownDone={() => setWelcomeDone(true)} />;
   }
-  
+
   // Final stage: retrozone unlocked
   return <RetroZoneDashboard />;
 }
