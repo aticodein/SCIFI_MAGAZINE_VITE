@@ -1,30 +1,37 @@
 //  /frontend/src/components/User/SessionLogin.tsx
 
-import { useState } from "react";
-import { toast } from "react-hot-toast";
-import { API_BASE_URL } from "../../config/api";
+import { useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { API_BASE_URL } from '../../config/api';
+import { notifySessionChanged } from '../../utils/session';
 
-export function SessionLogin({ onLogin }: { onLogin: () => void }) {
-  const [username, setUsername] = useState("");
-  const [error, setError] = useState("");
+export function SessionLogin({
+  onLogin,
+  onLoginDelayMs = 4000,
+}: {
+  onLogin: () => void;
+  onLoginDelayMs?: number;
+}) {
+  const [username, setUsername] = useState('');
+  const [error, setError] = useState('');
 
   const validateUsername = (name: string) => /^[a-zA-Z0-9]{3,20}$/.test(name);
 
   const handleSave = async () => {
     if (!validateUsername(username)) {
-      setError("Use 3–20 letters or numbers.");
+      setError('Use 3–20 letters or numbers.');
       return;
     }
 
-    setError("");
-    toast.loading("Logging in...");
+    setError('');
+    toast.loading('Logging in...');
 
     try {
       const res = await fetch(`${API_BASE_URL}/api/create-username/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username }),
-        credentials: "include",
+        credentials: 'include',
       });
 
       toast.dismiss();
@@ -32,18 +39,20 @@ export function SessionLogin({ onLogin }: { onLogin: () => void }) {
 
       if (res.status === 201) {
         toast.success(`New user: ${username} created. Welcome! 🚀`);
-        setTimeout(() => onLogin(), 4000);
+        notifySessionChanged();
+        setTimeout(() => onLogin(), onLoginDelayMs);
       } else if (res.status === 409) {
         // Existing user — treat as login
         toast.success(`Welcome back, ${username}! You're now logged in. 🚀`);
-        setTimeout(() => onLogin(), 4000);
+        notifySessionChanged();
+        setTimeout(() => onLogin(), onLoginDelayMs);
       } else {
-        setError(data.error || "Unknown error.");
+        setError(data.error || 'Unknown error.');
         toast.error(`❌ ${data.error}`);
       }
     } catch (err) {
       toast.dismiss();
-      toast.error("🚫 Could not connect to server.");
+      toast.error('🚫 Could not connect to server.');
     }
   };
 
@@ -55,7 +64,7 @@ export function SessionLogin({ onLogin }: { onLogin: () => void }) {
         value={username}
         onChange={(e) => {
           setUsername(e.target.value);
-          setError("");
+          setError('');
         }}
         placeholder="Your Username"
         className="px-4 py-2 rounded text-black"

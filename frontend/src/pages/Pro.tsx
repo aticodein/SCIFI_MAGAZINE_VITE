@@ -165,7 +165,7 @@ export default function ProPage() {
   if (!username) {
     return (
       <div className="min-h-screen bg-earth-olive text-earth-cream p-8">
-        <SessionLogin onLogin={handleLoginSuccess} />
+        <SessionLogin onLogin={handleLoginSuccess} onLoginDelayMs={250} />
       </div>
     );
   }
