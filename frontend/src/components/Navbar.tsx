@@ -73,6 +73,10 @@ export default function Navbar() {
               {item.name}
             </Link>
           ))}
+
+          <div className="pt-2">
+            <UserStatus />
+          </div>
         </div>
       )}
     </nav>
