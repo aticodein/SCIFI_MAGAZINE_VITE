@@ -1,13 +1,14 @@
 // src/pages/Pro.tsx
 
-import { useEffect, useState } from "react";
-import { CodeCollector } from "../components/Pro/CodeCollector";
-import { ProgressTracker } from "../components/Pro/ProgressTracker";
-import { SessionLogin } from "../components/User/SessionLogin";
-import { API_BASE_URL } from "../config/api";
-import { clearSessionStoragePreservingPrefs } from "../utils/session";
+import { LogOut } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { CodeCollector } from '../components/Pro/CodeCollector';
+import { ProgressTracker } from '../components/Pro/ProgressTracker';
+import { SessionLogin } from '../components/User/SessionLogin';
+import { API_BASE_URL } from '../config/api';
+import { clearSessionStoragePreservingPrefs } from '../utils/session';
 
-type CodesState = Record<"A" | "B" | "C" | "D" | "E", string | null>;
+type CodesState = Record<'A' | 'B' | 'C' | 'D' | 'E', string | null>;
 
 export default function ProPage() {
   const [codes, setCodes] = useState<CodesState>({
@@ -20,16 +21,14 @@ export default function ProPage() {
 
   const [username, setUsername] = useState<string | null>(null);
   const [checkingLogin, setCheckingLogin] = useState(true);
-  
-
 
   const fetchUsername = async () => {
     setCheckingLogin(true);
     try {
       console.log('🔄 ProPage: Checking username with API:', API_BASE_URL);
       const res = await fetch(`${API_BASE_URL}/api/check-username/`, {
-        method: "GET",
-        credentials: "include",
+        method: 'GET',
+        credentials: 'include',
       });
       console.log('🌐 ProPage: Response status:', res.status);
       const data = await res.json();
@@ -42,7 +41,7 @@ export default function ProPage() {
         setUsername(null);
       }
     } catch (err) {
-      console.error("💥 ProPage: Error checking username:", err);
+      console.error('💥 ProPage: Error checking username:', err);
       setUsername(null);
     } finally {
       console.log('🏁 ProPage: Setting checkingLogin to false');
@@ -55,8 +54,8 @@ export default function ProPage() {
   }, []);
 
   useEffect(() => {
-    const savedCodes = localStorage.getItem("proCodes");
-    const activated = localStorage.getItem("activatedCode");
+    const savedCodes = localStorage.getItem('proCodes');
+    const activated = localStorage.getItem('activatedCode');
 
     let initialCodes: CodesState = {
       A: null,
@@ -72,9 +71,9 @@ export default function ProPage() {
 
     if (activated) {
       const part = activated[0] as keyof CodesState;
-      console.log("ProPage caught Activated Code:", activated, " for part:", part);
+      console.log('ProPage caught Activated Code:', activated, ' for part:', part);
       initialCodes[part] = activated;
-      localStorage.removeItem("activatedCode");
+      localStorage.removeItem('activatedCode');
     }
 
     setCodes(initialCodes);
@@ -83,18 +82,18 @@ export default function ProPage() {
   // 🔧 FIXED: Protective localStorage update to prevent race condition overwrites
   useEffect(() => {
     // Only update localStorage if we actually have codes to save
-    const hasNewCodes = Object.values(codes).some(code => code !== null);
-    
+    const hasNewCodes = Object.values(codes).some((code) => code !== null);
+
     // Check what's currently in localStorage
-    const existingCodes = localStorage.getItem("proCodes");
+    const existingCodes = localStorage.getItem('proCodes');
     const parsedExisting = existingCodes ? JSON.parse(existingCodes) : {};
-    const hasExistingCodes = Object.values(parsedExisting).some(code => code !== null);
-    
+    const hasExistingCodes = Object.values(parsedExisting).some((code) => code !== null);
+
     // Update localStorage if:
     // 1. We have new codes to save, OR
     // 2. There are no existing codes in localStorage
     if (hasNewCodes || !hasExistingCodes) {
-      localStorage.setItem("proCodes", JSON.stringify(codes));
+      localStorage.setItem('proCodes', JSON.stringify(codes));
     }
   }, [codes]);
 
@@ -112,38 +111,38 @@ export default function ProPage() {
 
   async function handleSubmitCode() {
     // 1. Check that all 5 code parts are present
-    const parts = ["A", "B", "C", "D", "E"] as (keyof CodesState)[];
+    const parts = ['A', 'B', 'C', 'D', 'E'] as (keyof CodesState)[];
     const missing = parts.filter((p) => !codes[p]);
-  
+
     if (missing.length > 0) {
-      alert(`You're missing these parts: ${missing.join(", ")}`);
+      alert(`You're missing these parts: ${missing.join(', ')}`);
       return;
     }
-  
+
     // 2. Assemble token
-    const fullToken = parts.map((p) => codes[p]).join("-");
-  
+    const fullToken = parts.map((p) => codes[p]).join('-');
+
     // 3. Send to backend
     try {
       const response = await fetch(`${API_BASE_URL}/api/token/redeem/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ token: fullToken }),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         alert(`✅ ${data.message}\nExpires: ${data.expires}`);
-        localStorage.removeItem("proCodes");
+        localStorage.removeItem('proCodes');
         window.location.reload();
       } else {
         alert(`❌ ${data.error}`);
       }
     } catch (err) {
-      console.error("Redemption error:", err);
-      alert("🚫 Failed to redeem code. Server unreachable.");
+      console.error('Redemption error:', err);
+      alert('🚫 Failed to redeem code. Server unreachable.');
     }
   }
 
@@ -154,7 +153,7 @@ export default function ProPage() {
     setCheckingLogin(true);
     try {
       // Small delay to ensure session is established
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       await fetchUsername();
     } catch (error) {
       console.error('💥 ProPage: Post-login error:', error);
@@ -173,26 +172,23 @@ export default function ProPage() {
 
   async function handleLogout() {
     try {
-      console.log("🔄 ProPage: Starting logout process...");
+      console.log('🔄 ProPage: Starting logout process...');
       const res = await fetch(`${API_BASE_URL}/api/logout/`, {
-        method: "POST",
-        credentials: "include",
+        method: 'POST',
+        credentials: 'include',
       });
-      console.log("🌐 ProPage: Logout API response status:", res.status);
+      console.log('🌐 ProPage: Logout API response status:', res.status);
       const data = await res.json();
-      console.log("✅ ProPage: Logout successful:", data);
-      console.log("🧹 ProPage: Clearing session storage...");
+      console.log('✅ ProPage: Logout successful:', data);
+      console.log('🧹 ProPage: Clearing session storage...');
       clearSessionStoragePreservingPrefs();
-      console.log("🔄 ProPage: Reloading page...");
+      console.log('🔄 ProPage: Reloading page...');
       window.location.reload();
     } catch (err) {
-      console.error("❌ ProPage: Logout failed:", err);
-      alert("❌ Failed to logout.");
+      console.error('❌ ProPage: Logout failed:', err);
+      alert('❌ Failed to logout.');
     }
   }
-  
-
-  
 
   return (
     <div className="min-h-screen bg-earth-olive text-earth-cream">
@@ -206,7 +202,8 @@ export default function ProPage() {
           onClick={handleLogout}
           className="flex items-center gap-2 bg-orange-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-orange-500 transition font-bold text-base"
         >
-          ⏻ LOGOUT
+          <LogOut size={18} />
+          <span>LOGOUT</span>
         </button>
       </div>
 
@@ -214,15 +211,15 @@ export default function ProPage() {
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold mb-8 text-center">Unlock Pro Access</h1>
 
-        <ProgressTracker codes={codes} />
+          <ProgressTracker codes={codes} />
 
-        <CodeCollector codes={codes} onFindCode={handleFakeAdd} />
+          <CodeCollector codes={codes} onFindCode={handleFakeAdd} />
 
           <div className="text-center mt-6">
             <button
-                className="bg-brand-dark text-earth-cream px-6 py-3 rounded-full font-semibold hover:bg-brand-light transition"
-                onClick={handleSubmitCode}
-              >
+              className="bg-brand-dark text-earth-cream px-6 py-3 rounded-full font-semibold hover:bg-brand-light transition"
+              onClick={handleSubmitCode}
+            >
               Submit Your Full Code
             </button>
           </div>
