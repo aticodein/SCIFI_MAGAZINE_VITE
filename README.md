@@ -38,6 +38,30 @@ Start Frontend: cd frontend npm install npm run dev (localhost:5173)
 
 Start Backend: cd backend python manage.py migrate python manage.py runserver (localhost:8000 - Admin at /admin/)
 
+Deployment (Netlify + Railway):
+
+- Frontend calls the API using same-origin paths (`/api/...` and `/media/...`).
+  - Dev: Vite proxies `/api` + `/media` to `http://localhost:8000`.
+  - Prod: Netlify redirects in `frontend/public/_redirects` proxy to Railway.
+
+Railway environment variables (recommended):
+
+- `DJANGO_SECRET_KEY` (required)
+- `DJANGO_DEBUG=False`
+- `DJANGO_ALLOWED_HOSTS` (include your Railway domain)
+- `DATABASE_URL` (Postgres recommended)
+- `DJANGO_PRODUCTION=True` (enables secure cookie settings)
+- `DJANGO_AUTO_MIGRATE=True` (keeps DB schema in sync on deploy)
+- Optional:
+  - `DJANGO_UPLOAD_MAX_MB` (default 25)
+  - `DJANGO_ENABLE_PDF_PREVIEW_CONVERSION` (default True; needs LibreOffice/soffice)
+  - `SOFFICE_PATH` (if Railway image provides it in a non-standard path)
+
+Netlify settings:
+
+- Ensure the site deploy includes `frontend/public/_redirects`.
+- No `VITE_API_URL` is required (API defaults to same-origin `/api`).
+
 Full Localstack (Frontend + Functions): cd SCI-FI-MAGAZINE-V3-UPDATED netlify dev
 
 Key Features:
@@ -62,10 +86,9 @@ License:
 
 Private Project – All Rights Reserved © 2025 Sci-Fi Magazine
 
-
 BACKEND DEV COMMAND LINE:
-cd backend 
-source env/bin/activate 
+cd backend
+source env/bin/activate
 python manage.py runserver
 
 FRONTEND DEV COMMANDLINE

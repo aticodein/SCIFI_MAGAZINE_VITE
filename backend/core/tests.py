@@ -125,3 +125,61 @@ class CreatorUploadApiTests(TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertTrue(res.data.get("ok"))
         self.assertEqual(CreatorUpload.objects.count(), 0)
+
+    def test_title_must_be_unique_per_user_case_insensitive(self):
+        self._login_session_user("alice")
+
+        upload1 = SimpleUploadedFile(
+            "a.pdf",
+            b"%PDF-1.4\n%test\n",
+            content_type="application/pdf",
+        )
+        res1 = self.client.post(
+            "/api/uploads/",
+            {"title": "Nebula Drift", "file": upload1},
+            format="multipart",
+        )
+        self.assertEqual(res1.status_code, 201)
+
+        upload2 = SimpleUploadedFile(
+            "b.pdf",
+            b"%PDF-1.4\n%test\n",
+            content_type="application/pdf",
+        )
+        res2 = self.client.post(
+            "/api/uploads/",
+            {"title": "nebula drift", "file": upload2},
+            format="multipart",
+        )
+        self.assertEqual(res2.status_code, 409)
+        self.assertIn("unique title", str(res2.data).lower())
+
+    def test_same_title_allowed_for_different_users(self):
+        # Alice uploads
+        self._login_session_user("alice")
+        upload1 = SimpleUploadedFile(
+            "a.pdf",
+            b"%PDF-1.4\n%test\n",
+            content_type="application/pdf",
+        )
+        res1 = self.client.post(
+            "/api/uploads/",
+            {"title": "Shared Title", "file": upload1},
+            format="multipart",
+        )
+        self.assertEqual(res1.status_code, 201)
+
+        # Bob uploads same title
+        other = APIClient()
+        other.post("/api/create-username/", {"username": "bob"}, format="json")
+        upload2 = SimpleUploadedFile(
+            "b.pdf",
+            b"%PDF-1.4\n%test\n",
+            content_type="application/pdf",
+        )
+        res2 = other.post(
+            "/api/uploads/",
+            {"title": "Shared Title", "file": upload2},
+            format="multipart",
+        )
+        self.assertEqual(res2.status_code, 201)

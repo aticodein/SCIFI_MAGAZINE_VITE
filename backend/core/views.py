@@ -15,6 +15,7 @@ from django.shortcuts import render
 from django.core.files import File
 from django.core.management import call_command
 from django.db.utils import OperationalError, ProgrammingError
+from django.db import IntegrityError
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth import logout
@@ -283,6 +284,13 @@ def upload_creator_novel(request):
     if not title:
         return Response({"error": "Title is required"}, status=400)
 
+    # Enforce: each user must use a unique title (case-insensitive).
+    if CreatorUpload.objects.filter(username=username, title__iexact=title).exists():
+        return Response(
+            {"error": "You already have an upload with this title. Please choose a unique title."},
+            status=409,
+        )
+
     original_name = uploaded_file.name or ""
     ext = os.path.splitext(original_name)[1].lower().lstrip(".")
     allowed = {"pdf", "doc", "docx"}
@@ -293,14 +301,21 @@ def upload_creator_novel(request):
     if uploaded_file.size and uploaded_file.size > max_mb * 1024 * 1024:
         return Response({"error": f"File too large (max {max_mb}MB)"}, status=413)
 
-    upload = CreatorUpload.objects.create(
-        username=username,
-        title=title,
-        file=uploaded_file,
-        original_filename=original_name[:255],
-        content_type=(getattr(uploaded_file, "content_type", "") or "")[:100],
-        size_bytes=int(getattr(uploaded_file, "size", 0) or 0),
-    )
+    try:
+        upload = CreatorUpload.objects.create(
+            username=username,
+            title=title,
+            file=uploaded_file,
+            original_filename=original_name[:255],
+            content_type=(getattr(uploaded_file, "content_type", "") or "")[:100],
+            size_bytes=int(getattr(uploaded_file, "size", 0) or 0),
+        )
+    except IntegrityError:
+        # If we race with another request, still return a clean error.
+        return Response(
+            {"error": "You already have an upload with this title. Please choose a unique title."},
+            status=409,
+        )
 
     _maybe_generate_pdf_preview(upload)
 
