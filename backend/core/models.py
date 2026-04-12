@@ -3,6 +3,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.db.models.functions import Lower
 
 
 class UserMiningProgress(models.Model):
@@ -93,6 +94,15 @@ class CreatorUpload(models.Model):
     content_type = models.CharField(max_length=100, blank=True, default="")
     size_bytes = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                Lower("title"),
+                "username",
+                name="uniq_creatorupload_title_per_user_ci",
+            )
+        ]
 
     def __str__(self):
         return f"{self.title} ({self.username})"

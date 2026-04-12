@@ -59,6 +59,7 @@ export default function Create() {
 
   const uploadSectionRef = React.useRef<HTMLDivElement | null>(null);
   const titleInputRef = React.useRef<HTMLInputElement | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -117,14 +118,15 @@ export default function Create() {
       setUploadError('Title is required.');
       return;
     }
-    if (!file) {
+    const selectedFile = fileInputRef.current?.files?.[0] || file;
+    if (!selectedFile) {
       setUploadError('Please choose a file (PDF/DOC/DOCX).');
       return;
     }
 
     const form = new FormData();
     form.append('title', title.trim());
-    form.append('file', file);
+    form.append('file', selectedFile);
 
     setUploading(true);
     try {
@@ -134,7 +136,6 @@ export default function Create() {
       });
       setUploadSuccess('Uploaded successfully.');
       setTitle('');
-      setFile(null);
       await loadMyUploads();
     } catch (err: any) {
       const msg = err?.response?.data?.error || 'Upload failed.';
@@ -302,9 +303,13 @@ export default function Create() {
                 <div className="md:col-span-1">
                   <label className="block text-sm font-semibold mb-1">File</label>
                   <input
+                    ref={fileInputRef}
                     type="file"
                     accept=".pdf,.doc,.docx"
-                    onChange={(e) => setFile(e.target.files?.[0] || null)}
+                    onChange={(e) => {
+                      setFile(e.target.files?.[0] || null);
+                      setUploadError(null);
+                    }}
                     className="w-full"
                   />
                   {file && (
