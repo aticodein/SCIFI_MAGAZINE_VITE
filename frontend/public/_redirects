@@ -1,1 +1,8 @@
+# Proxy API calls to Railway (avoids CORS + third-party cookie issues)
+/api/*  https://web-production-2e557.up.railway.app/api/:splat  200
+
+# Proxy media URLs as well (upload previews/reader)
+/media/*  https://web-production-2e557.up.railway.app/media/:splat  200
+
+# SPA fallback
 /*  /index.html  200
