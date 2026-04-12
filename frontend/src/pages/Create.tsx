@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import CardGrid from '../components/CardGrid';
 import { SessionLogin } from '../components/User/SessionLogin';
 import { API_BASE_URL } from '../config/api';
+import { clearSessionStoragePreservingPrefs } from '../utils/session';
 
 type CreatorUpload = {
   id: number;
@@ -86,6 +87,19 @@ export default function Create() {
     }
     fetchUsername();
   }, []);
+
+  async function handleLogout() {
+    try {
+      await fetch(`${API_BASE_URL}/api/logout/`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+      clearSessionStoragePreservingPrefs();
+      window.location.reload();
+    } catch {
+      setUploadError('Failed to logout. Please try again.');
+    }
+  }
 
   const loadMyUploads = React.useCallback(async () => {
     if (!username) return;
@@ -232,10 +246,19 @@ export default function Create() {
           </div>
 
           {username ? (
-            <p className="mt-4 text-sm text-earth-olive-700 dark:text-gray-200">
-              Logged in as{' '}
-              <strong className="text-brand-dark dark:text-earth-cream">{username}</strong>
-            </p>
+            <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <p className="text-sm text-earth-olive-700 dark:text-gray-200">
+                Logged in as{' '}
+                <strong className="text-brand-dark dark:text-earth-cream">{username}</strong>
+              </p>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="w-full sm:w-auto px-4 py-2 rounded-xl bg-earth-forest text-earth-cream hover:bg-earth-clay transition text-sm font-semibold"
+              >
+                Logout
+              </button>
+            </div>
           ) : (
             <div className="mt-4">
               <p className="text-sm text-earth-olive-700 dark:text-gray-200 mb-2">
