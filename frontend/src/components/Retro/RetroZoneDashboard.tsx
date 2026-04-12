@@ -16,6 +16,7 @@ import VitalsFeed from './VitalsFeed';
 export default function Retro() {
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
+  const [username, setUsername] = useState<string | null>(null);
   const [hasUsername, setHasUsername] = useState(false);
 
   const [showVitalsModal, setShowVitalsModal] = useState(false);
@@ -38,13 +39,16 @@ export default function Retro() {
         console.log('🟢 Server responded with:', data);
         if (data.username) {
           console.log('✅ Username found:', data.username);
+          setUsername(data.username);
           setHasUsername(true);
         } else {
           console.log('⛔ No username found in session.');
+          setUsername(null);
           setHasUsername(false);
         }
       } catch (error) {
         console.error('❌ Error fetching username:', error);
+        setUsername(null);
         setHasUsername(false);
       } finally {
         console.log('🟡 Finished checking. Updating state...');
@@ -102,8 +106,8 @@ export default function Retro() {
       {/* User Status Bar */}
       <div className="bg-green-800 text-green-200 px-6 py-3 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <span className="text-sm">COMMANDER:</span>
-          <strong className="text-green-100">USER_LOGGED_IN</strong>
+          <span className="text-sm">Operator:</span>
+          <strong className="text-green-100">{username}</strong>
         </div>
         <button
           onClick={handleLogout}
