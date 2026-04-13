@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import goldenImg from '../assets/images/golden-age2.png';
 import hero2Img from '../assets/images/hero2.png';
 import movie2Img from '../assets/images/movie2.jpg';
+import userNovelsImg from '../assets/images/UserNovels.png';
 import warImg from '../assets/images/war.png';
 
 const categories = [
@@ -43,7 +44,7 @@ const categories = [
   {
     title: 'User Novels',
     description: 'Short novels uploaded by creators in the community.',
-    image: movie2Img,
+    image: userNovelsImg,
     bgTint: 'bg-brand-light bg-opacity-20',
     text: 'text-white',
     path: '/read/user-novels',
