@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urlparse
 from pathlib import Path
 import dj_database_url
 import jazzmin  # ensures jazzmin is loaded early
@@ -13,7 +14,38 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "changeme")
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
+def _coerce_allowed_host(value: str) -> str | None:
+    value = (value or "").strip()
+    if not value:
+        return None
+    if value == "*":
+        return "*"
+
+    # Support common misconfiguration: env var contains a full URL.
+    if "://" in value:
+        try:
+            parsed = urlparse(value)
+            if parsed.hostname:
+                return parsed.hostname
+        except Exception:
+            pass
+
+    # Remove any path and port fragments.
+    value = value.split("/")[0]
+    value = value.split(":")[0]
+    return value or None
+
+
+_raw_allowed_hosts = os.getenv("DJANGO_ALLOWED_HOSTS", "*")
+ALLOWED_HOSTS: list[str] = []
+for part in _raw_allowed_hosts.split(","):
+    host = _coerce_allowed_host(part)
+    if host and host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(host)
+
+if not ALLOWED_HOSTS:
+    # Preserve historical behavior: default to permissive hosts.
+    ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
