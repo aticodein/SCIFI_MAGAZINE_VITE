@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # DJANGO CORE SETTINGS
 # ------------------------------------------
 
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "changeme")
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 
 def _coerce_allowed_host(value: str) -> str | None:
